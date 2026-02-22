@@ -59,9 +59,9 @@ module.exports = {
             name: '⚡ XP Per Activity',
             value: [
                 `💬 **Message** — 15–25 XP`,
-                `🔗 **Link** — 20–35 XP`,
-                `🖼️ **Image** — 25–40 XP`,
-                `🔗🖼️ **Link + Image** — 30–50 XP`,
+                `🔗 **Link** — 15–25 XP`,
+                `🖼️ **Image** — 15–25 XP`,
+                `🔗🖼️ **Link + Image** — 15–25 XP`,
                 `⏱️ **Cooldown** — 60 seconds`,
             ].join('\n'),
             inline: false,

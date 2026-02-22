@@ -10,11 +10,11 @@ const { query } = require('./db');
 
 // ─── XP Configuration ────────────────────────────────────────
 const XP_CONFIG = {
-    // Base XP ranges per message type
+    // Base XP ranges per message type (Uniform for all types)
     MESSAGE:  { min: 15, max: 25 },   // Normal text message
-    LINK:     { min: 20, max: 35 },   // Message containing a URL
-    IMAGE:    { min: 25, max: 40 },   // Message with attachment(s)
-    MIXED:    { min: 30, max: 50 },   // Image + link in same message
+    LINK:     { min: 15, max: 25 },   // Message containing a URL
+    IMAGE:    { min: 15, max: 25 },   // Message with attachment(s)
+    MIXED:    { min: 15, max: 25 },   // Image + link in same message
 
     // Cooldown in milliseconds (per user, per guild)
     COOLDOWN_MS: 60_000,              // 60 seconds between XP grants
