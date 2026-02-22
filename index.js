@@ -141,6 +141,12 @@ try {
             // Note: ai_config table created for Groq AI configuration
             console.log('✅ [STARTUP] TiDB Schema ready (including Groq AI tables).');
             
+            // Initialize Leveling System tables
+            console.log('⭐ [STARTUP] Initializing Leveling System tables...');
+            const levelSystem = require('./utils/levelSystem');
+            await levelSystem.ensureTables();
+            console.log('✅ [STARTUP] Leveling System tables ready.');
+            
             // Run migration to add missing columns if table already existed
             await fixDatabase();
             
@@ -667,6 +673,10 @@ app.use('/api/welcome', welcomeApi);
 // Growtopia Price Tracking API routes
 const growtopiaApi = require('./routes/growtopiaApi');
 app.use('/api/growtopia', growtopiaApi);
+
+// Leveling System API routes
+const levelingApi = require('./routes/levelingApi');
+app.use('/api/leveling', levelingApi);
 
 
 

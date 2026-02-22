@@ -35,6 +35,11 @@ module.exports = {
                     name: '🎉 Giveaways', 
                     value: '• `/giveaway-list` - List all active giveaways',
                     inline: false 
+                },
+                {
+                    name: '⭐ Leveling System',
+                    value: '• `/rank` - Check your level and XP progress\n• `/leaderboard` - View the top XP earners\n• `/levels` - View level rewards and XP requirements\n• `/level-config` - *(Admin)* Configure the leveling system',
+                    inline: false
                 }
             )
             .setFooter({ text: 'Supreme | Professional Discord Solutions', iconURL: client.user.displayAvatarURL() })
