@@ -1114,7 +1114,7 @@ router.post('/ticket-setup/deploy', requireAuth, requireGuildAccess, async (req,
 
         // Save ticket category if provided
         if (ticketCategoryId) {
-            storage.set(guildId, 'ticketCategoryId', ticketCategoryId);
+            storage.set(guild.id, 'ticketCategoryId', ticketCategoryId);
         }
 
         // Build the embed
@@ -1153,12 +1153,12 @@ router.post('/ticket-setup/deploy', requireAuth, requireGuildAccess, async (req,
 // ==================== PREMIUM / PAYMENT ENDPOINTS ====================
 
 // Get premium status for a guild
-router.get('/premium/status', async (req, res) => {
+router.get('/premium/status', requireAuth, requireGuildAccess, async (req, res) => {
     try {
-        const guildId = req.session?.guildId;
-        if (!guildId) return res.status(400).json({ error: 'No guild selected' });
+        const guild = getSelectedGuild(req);
+        if (!guild) return res.status(400).json({ error: 'No guild selected' });
 
-        const premiumData = storage.get(guildId, 'premium') || null;
+        const premiumData = storage.get(guild.id, 'premium') || null;
         if (!premiumData) {
             return res.json({ isPremium: false, plan: null, expiresAt: null });
         }
@@ -1183,11 +1183,11 @@ router.get('/premium/status', async (req, res) => {
 });
 
 // Activate premium (called after payment verification)
-router.post('/premium/activate', async (req, res) => {
+router.post('/premium/activate', requireAuth, requireGuildAccess, async (req, res) => {
     try {
-        const client = req.app.get('discordClient');
-        const guildId = req.session?.guildId;
-        if (!guildId) return res.status(400).json({ error: 'No guild selected' });
+        const client = req.app.locals.client;
+        const guild = getSelectedGuild(req);
+        if (!guild) return res.status(400).json({ error: 'No guild selected' });
 
         const { plan, paymentMethod, transactionId, duration } = req.body;
         if (!plan || !paymentMethod) {
@@ -1205,7 +1205,7 @@ router.post('/premium/activate', async (req, res) => {
             expiresAt: Date.now() + durationMs
         };
 
-        storage.set(guildId, 'premium', premiumData);
+        storage.set(guild.id, 'premium', premiumData);
 
         // Save to database for persistence
         try {
@@ -1213,7 +1213,7 @@ router.post('/premium/activate', async (req, res) => {
                 `INSERT INTO premium_subscriptions (guild_id, plan, payment_method, transaction_id, activated_at, expires_at) 
                  VALUES (?, ?, ?, ?, NOW(), DATE_ADD(NOW(), INTERVAL ? DAY))
                  ON DUPLICATE KEY UPDATE plan = ?, payment_method = ?, transaction_id = ?, activated_at = NOW(), expires_at = DATE_ADD(NOW(), INTERVAL ? DAY)`,
-                [guildId, plan, paymentMethod, transactionId || 'manual', duration || 30, plan, paymentMethod, transactionId || 'manual', duration || 30]
+                [guild.id, plan, paymentMethod, transactionId || 'manual', duration || 30, plan, paymentMethod, transactionId || 'manual', duration || 30]
             );
         } catch (dbError) {
             // If table doesn't exist, create it
@@ -1230,7 +1230,7 @@ router.post('/premium/activate', async (req, res) => {
             await query(
                 `INSERT INTO premium_subscriptions (guild_id, plan, payment_method, transaction_id, activated_at, expires_at) 
                  VALUES (?, ?, ?, ?, NOW(), DATE_ADD(NOW(), INTERVAL ? DAY))`,
-                [guildId, plan, paymentMethod, transactionId || 'manual', duration || 30]
+                [guild.id, plan, paymentMethod, transactionId || 'manual', duration || 30]
             );
         }
 
