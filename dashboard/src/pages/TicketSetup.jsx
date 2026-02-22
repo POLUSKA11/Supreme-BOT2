@@ -36,8 +36,10 @@ export default function TicketSetup({ selectedGuild }) {
   const [ticketCategory, setTicketCategory] = useState('');
 
   useEffect(() => {
-    fetchChannels();
-  }, []);
+    if (selectedGuild?.id) {
+      fetchChannels();
+    }
+  }, [selectedGuild?.id]);
 
   const fetchChannels = async () => {
     try {

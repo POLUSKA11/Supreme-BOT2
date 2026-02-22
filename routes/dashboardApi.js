@@ -1077,14 +1077,10 @@ router.get('/guild-data', requireAuth, requireGuildAccess, async (req, res) => {
 });
 
 // ==================== CHANNELS ENDPOINT ====================
-router.get('/channels', async (req, res) => {
+router.get('/channels', requireAuth, requireGuildAccess, async (req, res) => {
     try {
-        const client = req.app.get('discordClient');
-        const guildId = req.session?.guildId;
-        if (!guildId) return res.status(400).json({ error: 'No guild selected' });
-
-        const guild = client.guilds.cache.get(guildId);
-        if (!guild) return res.status(404).json({ error: 'Guild not found' });
+        const guild = getSelectedGuild(req);
+        if (!guild) return res.status(400).json({ error: 'No guild selected' });
 
         const channels = guild.channels.cache
             .filter(ch => ch.type === ChannelType.GuildText || ch.type === ChannelType.GuildCategory)
@@ -1104,14 +1100,11 @@ router.get('/channels', async (req, res) => {
 });
 
 // ==================== TICKET SETUP DEPLOY ====================
-router.post('/ticket-setup/deploy', async (req, res) => {
+router.post('/ticket-setup/deploy', requireAuth, requireGuildAccess, async (req, res) => {
     try {
-        const client = req.app.get('discordClient');
-        const guildId = req.session?.guildId;
-        if (!guildId) return res.status(400).json({ error: 'No guild selected' });
-
-        const guild = client.guilds.cache.get(guildId);
-        if (!guild) return res.status(404).json({ error: 'Guild not found' });
+        const guild = getSelectedGuild(req);
+        if (!guild) return res.status(400).json({ error: 'No guild selected' });
+        const client = req.app.locals.client;
 
         const { channelId, ticketCategoryId, embed, button } = req.body;
         if (!channelId) return res.status(400).json({ error: 'Channel ID is required' });
