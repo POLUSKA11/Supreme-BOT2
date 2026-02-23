@@ -37,9 +37,8 @@ export default function TicketSetup({ selectedGuild }) {
   
   // New config fields
   const [roles, setRoles] = useState([]);
-  const [whitelistRoles, setWhitelistRoles] = useState([]);
-  const [blacklistRoles, setBlacklistRoles] = useState([]);
   const [staffRoles, setStaffRoles] = useState([]);
+  const [blacklistRoles, setBlacklistRoles] = useState([]);
   const [useModal, setUseModal] = useState(true);
   const [welcomeMessage, setWelcomeMessage] = useState('Welcome to your middleman ticket. Please follow these guidelines:\n\n• Be respectful and professional\n• Provide clear information about your trade\n• Wait for staff verification before proceeding\n• Do not share sensitive information');
 
@@ -97,9 +96,8 @@ export default function TicketSetup({ selectedGuild }) {
             emoji: buttonEmoji
           },
           config: {
-            whitelistRoles,
-            blacklistRoles,
             staffRoles,
+            blacklistRoles,
             useModal,
             welcomeMessage
           }
@@ -312,7 +310,7 @@ export default function TicketSetup({ selectedGuild }) {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Staff Roles (Can see all tickets)</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Staff/Support Roles (Can see and manage tickets)</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {staffRoles.map(roleId => {
                     const role = roles.find(r => r.id === roleId);
@@ -332,43 +330,27 @@ export default function TicketSetup({ selectedGuild }) {
                   }}
                   className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
                 >
-                  <option value="">Add a staff role...</option>
+                  <option value="">Add a staff/support role...</option>
                   {roles.map(role => (
                     <option key={role.id} value={role.id}>{role.name}</option>
                   ))}
                 </select>
+                <p className="text-xs text-slate-500 mt-1">These roles will be added to every new ticket channel and pinged.</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Whitelisted Roles</label>
-                  <select
-                    multiple
-                    value={whitelistRoles}
-                    onChange={(e) => setWhitelistRoles(Array.from(e.target.selectedOptions, option => option.value))}
-                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all h-32"
-                  >
-                    {roles.map(role => (
-                      <option key={role.id} value={role.id}>{role.name}</option>
-                    ))}
-                  </select>
-                  <p className="text-xs text-slate-500 mt-1">Only users with these roles can open tickets (leave empty for everyone)</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Blacklisted Roles</label>
-                  <select
-                    multiple
-                    value={blacklistRoles}
-                    onChange={(e) => setBlacklistRoles(Array.from(e.target.selectedOptions, option => option.value))}
-                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all h-32"
-                  >
-                    {roles.map(role => (
-                      <option key={role.id} value={role.id}>{role.name}</option>
-                    ))}
-                  </select>
-                  <p className="text-xs text-slate-500 mt-1">Users with these roles cannot open tickets</p>
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Blacklisted Roles</label>
+                <select
+                  multiple
+                  value={blacklistRoles}
+                  onChange={(e) => setBlacklistRoles(Array.from(e.target.selectedOptions, option => option.value))}
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all h-32"
+                >
+                  {roles.map(role => (
+                    <option key={role.id} value={role.id}>{role.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-slate-500 mt-1">Users with these roles cannot open tickets. Everyone else can.</p>
               </div>
             </div>
           </div>

@@ -525,11 +525,8 @@ module.exports = {
                     return interaction.reply({ content: '❌ You are blacklisted from creating tickets.', flags: [MessageFlags.Ephemeral] });
                 }
 
-                // 2. Check Whitelist (if configured)
-                const whitelistRoles = storage.get(guild.id, 'ticket_whitelist_roles') || [];
-                if (whitelistRoles.length > 0 && !member.roles.cache.some(r => whitelistRoles.includes(r.id))) {
-                    return interaction.reply({ content: '❌ You do not have the required role to create a ticket.', flags: [MessageFlags.Ephemeral] });
-                }
+                // Whitelist check removed - everyone can create tickets now.
+                // Blacklist still applies.
 
                 // 3. Check if Modal is enabled
                 const useModal = storage.get(guild.id, 'ticket_use_modal') !== 'false'; // Default to true
