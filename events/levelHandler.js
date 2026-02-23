@@ -53,10 +53,11 @@ module.exports = {
             if (!member) return;
 
             // ── 1. Assign Level Roles ─────────────────────────────
+            // Fetch level roles once and reuse throughout this handler
+            const levelRoles = await levelSystem.getLevelRoles(message.guild.id);
+
             try {
-                const levelRoles = await levelSystem.getLevelRoles(message.guild.id);
                 const rolesToAdd = levelRoles.filter(r => r.level <= newLevel);
-                const rolesToRemove = levelRoles.filter(r => r.level > newLevel);
 
                 for (const { role_id } of rolesToAdd) {
                     const role = message.guild.roles.cache.get(role_id);
@@ -67,6 +68,7 @@ module.exports = {
 
                 // Remove roles for levels above current (optional: keep all earned roles)
                 // Uncomment below if you want "replace" behavior instead of "stack" behavior:
+                // const rolesToRemove = levelRoles.filter(r => r.level > newLevel);
                 // for (const { role_id } of rolesToRemove) {
                 //     if (member.roles.cache.has(role_id)) {
                 //         await member.roles.remove(role_id, 'Level role update').catch(() => null);
@@ -87,8 +89,7 @@ module.exports = {
             const progressBar = buildProgressBar(currentXp, xpNeeded);
             const color = getLevelColor(newLevel);
 
-            // Find the next reward role (if any)
-            const levelRoles = await levelSystem.getLevelRoles(message.guild.id);
+            // Reuse the levelRoles already fetched above
             const nextReward = levelRoles.find(r => r.level > newLevel);
             const currentReward = levelRoles.filter(r => r.level <= newLevel).pop();
 

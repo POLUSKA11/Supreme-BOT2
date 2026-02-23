@@ -182,7 +182,7 @@ async function setConfig(guildId, key, value) {
 async function getLeaderboard(guildId, limit = 10) {
     return await query(
         'SELECT user_id, xp, level, messages FROM levels WHERE guild_id = ? ORDER BY xp DESC LIMIT ?',
-        [guildId, limit]
+        [guildId, parseInt(limit, 10)]
     );
 }
 

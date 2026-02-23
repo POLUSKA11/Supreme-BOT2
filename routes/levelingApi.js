@@ -23,7 +23,7 @@ const requireAuth = (req, res, next) => {
 router.get('/:guildId/leaderboard', requireAuth, async (req, res) => {
     try {
         const { guildId } = req.params;
-        const limit = Math.min(parseInt(req.query.limit) || 25, 100);
+        const limit = Math.min(parseInt(req.query.limit, 10) || 25, 100);
         const data = await levelSystem.getLeaderboard(guildId, limit);
 
         const client = req.app.locals.client;
