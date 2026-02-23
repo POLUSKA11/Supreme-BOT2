@@ -205,6 +205,9 @@ module.exports = {
                     
                     const ticketNumber = ticketCount.toString().padStart(4, '0');
                     const ticketCategoryId = storage.get(guild.id, 'ticketCategory') || CONFIG.TICKET_CATEGORY_ID;
+                    // Get staff roles from storage or fallback to CONFIG
+                    const staffRoles = storage.get(guild.id, 'ticket_staff_roles') || CONFIG.ALLOWED_STAFF_ROLES;
+
                     const ticketChannel = await guild.channels.create({
                         name: `ticket-${ticketNumber}`,
                         type: ChannelType.GuildText,
@@ -212,7 +215,7 @@ module.exports = {
                         permissionOverwrites: [
                             { id: guild.id, deny: [PermissionFlagsBits.ViewChannel] },
                             { id: user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
-                            ...CONFIG.ALLOWED_STAFF_ROLES.map(roleId => ({ id: roleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] }))
+                            ...staffRoles.map(roleId => ({ id: roleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] }))
                         ]
                     });
 
@@ -237,13 +240,13 @@ module.exports = {
                     const policyEmbed = new EmbedBuilder()
                         .setAuthor({ name: 'Supreme | MM', iconURL: CONFIG.SUPREME_LOGO })
                         .setTitle('Middleman Ticket Policy')
-                        .setDescription('Welcome to your middleman ticket. Please follow these guidelines:\n\n• Be respectful and professional\n• Provide clear information about your trade\n• Wait for staff verification before proceeding\n• Do not share sensitive information')
+                        .setDescription(storage.get(guild.id, 'ticket_welcome_msg') || 'Welcome to your middleman ticket. Please follow these guidelines:\n\n• Be respectful and professional\n• Provide clear information about your trade\n• Wait for staff verification before proceeding\n• Do not share sensitive information')
                         .setColor('#00FFFF')
                         .setImage('attachment://banner.gif');
 
                     const row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('close_ticket').setLabel('Close Ticket').setStyle(ButtonStyle.Danger));
                     const attachment = new AttachmentBuilder(CONFIG.BANNER_URL, { name: 'banner.gif' });
-                    const staffMentions = CONFIG.ALLOWED_STAFF_ROLES.map(id => `<@&${id}>`).join(' ');
+                    const staffMentions = staffRoles.map(id => `<@&${id}>`).join(' ');
                     
                     await ticketChannel.send({ content: `${staffMentions}`, embeds: [policyEmbed], components: [row], files: [attachment] });
                     const detailsEmbed = new EmbedBuilder().setDescription(`**Who are you trading with? (Name/ID)**\n\`\`\`\n${partner}\n\`\`\`\n**Trade Type? (Item/Item), (Item/Money)**\n\`\`\`\n${type}\n\`\`\`\n**Enter The Trade Below**\n\`\`\`\n${details}\n\`\`\``).setColor('#2B2D31');
@@ -516,17 +519,90 @@ module.exports = {
             }
 
             if (customId === 'create_middleman_ticket') {
-                const modal = new ModalBuilder().setCustomId('middleman_ticket_modal').setTitle('Create Middleman Ticket');
-                modal.addComponents(
-                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('trading_partner').setLabel('Who are you trading with? (Name/ID)').setStyle(TextInputStyle.Short).setRequired(true)),
-                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('trade_type').setLabel('Trade Type? (Item/Item), (Item/Money)').setStyle(TextInputStyle.Short).setRequired(true)),
-                    new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('trade_details').setLabel('Enter The Trade Below').setStyle(TextInputStyle.Paragraph).setRequired(true))
-                );
-                try {
-                    return await interaction.showModal(modal);
-                } catch (error) {
-                    if (error.code === 10062) return console.warn('⚠️ [MODAL] Interaction expired before showing ticket modal.');
-                    throw error;
+                // 1. Check Blacklist
+                const blacklistRoles = storage.get(guild.id, 'ticket_blacklist_roles') || [];
+                if (blacklistRoles.length > 0 && member.roles.cache.some(r => blacklistRoles.includes(r.id))) {
+                    return interaction.reply({ content: '❌ You are blacklisted from creating tickets.', flags: [MessageFlags.Ephemeral] });
+                }
+
+                // 2. Check Whitelist (if configured)
+                const whitelistRoles = storage.get(guild.id, 'ticket_whitelist_roles') || [];
+                if (whitelistRoles.length > 0 && !member.roles.cache.some(r => whitelistRoles.includes(r.id))) {
+                    return interaction.reply({ content: '❌ You do not have the required role to create a ticket.', flags: [MessageFlags.Ephemeral] });
+                }
+
+                // 3. Check if Modal is enabled
+                const useModal = storage.get(guild.id, 'ticket_use_modal') !== 'false'; // Default to true
+
+                if (useModal) {
+                    const modal = new ModalBuilder().setCustomId('middleman_ticket_modal').setTitle('Create Middleman Ticket');
+                    modal.addComponents(
+                        new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('trading_partner').setLabel('Who are you trading with? (Name/ID)').setStyle(TextInputStyle.Short).setRequired(true)),
+                        new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('trade_type').setLabel('Trade Type? (Item/Item), (Item/Money)').setStyle(TextInputStyle.Short).setRequired(true)),
+                        new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('trade_details').setLabel('Enter The Trade Below').setStyle(TextInputStyle.Paragraph).setRequired(true))
+                    );
+                    try {
+                        return await interaction.showModal(modal);
+                    } catch (error) {
+                        if (error.code === 10062) return console.warn('⚠️ [MODAL] Interaction expired before showing ticket modal.');
+                        throw error;
+                    }
+                } else {
+                    // Normal ticket creation without modal
+                    await interaction.deferReply({ ephemeral: true });
+                    try {
+                        let ticketCount = parseInt(storage.get(guild.id, 'ticketCount')) || 0;
+                        ticketCount++;
+                        await storage.set(guild.id, 'ticketCount', ticketCount);
+                        
+                        const ticketNumber = ticketCount.toString().padStart(4, '0');
+                        const ticketCategoryId = storage.get(guild.id, 'ticketCategory') || CONFIG.TICKET_CATEGORY_ID;
+                        
+                        // Get staff roles from storage or fallback to CONFIG
+                        const staffRoles = storage.get(guild.id, 'ticket_staff_roles') || CONFIG.ALLOWED_STAFF_ROLES;
+
+                        const ticketChannel = await guild.channels.create({
+                            name: `ticket-${ticketNumber}`,
+                            type: ChannelType.GuildText,
+                            parent: ticketCategoryId,
+                            permissionOverwrites: [
+                                { id: guild.id, deny: [PermissionFlagsBits.ViewChannel] },
+                                { id: user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+                                ...staffRoles.map(roleId => ({ id: roleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] }))
+                            ]
+                        });
+
+                        const ticketData = { creator: user.id, createdAt: new Date().toISOString(), number: ticketNumber };
+                        await ticketChannel.setTopic(JSON.stringify(ticketData));
+
+                        const activeTickets = storage.get(guild.id, 'active_tickets') || {};
+                        activeTickets[ticketChannel.id] = {
+                            id: ticketChannel.id,
+                            user: user.username,
+                            userId: user.id,
+                            created: new Date().toISOString(),
+                            status: 'Active',
+                            ticketNumber: ticketNumber
+                        };
+                        await storage.set(guild.id, 'active_tickets', activeTickets);
+
+                        const policyEmbed = new EmbedBuilder()
+                            .setAuthor({ name: 'Supreme | MM', iconURL: CONFIG.SUPREME_LOGO })
+                            .setTitle('Middleman Ticket Policy')
+                            .setDescription(storage.get(guild.id, 'ticket_welcome_msg') || 'Welcome to your middleman ticket. Please follow these guidelines:\n\n• Be respectful and professional\n• Provide clear information about your trade\n• Wait for staff verification before proceeding\n• Do not share sensitive information')
+                            .setColor('#00FFFF')
+                            .setImage('attachment://banner.gif');
+
+                        const row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('close_ticket').setLabel('Close Ticket').setStyle(ButtonStyle.Danger));
+                        const attachment = new AttachmentBuilder(CONFIG.BANNER_URL, { name: 'banner.gif' });
+                        const staffMentions = staffRoles.map(id => `<@&${id}>`).join(' ');
+                        
+                        await ticketChannel.send({ content: `${staffMentions}`, embeds: [policyEmbed], components: [row], files: [attachment] });
+                        await interaction.editReply({ content: `✅ Ticket created: ${ticketChannel}` });
+                    } catch (error) {
+                        console.error('Ticket Creation Error:', error);
+                        await interaction.editReply({ content: '❌ Failed to create ticket.' });
+                    }
                 }
             }
 

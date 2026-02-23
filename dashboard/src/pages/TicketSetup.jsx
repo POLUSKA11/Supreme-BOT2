@@ -34,6 +34,14 @@ export default function TicketSetup({ selectedGuild }) {
   const [buttonEmoji, setButtonEmoji] = useState('🤝');
   const [selectedChannel, setSelectedChannel] = useState('');
   const [ticketCategory, setTicketCategory] = useState('');
+  
+  // New config fields
+  const [roles, setRoles] = useState([]);
+  const [whitelistRoles, setWhitelistRoles] = useState([]);
+  const [blacklistRoles, setBlacklistRoles] = useState([]);
+  const [staffRoles, setStaffRoles] = useState([]);
+  const [useModal, setUseModal] = useState(true);
+  const [welcomeMessage, setWelcomeMessage] = useState('Welcome to your middleman ticket. Please follow these guidelines:\n\n• Be respectful and professional\n• Provide clear information about your trade\n• Wait for staff verification before proceeding\n• Do not share sensitive information');
 
   useEffect(() => {
     if (selectedGuild?.id) {
@@ -49,8 +57,14 @@ export default function TicketSetup({ selectedGuild }) {
         setChannels(data.filter(ch => ch.type === 0)); // Text channels
         setCategories(data.filter(ch => ch.type === 4)); // Categories
       }
+      
+      const rolesRes = await fetch('/api/dashboard/roles', { credentials: 'include' });
+      if (rolesRes.ok) {
+        const rolesData = await rolesRes.json();
+        setRoles(rolesData);
+      }
     } catch (e) {
-      console.error('Failed to fetch channels:', e);
+      console.error('Failed to fetch channels/roles:', e);
     }
   };
 
@@ -81,6 +95,13 @@ export default function TicketSetup({ selectedGuild }) {
           button: {
             label: buttonLabel,
             emoji: buttonEmoji
+          },
+          config: {
+            whitelistRoles,
+            blacklistRoles,
+            staffRoles,
+            useModal,
+            welcomeMessage
           }
         })
       });
@@ -238,36 +259,144 @@ export default function TicketSetup({ selectedGuild }) {
           {/* Button Configuration */}
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox=          {/* Button Configuration */}
+          <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+            <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
               <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg>
-              Button Configuration
+              Button & Creation Mode
             </h2>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Button Label</label>
-                <input
-                  type="text"
-                  value={buttonLabel}
-                  onChange={(e) => setButtonLabel(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
-                  placeholder="Button text..."
-                />
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Button Label</label>
+                  <input
+                    type="text"
+                    value={buttonLabel}
+                    onChange={(e) => setButtonLabel(e.target.value)}
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                    placeholder="Button text..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Button Emoji</label>
+                  <input
+                    type="text"
+                    value={buttonEmoji}
+                    onChange={(e) => setButtonEmoji(e.target.value)}
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                    placeholder="🤝"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Button Emoji</label>
-                <input
-                  type="text"
-                  value={buttonEmoji}
-                  onChange={(e) => setButtonEmoji(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
-                  placeholder="🤝"
-                />
+              <div className="flex items-center justify-between p-4 bg-slate-900/30 rounded-xl border border-white/5">
+                <div>
+                  <h3 className="text-sm font-medium text-white">Use Modal Form</h3>
+                  <p className="text-xs text-slate-500">Show a popup form when users click the button</p>
+                </div>
+                <button
+                  onClick={() => setUseModal(!useModal)}
+                  className={`w-12 h-6 rounded-full transition-all duration-300 relative ${useModal ? 'bg-indigo-600' : 'bg-slate-700'}`}
+                >
+                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all duration-300 ${useModal ? 'left-7' : 'left-1'}`} />
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Deploy Button */}
+          {/* Role Configuration */}
+          <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+            <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 01-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+              Role Permissions
+            </h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Staff Roles (Can see all tickets)</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {staffRoles.map(roleId => {
+                    const role = roles.find(r => r.id === roleId);
+                    return (
+                      <span key={roleId} className="px-2 py-1 bg-indigo-500/20 border border-indigo-500/30 rounded text-xs text-indigo-300 flex items-center gap-1">
+                        {role?.name || roleId}
+                        <button onClick={() => setStaffRoles(staffRoles.filter(id => id !== roleId))} className="hover:text-white">×</button>
+                      </span>
+                    );
+                  })}
+                </div>
+                <select
+                  onChange={(e) => {
+                    if (e.target.value && !staffRoles.includes(e.target.value)) {
+                      setStaffRoles([...staffRoles, e.target.value]);
+                    }
+                  }}
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                >
+                  <option value="">Add a staff role...</option>
+                  {roles.map(role => (
+                    <option key={role.id} value={role.id}>{role.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Whitelisted Roles</label>
+                  <select
+                    multiple
+                    value={whitelistRoles}
+                    onChange={(e) => setWhitelistRoles(Array.from(e.target.selectedOptions, option => option.value))}
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all h-32"
+                  >
+                    {roles.map(role => (
+                      <option key={role.id} value={role.id}>{role.name}</option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-slate-500 mt-1">Only users with these roles can open tickets (leave empty for everyone)</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Blacklisted Roles</label>
+                  <select
+                    multiple
+                    value={blacklistRoles}
+                    onChange={(e) => setBlacklistRoles(Array.from(e.target.selectedOptions, option => option.value))}
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all h-32"
+                  >
+                    {roles.map(role => (
+                      <option key={role.id} value={role.id}>{role.name}</option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-slate-500 mt-1">Users with these roles cannot open tickets</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Ticket Content Configuration */}
+          <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+            <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              Ticket Welcome Message
+            </h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Welcome Message</label>
+                <textarea
+                  value={welcomeMessage}
+                  onChange={(e) => setWelcomeMessage(e.target.value)}
+                  rows={6}
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all resize-none text-sm"
+                  placeholder="Message sent when a ticket is opened..."
+                />
+                <p className="text-xs text-slate-500 mt-1">This message appears at the top of every new ticket</p>
+              </div>
+            </div>
+          </div>        {/* Deploy Button */}
           <button
             onClick={handleDeploy}
             disabled={saving || !selectedChannel}

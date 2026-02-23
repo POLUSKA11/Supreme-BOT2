@@ -1106,7 +1106,7 @@ router.post('/ticket-setup/deploy', requireAuth, requireGuildAccess, async (req,
         if (!guild) return res.status(400).json({ error: 'No guild selected' });
         const client = req.app.locals.client;
 
-        const { channelId, ticketCategoryId, embed, button } = req.body;
+        const { channelId, ticketCategoryId, embed, button, config } = req.body;
         if (!channelId) return res.status(400).json({ error: 'Channel ID is required' });
 
         const channel = guild.channels.cache.get(channelId);
@@ -1115,6 +1115,15 @@ router.post('/ticket-setup/deploy', requireAuth, requireGuildAccess, async (req,
         // Save ticket category if provided
         if (ticketCategoryId) {
             storage.set(guild.id, 'ticketCategoryId', ticketCategoryId);
+        }
+
+        // Save additional config if provided
+        if (config) {
+            if (config.whitelistRoles) storage.set(guild.id, 'ticket_whitelist_roles', config.whitelistRoles);
+            if (config.blacklistRoles) storage.set(guild.id, 'ticket_blacklist_roles', config.blacklistRoles);
+            if (config.staffRoles) storage.set(guild.id, 'ticket_staff_roles', config.staffRoles);
+            if (config.useModal !== undefined) storage.set(guild.id, 'ticket_use_modal', String(config.useModal));
+            if (config.welcomeMessage) storage.set(guild.id, 'ticket_welcome_msg', config.welcomeMessage);
         }
 
         // Build the embed
