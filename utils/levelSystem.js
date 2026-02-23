@@ -180,9 +180,10 @@ async function setConfig(guildId, key, value) {
 }
 
 async function getLeaderboard(guildId, limit = 10) {
+    const sanitizedLimit = Math.max(1, parseInt(limit, 10) || 10);
     return await query(
-        'SELECT user_id, xp, level, messages FROM levels WHERE guild_id = ? ORDER BY xp DESC LIMIT ?',
-        [guildId, parseInt(limit, 10)]
+        `SELECT user_id, xp, level, messages FROM levels WHERE guild_id = ? ORDER BY xp DESC LIMIT ${sanitizedLimit}`,
+        [guildId]
     );
 }
 

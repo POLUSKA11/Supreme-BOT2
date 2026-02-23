@@ -185,7 +185,7 @@ router.post('/:guildId/user/:userId/add-xp', requireAuth, async (req, res) => {
         }
 
         const userData = await levelSystem.getUserData(guildId, userId);
-        const newXp = userData.xp + parseInt(amount);
+        const newXp = userData.xp + parseInt(amount, 10);
         const { level: newLevel } = levelSystem.getLevelFromXp(newXp);
 
         await query(`
