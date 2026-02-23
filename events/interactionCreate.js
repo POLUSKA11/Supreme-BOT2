@@ -204,14 +204,24 @@ module.exports = {
                     await storage.set(guild.id, 'ticketCount', ticketCount);
                     
                     const ticketNumber = ticketCount.toString().padStart(4, '0');
-                    const ticketCategoryId = storage.get(guild.id, 'ticketCategory') || CONFIG.TICKET_CATEGORY_ID;
+                    let ticketCategoryId = storage.get(guild.id, 'ticketCategory') || CONFIG.TICKET_CATEGORY_ID;
+
+                    // Validate category exists
+                    if (ticketCategoryId) {
+                        const category = guild.channels.cache.get(ticketCategoryId);
+                        if (!category || category.type !== ChannelType.GuildCategory) {
+                            console.warn(`⚠️ [TICKETS] Category ${ticketCategoryId} not found or invalid. Falling back to no category.`);
+                            ticketCategoryId = null;
+                        }
+                    }
+
                     // Get staff roles from storage or fallback to CONFIG
                     const staffRoles = storage.get(guild.id, 'ticket_staff_roles') || CONFIG.ALLOWED_STAFF_ROLES;
 
                     const ticketChannel = await guild.channels.create({
                         name: `ticket-${ticketNumber}`,
                         type: ChannelType.GuildText,
-                        parent: ticketCategoryId,
+                        parent: ticketCategoryId || undefined,
                         permissionOverwrites: [
                             { id: guild.id, deny: [PermissionFlagsBits.ViewChannel] },
                             { id: user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
@@ -553,7 +563,16 @@ module.exports = {
                         await storage.set(guild.id, 'ticketCount', ticketCount);
                         
                         const ticketNumber = ticketCount.toString().padStart(4, '0');
-                        const ticketCategoryId = storage.get(guild.id, 'ticketCategory') || CONFIG.TICKET_CATEGORY_ID;
+                        let ticketCategoryId = storage.get(guild.id, 'ticketCategory') || CONFIG.TICKET_CATEGORY_ID;
+                        
+                        // Validate category exists
+                        if (ticketCategoryId) {
+                            const category = guild.channels.cache.get(ticketCategoryId);
+                            if (!category || category.type !== ChannelType.GuildCategory) {
+                                console.warn(`⚠️ [TICKETS] Category ${ticketCategoryId} not found or invalid. Falling back to no category.`);
+                                ticketCategoryId = null;
+                            }
+                        }
                         
                         // Get staff roles from storage or fallback to CONFIG
                         const staffRoles = storage.get(guild.id, 'ticket_staff_roles') || CONFIG.ALLOWED_STAFF_ROLES;
@@ -561,7 +580,7 @@ module.exports = {
                         const ticketChannel = await guild.channels.create({
                             name: `ticket-${ticketNumber}`,
                             type: ChannelType.GuildText,
-                            parent: ticketCategoryId,
+                            parent: ticketCategoryId || undefined,
                             permissionOverwrites: [
                                 { id: guild.id, deny: [PermissionFlagsBits.ViewChannel] },
                                 { id: user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
