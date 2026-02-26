@@ -57,6 +57,21 @@ function App() {
           const userData = await response.json();
           setUser(userData);
           setIsAuthenticated(true);
+          // Re-sync selectedGuild to backend session if restored from sessionStorage
+          const savedGuild = sessionStorage.getItem('selectedGuild');
+          if (savedGuild) {
+            try {
+              const guild = JSON.parse(savedGuild);
+              if (guild && guild.id) {
+                await fetch('/api/dashboard/select-guild', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({ guildId: guild.id }),
+                }).catch(() => {}); // Silently fail if guild no longer accessible
+              }
+            } catch (e) { /* ignore parse errors */ }
+          }
         } else {
           setIsAuthenticated(false);
         }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function Dashboard() {
+export default function Dashboard({ selectedGuild }) {
   const { t } = useTranslation();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,9 +30,8 @@ export default function Dashboard() {
         setLoading(false);
       }
     };
-
     fetchStats();
-  }, []);
+  }, [selectedGuild?.id]);
 
   if (loading) {
     return (

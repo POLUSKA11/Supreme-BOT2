@@ -17,11 +17,26 @@ export default function WelcomeSetup() {
   });
   const [showVariables, setShowVariables] = useState(false);
   const [toast, setToast] = useState(null);
+  const [guildName, setGuildName] = useState('');
 
   useEffect(() => {
     fetchConfig();
     fetchChannels();
+    fetchGuildName();
   }, [guildId]);
+
+  const fetchGuildName = async () => {
+    try {
+      const response = await fetch('/api/dashboard/guilds', { credentials: 'include' });
+      if (response.ok) {
+        const data = await response.json();
+        const guild = (data.guilds || []).find(g => g.id === guildId);
+        if (guild) setGuildName(guild.name);
+      }
+    } catch (error) {
+      console.error('Failed to fetch guild name:', error);
+    }
+  };
 
   const fetchConfig = async () => {
     try {
@@ -85,7 +100,7 @@ export default function WelcomeSetup() {
   const replaceVariables = (text) => {
     return text
       .replace(/{username}/g, '@FocusedOVP')
-      .replace(/{serverName}/g, 'Supreme ! MM')
+      .replace(/{serverName}/g, guildName || 'Your Server')
       .replace(/{user}/g, '@FocusedOVP');
   };
 

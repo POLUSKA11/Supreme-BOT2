@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function Transcripts() {
+export default function Transcripts({ selectedGuild }) {
   const [transcripts, setTranscripts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTranscript, setSelectedTranscript] = useState(null);
@@ -14,7 +14,7 @@ export default function Transcripts() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [selectedGuild?.id]);
 
   const parseMessages = (messagesJson) => {
     try {

@@ -138,8 +138,7 @@ try {
                     INDEX idx_guild (guild_id)
                 )
             `);
-            // Note: ai_config table created for Groq AI configuration
-            console.log('✅ [STARTUP] TiDB Schema ready (including Groq AI tables).');
+            console.log('✅ [STARTUP] TiDB Schema ready.');
             
             // Initialize Leveling System tables
             console.log('⭐ [STARTUP] Initializing Leveling System tables...');
@@ -153,10 +152,6 @@ try {
             // Run staff info migration
             const { migrateStaffInfo } = require('./migrations/add_staff_info');
             await migrateStaffInfo();
-            
-            // Fix ai_config table schema
-            const { fixAiConfig } = require('./migrations/fix_ai_config');
-            await fixAiConfig();
             
             // Create Growtopia Price Prediction System tables
             console.log('🎮 [STARTUP] Creating Growtopia Price System tables...');
@@ -419,7 +414,7 @@ client.once('ready', async () => {
             // Translation of the requested message:
             // "Never hand over your items first! Always use a server middleman. 
             // There are always tools like (DDoS - Lag - Crash), always use a middleman to guarantee your rights."
-            const stickyMessage = "<:Alert:1473671637004980294> **Never hand over your items first! Always use a server middleman.**\n-# There are always tools like (DDoS - Lag - Crash), always use a middleman\n**Always to guarantee your rights!** <:Alert:1473671637004980294>";
+            const stickyMessage = "<a:22565siren:1476563868305068044> **Never hand over your items first! Always use a server middleman.**\n-# There are always tools like (DDoS - Lag - Crash), always use a middleman\n**Always to guarantee your rights!** <a:22565siren:1476563868305068044>";
 
             // Optional: Delete previous sticky message to keep it at the bottom
             const messages = await channel.messages.fetch({ limit: 10 });
@@ -639,6 +634,7 @@ app.use(session({
     cookie: { 
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days for trusted IPs
     }
 }));
@@ -657,10 +653,6 @@ app.locals.client = client;
 
 // Dashboard API routes
 app.use('/api/dashboard', dashboardApi);
-
-// AI API routes
-const aiApi = require('./routes/aiApi');
-app.use('/api/ai', aiApi);
 
 // Staff Verification API routes
 app.set('client', client); // Make Discord client available to routes

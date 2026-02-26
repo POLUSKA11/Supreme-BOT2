@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function Settings() {
+export default function Settings({ selectedGuild }) {
   const { t } = useTranslation();
   
   const [settings, setSettings] = useState({
@@ -52,9 +52,8 @@ export default function Settings() {
         setLoading(false);
       }
     };
-
     fetchData();
-  }, []);
+  }, [selectedGuild?.id]);
 
   // Update currentAutoRole when settings or guildData changes
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function Giveaways() {
+export default function Giveaways({ selectedGuild }) {
   const [giveaways, setGiveaways] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(null);
@@ -15,7 +15,7 @@ export default function Giveaways() {
 
   useEffect(() => {
     fetchGiveaways();
-  }, []);
+  }, [selectedGuild?.id]);
 
   const fetchGiveaways = async () => {
     try {

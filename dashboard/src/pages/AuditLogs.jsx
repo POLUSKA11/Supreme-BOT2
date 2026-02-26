@@ -19,14 +19,14 @@ const ACTION_COLORS = {
 
 const DEFAULT_COLOR = 'text-slate-400 bg-slate-500/10 border-slate-500/20';
 
-export default function AuditLogs() {
+export default function AuditLogs({ selectedGuild }) {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     fetchLogs();
-  }, []);
+  }, [selectedGuild?.id]);
 
   const fetchLogs = async () => {
     try {

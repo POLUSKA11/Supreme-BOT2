@@ -1,6 +1,5 @@
 const { Events, PermissionFlagsBits } = require('discord.js');
 const storage = require('../commands/utility/storage.js');
-const groqAI = require('../utils/groqAI');
 
 const CONTROL_CHANNEL_ID = '1470577900540661925';
 
@@ -133,46 +132,6 @@ module.exports = {
             const appManager = require('../applicationManager.js');
             await appManager.handleDMResponse(message, message.client);
             return;
-        }
-        
-        const channelName = channel.name;
-        
-        // Groq AI auto-response in ticket channels
-        if (channelName && channelName.startsWith('ticket-')) {
-            // Check if Groq AI is configured
-            if (groqAI.isConfigured()) {
-                // Don't respond to staff messages (let staff handle it)
-                const STAFF_ROLE_IDS = ['982731220913913856', '958703198447755294', '1410661468688482314', '1457664338163667072', '1354402446994309123'];
-                const isStaff = message.member?.roles?.cache.some(role => STAFF_ROLE_IDS.includes(role.id));
-                
-                if (!isStaff) {
-                    // Show typing indicator
-                    await channel.sendTyping();
-
-                    try {
-                        const response = await groqAI.generateResponse(
-                            author.id,
-                            channel.id,
-                            message.content
-                        );
-
-                        if (response) {
-                            // Split response if too long (Discord limit is 2000 chars)
-                            if (response.length > 2000) {
-                                const chunks = response.match(/[\s\S]{1,2000}/g) || [];
-                                for (const chunk of chunks) {
-                                    await channel.send(chunk);
-                                }
-                            } else {
-                                await channel.send(response);
-                            }
-                        }
-                    } catch (error) {
-                        console.error('[GROQ AI] Ticket auto-response error:', error);
-                        // Silently fail - don't interrupt ticket flow
-                    }
-                }
-            }
         }
     }
 };

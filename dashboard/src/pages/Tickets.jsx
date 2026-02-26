@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Toast from '../components/Toast';
 
-export default function Tickets() {
+export default function Tickets({ selectedGuild }) {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTicket, setSelectedTicket] = useState(null);
@@ -24,7 +24,7 @@ export default function Tickets() {
 
   useEffect(() => {
     fetchTickets();
-  }, []);
+  }, [selectedGuild?.id]);
 
   const viewChat = async (ticket) => {
     setSelectedTicket(ticket);

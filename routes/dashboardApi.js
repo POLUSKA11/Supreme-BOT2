@@ -714,9 +714,9 @@ router.get('/users', requireAuth, requireGuildAccess, async (req, res) => {
         // Get invite data from database
         const inviteMap = {};
         try {
-            const inviteRows = await query('SELECT user_id, regular, fake, bonus, `left` FROM invites WHERE guild_id = ?', [guild.id]);
+            const inviteRows = await query('SELECT user_id, regular, fake, bonus, left_count FROM invites WHERE guild_id = ?', [guild.id]);
             for (const row of inviteRows) {
-                inviteMap[row.user_id] = (row.regular || 0) - (row.left || 0) - (row.fake || 0) + (row.bonus || 0);
+                inviteMap[row.user_id] = (row.regular || 0) - (row.left_count || 0) - (row.fake || 0) + (row.bonus || 0);
             }
         } catch (e) {
             console.warn('Failed to fetch invite data:', e.message);

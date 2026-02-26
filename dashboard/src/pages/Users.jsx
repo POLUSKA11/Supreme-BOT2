@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function Users() {
+export default function Users({ selectedGuild }) {
   const [users, setUsers] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
   const [loading, setLoading] = useState(true);
@@ -23,7 +23,7 @@ export default function Users() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [selectedGuild?.id]);
 
   useEffect(() => {
     fetchUsers(1, searchTerm);

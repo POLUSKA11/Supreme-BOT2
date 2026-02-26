@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits, ChannelType } = require('discord.js');
 const storage = require('./storage.js');
 
 module.exports = {
@@ -9,13 +9,14 @@ module.exports = {
         .addStringOption(opt => opt.setName('prize').setDescription('The name of the prize for the giveaway').setRequired(true))
         .addStringOption(opt => opt.setName('duration').setDescription('The Duration for the giveaway (e.g., 3w, 2h, 1m 30s)').setRequired(true))
         .addIntegerOption(opt => opt.setName('winners').setDescription('The number of winners').setRequired(true))
-        .addChannelOption(opt => opt.setName('channel').setDescription('Which channel should the giveaway be in').setRequired(true)),
+        .addChannelOption(opt => opt.setName('channel').setDescription('Which channel should the giveaway be in').setRequired(true).addChannelTypes(ChannelType.GuildText)),
 
     async execute(interaction) {
         const prize = interaction.options.getString('prize');
         const durationStr = interaction.options.getString('duration');
         const winnersCount = interaction.options.getInteger('winners');
-        const channel = interaction.options.getChannel('channel');
+        // getChannel returns a partial channel - fetch the full channel object to ensure .send() works
+        const channelOption = interaction.options.getChannel('channel');
 
         function parseDuration(str) {
             const regex = /(\d+)\s*([smhdw])/g;
@@ -38,6 +39,14 @@ module.exports = {
         const durationMs = parseDuration(durationStr);
         if (durationMs <= 0) {
             return interaction.reply({ content: '❌ Invalid duration format! Use something like `1h`, `30m`, or `1d`.', ephemeral: true });
+        }
+
+        // Fetch the full channel object from the guild cache to ensure .send() is available
+        const channel = interaction.guild.channels.cache.get(channelOption.id) 
+            || await interaction.client.channels.fetch(channelOption.id).catch(() => null);
+
+        if (!channel || !channel.isTextBased()) {
+            return interaction.reply({ content: '❌ Could not access the specified channel. Make sure the bot has permission to send messages there.', ephemeral: true });
         }
 
         const endTime = Math.floor((Date.now() + durationMs) / 1000);
@@ -122,10 +131,16 @@ module.exports = {
 
                     await giveawayMsg.edit({ embeds: [endedEmbed], components: [] });
                     
-                    if (winners.length > 0) {
-                        await channel.send(`Congratulations ${winnersText}! You won the **${prize}**!`);
-                    } else {
-                        await channel.send(`The giveaway for **${prize}** has ended, but no one participated.`);
+                    // Re-fetch channel in case it was evicted from cache
+                    const endChannel = interaction.guild.channels.cache.get(channel.id)
+                        || await interaction.client.channels.fetch(channel.id).catch(() => null);
+                    
+                    if (endChannel) {
+                        if (winners.length > 0) {
+                            await endChannel.send(`🎉 Congratulations ${winnersText}! You won the **${prize}**!`);
+                        } else {
+                            await endChannel.send(`The giveaway for **${prize}** has ended, but no one participated.`);
+                        }
                     }
 
                     // Update metadata to ended
@@ -143,7 +158,7 @@ module.exports = {
 
         } catch (error) {
             console.error('Giveaway Send Error:', error);
-            await interaction.reply({ content: '❌ Failed to send giveaway message.', ephemeral: true });
+            await interaction.reply({ content: '❌ Failed to send giveaway message. Make sure the bot has permission to send messages in that channel.', ephemeral: true });
         }
     }
 };
