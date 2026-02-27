@@ -393,9 +393,9 @@ async function buildStaffEmbed(guild, staffInfo) {
         .setTitle('✅ Nexus Officials')
         .setDescription(
             `Welcome to the **only official verification hub** of Nexus MM.\n` +
-            `Before you trust any server, account, or "Nexus / SMMP" tag, always check this message first.\n\n` +
-            `The "Nexus / SMMP" tag is public – anyone can use it.\n` +
-            `Having "Nexus", "SMMP" or similar in a name or status does not make a user trusted or staff.\n` +
+            `Before you trust any server, account, or "Nexus / NMMP" tag, always check this message first.\n\n` +
+            `The "Nexus / NMMP" tag is public – anyone can use it.\n` +
+            `Having "Nexus", "NMMP" or similar in a name or status does not make a user trusted or staff.\n` +
             `Only what is listed in this embed is considered official.`
         )
         .setTimestamp()

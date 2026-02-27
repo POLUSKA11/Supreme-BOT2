@@ -14,15 +14,15 @@ export default function TicketSetup({ selectedGuild }) {
   const [embedTitle, setEmbedTitle] = useState('💸 Middleman Tickets');
   const [embedDescription, setEmbedDescription] = useState(
     '📌 **Important**\n' +
-    'Only open a ticket when both trading parties have agreed to use a SM MM.\n' +
+    'Only open a ticket when both trading parties have agreed to use a NM MM.\n' +
     'Repeated misuse or spam tickets may lead to temporary or permanent restrictions.\n\n' +
     '⚠️ **Ticket Policy & Requirements**\n' +
-    '• SM provides a structured, documented process – not a guarantee, insurance, or refund service.\n' +
-    '• All protection applies only to trades handled inside official SM tickets with verified staff.\n' +
+    '• NM provides a structured, documented process – not a guarantee, insurance, or refund service.\n' +
+    '• All protection applies only to trades handled inside official NM tickets with verified staff.\n' +
     '• Trades in DMs, group chats, or other servers are 100% at your own risk.\n' +
     '• Staff may delay, decline, or cancel any trade that fails verification or looks unsafe.\n' +
-    '• Do not send items, accounts, or payments until a SM staff member clearly confirms both sides and tells you when to start.\n\n' +
-    '💸 **Here is the SM server\'s official MM tipping policy (Mandatory)**\n' +
+    '• Do not send items, accounts, or payments until a NM staff member clearly confirms both sides and tells you when to start.\n\n' +
+    '💸 **Here is the NM server\'s official MM tipping policy (Mandatory)**\n' +
     '**Item for Item trades 🏷️:**\n' +
     '• FREE for everyone no matter how big the trade, or how small either.\n' +
     '**Item For Money trades 💸:**\n' +
