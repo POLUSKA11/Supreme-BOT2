@@ -60,7 +60,7 @@ module.exports = {
             .setThumbnail(guild.iconURL({ dynamic: true }))
             .setDescription(lines.join('\n'))
             .setFooter({
-                text: `Page ${page + 1} of ${totalPages} • Supreme Leveling System`,
+                text: `Page ${page + 1} of ${totalPages} • Nexus Leveling System`,
                 iconURL: interaction.client.user.displayAvatarURL(),
             })
             .setTimestamp();

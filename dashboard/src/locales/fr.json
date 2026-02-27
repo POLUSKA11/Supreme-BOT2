@@ -55,7 +55,7 @@
   "dashboard": {
     "title": "Aperçu du système",
     "subtitle": "Performances en temps réel et métriques communautaires pour",
-    "welcome": "Bienvenue sur Supreme Dashboard",
+    "welcome": "Bienvenue sur Nexus Dashboard",
     "selectServerMessage": "Veuillez sélectionner un serveur dans la barre latérale pour afficher ses statistiques et gérer ses paramètres.",
     "selectServerCta": "Sélectionnez un serveur pour commencer",
     "botUptime": "Temps de fonctionnement du bot",

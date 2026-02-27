@@ -12,7 +12,7 @@ client.once('ready', async () => {
     
     try {
         // Read the banner image
-        const bannerPath = path.join(__dirname, 'supreme_bot_banner.gif');
+        const bannerPath = path.join(__dirname, 'nexus_bot_banner.gif');
         const bannerBuffer = fs.readFileSync(bannerPath);
         const bannerBase64 = `data:image/gif;base64,${bannerBuffer.toString('base64')}`;
         

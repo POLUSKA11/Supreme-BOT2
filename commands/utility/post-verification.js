@@ -15,7 +15,7 @@ const INVITE_LINK = 'https://discord.gg/smmp';
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('post-verification')
-        .setDescription('Post/update official Supreme verification embed with staff list')
+        .setDescription('Post/update official Nexus verification embed with staff list')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .addChannelOption(option =>
             option.setName('channel')
@@ -48,25 +48,25 @@ module.exports = {
             // Build the embed
             const embed = new EmbedBuilder()
                 .setColor('#00FF00')
-                .setTitle('✅ Supreme Officials')
+                .setTitle('✅ Nexus Officials')
                 .setDescription(
-                    `Welcome to the **only official verification hub** of Supreme MM.\n` +
-                    `Before you trust any server, account, or "Supreme / SMMP" tag, always check this message first.\n\n` +
-                    `The "Supreme / SMMP" tag is public – anyone can use it.\n` +
-                    `Having "Supreme", "SMMP" or similar in a name or status does not make a user trusted or staff.\n` +
+                    `Welcome to the **only official verification hub** of Nexus MM.\n` +
+                    `Before you trust any server, account, or "Nexus / SMMP" tag, always check this message first.\n\n` +
+                    `The "Nexus / SMMP" tag is public – anyone can use it.\n` +
+                    `Having "Nexus", "SMMP" or similar in a name or status does not make a user trusted or staff.\n` +
                     `Only what is listed in this embed is considered official.`
                 )
                 .setTimestamp()
-                .setFooter({ text: 'Supreme MM Verification System' });
+                .setFooter({ text: 'Nexus MM Verification System' });
 
             // Add server info
             embed.addFields({
-                name: '🌐 Official Supreme MM Server',
+                name: '🌐 Official Nexus MM Server',
                 value: 
-                    `**Official Supreme Invite:** ${INVITE_LINK}\n` +
-                    `**Official Supreme MM Server ID:** ${SERVER_ID}\n` +
+                    `**Official Nexus Invite:** ${INVITE_LINK}\n` +
+                    `**Official Nexus MM Server ID:** ${SERVER_ID}\n` +
                     `All official Middleman cases are handled **exclusively** on this server,\n` +
-                    `with verified Supreme MM staff and through the official ticket system.`,
+                    `with verified Nexus MM staff and through the official ticket system.`,
                 inline: false
             });
 

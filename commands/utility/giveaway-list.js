@@ -2,7 +2,7 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('disc
 const storage = require('./storage.js');
 
 /**
- * SUPREME GIVEAWAY LIST COMMAND
+ * NEXUS GIVEAWAY LIST COMMAND
  * - Lists all active giveaways in the server
  * - Deeper validation: Checks message existence, buttons, AND embed content
  * - Automatically cleans up ended/deleted giveaways from the list
@@ -84,7 +84,7 @@ module.exports = {
             .setTitle('\u{1F389} Active Giveaways')
             .setDescription(`Here are the currently running giveaways:\n\n${list}`)
             .setColor('#5865F2')
-            .setFooter({ text: 'Supreme Bot \u00B7 Deep Validation Active', iconURL: interaction.client.user.displayAvatarURL() })
+            .setFooter({ text: 'Nexus Bot \u00B7 Deep Validation Active', iconURL: interaction.client.user.displayAvatarURL() })
             .setTimestamp();
 
         return interaction.editReply({ embeds: [embed] });

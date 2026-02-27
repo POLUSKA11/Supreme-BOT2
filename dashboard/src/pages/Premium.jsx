@@ -28,9 +28,9 @@ const PLANS = [
     name: 'Pro',
     price: 4.99,
     period: '/month',
-    color: 'from-indigo-600 to-purple-600',
-    borderColor: 'border-indigo-500/30',
-    glowColor: 'shadow-indigo-500/20',
+    color: 'from-red-600 to-purple-600',
+    borderColor: 'border-red-500/30',
+    glowColor: 'shadow-red-500/20',
     badge: 'POPULAR',
     features: [
       { text: 'Everything in Free', included: true },
@@ -185,7 +185,7 @@ function PaymentInfoModal({ show, onClose, type, data, plan }) {
             <div className="bg-white/5 rounded-2xl border border-white/10 p-5 mb-6">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-slate-400 text-sm">Plan</span>
-                <span className="text-white font-bold">{data?.description || `Supreme Bot ${plan?.name} Plan`}</span>
+                <span className="text-white font-bold">{data?.description || `Nexus Bot ${plan?.name} Plan`}</span>
               </div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-slate-400 text-sm">Duration</span>
@@ -435,16 +435,16 @@ export default function Premium({ selectedGuild }) {
           Upgrade to <span className="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">Premium</span>
         </h1>
         <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-          Unlock the full power of Supreme Bot with premium features, unlimited access, and priority support.
+          Unlock the full power of Nexus Bot with premium features, unlimited access, and priority support.
         </p>
       </div>
 
       {/* Current Plan Badge */}
       {currentPlan !== 'free' && (
         <div className="mb-8 flex justify-center">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 rounded-2xl">
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-red-600/20 to-purple-600/20 border border-red-500/30 rounded-2xl">
             <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)] animate-pulse" />
-            <span className="text-white font-medium">Current Plan: <span className="text-indigo-400 font-bold capitalize">{currentPlan}</span></span>
+            <span className="text-white font-medium">Current Plan: <span className="text-red-400 font-bold capitalize">{currentPlan}</span></span>
             {premiumStatus?.expiresAt && (
               <span className="text-slate-400 text-sm">Renews {new Date(premiumStatus.expiresAt).toLocaleDateString()}</span>
             )}
@@ -458,7 +458,7 @@ export default function Premium({ selectedGuild }) {
           <div
             key={plan.id}
             className={`relative bg-slate-800/50 backdrop-blur-xl rounded-3xl border ${plan.borderColor} p-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl ${plan.glowColor} ${
-              plan.badge === 'POPULAR' ? 'ring-2 ring-indigo-500/50' : ''
+              plan.badge === 'POPULAR' ? 'ring-2 ring-red-500/50' : ''
             }`}
           >
             {plan.badge && (
@@ -507,7 +507,7 @@ export default function Premium({ selectedGuild }) {
                   ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-default'
                   : plan.id === 'free'
                   ? 'bg-slate-700/50 text-slate-400 cursor-default'
-                  : `bg-gradient-to-r ${plan.color} text-white hover:shadow-lg hover:shadow-indigo-500/25 hover:scale-[1.02]`
+                  : `bg-gradient-to-r ${plan.color} text-white hover:shadow-lg hover:shadow-red-500/25 hover:scale-[1.02]`
               }`}
             >
               {plan.id === currentPlan ? 'Current Plan' : plan.id === 'free' ? 'Free Forever' : `Upgrade to ${plan.name}`}
@@ -559,7 +559,7 @@ export default function Premium({ selectedGuild }) {
             { q: 'Is my payment secure?', a: 'Yes, all payments are processed through PayPal, Stripe, or Binance Pay - industry-leading payment providers with bank-level encryption.' },
           ].map((faq, i) => (
             <details key={i} className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 group">
-              <summary className="p-5 cursor-pointer text-white font-medium flex items-center justify-between hover:text-indigo-400 transition-colors">
+              <summary className="p-5 cursor-pointer text-white font-medium flex items-center justify-between hover:text-red-400 transition-colors">
                 {faq.q}
                 <svg className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
               </summary>

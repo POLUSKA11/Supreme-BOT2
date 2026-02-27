@@ -108,8 +108,8 @@ export default function WelcomeSetup() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="relative w-16 h-16">
-          <div className="absolute top-0 left-0 w-full h-full border-4 border-indigo-500/20 rounded-full"></div>
-          <div className="absolute top-0 left-0 w-full h-full border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="absolute top-0 left-0 w-full h-full border-4 border-red-500/20 rounded-full"></div>
+          <div className="absolute top-0 left-0 w-full h-full border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       </div>
     );
@@ -139,7 +139,7 @@ export default function WelcomeSetup() {
               <h2 className="text-xl font-bold text-white">Message Customization</h2>
               <button
                 onClick={() => setShowVariables(!showVariables)}
-                className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors font-medium"
+                className="text-sm text-red-400 hover:text-red-300 transition-colors font-medium"
               >
                 {showVariables ? 'Hide' : 'Show'} Variables
               </button>
@@ -147,20 +147,20 @@ export default function WelcomeSetup() {
 
             {/* Variables Info */}
             {showVariables && (
-              <div className="mb-6 bg-indigo-500/10 border border-indigo-500/20 rounded-xl p-4">
-                <h3 className="text-sm font-semibold text-indigo-300 mb-3">Available Variables:</h3>
+              <div className="mb-6 bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+                <h3 className="text-sm font-semibold text-red-300 mb-3">Available Variables:</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-start gap-2">
-                    <code className="bg-slate-900/50 px-2 py-1 rounded text-indigo-300 font-mono text-xs">{'{username}'}</code>
+                    <code className="bg-slate-900/50 px-2 py-1 rounded text-red-300 font-mono text-xs">{'{username}'}</code>
                     <span className="text-slate-400">- User's display name (e.g., FocusedOVP)</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <code className="bg-slate-900/50 px-2 py-1 rounded text-indigo-300 font-mono text-xs">{'{user}'}</code>
+                    <code className="bg-slate-900/50 px-2 py-1 rounded text-red-300 font-mono text-xs">{'{user}'}</code>
                     <span className="text-slate-400">- User mention (e.g., @FocusedOVP)</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <code className="bg-slate-900/50 px-2 py-1 rounded text-indigo-300 font-mono text-xs">{'{serverName}'}</code>
-                    <span className="text-slate-400">- Server name (e.g., Supreme ! MM)</span>
+                    <code className="bg-slate-900/50 px-2 py-1 rounded text-red-300 font-mono text-xs">{'{serverName}'}</code>
+                    <span className="text-slate-400">- Server name (e.g., Nexus ! MM)</span>
                   </div>
                 </div>
               </div>
@@ -174,7 +174,7 @@ export default function WelcomeSetup() {
               <select
                 value={config.channelId}
                 onChange={(e) => setConfig({ ...config, channelId: e.target.value })}
-                className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 <option value="">Select a channel</option>
                 {channels.map((channel) => (
@@ -198,7 +198,7 @@ export default function WelcomeSetup() {
                     onChange={(e) => setConfig({ ...config, enabled: e.target.checked })}
                     className="sr-only"
                   />
-                  <div className={`w-11 h-6 rounded-full transition-colors ${config.enabled ? 'bg-green-500' : 'bg-slate-700'}`}>
+                  <div className={`w-11 h-6 rounded-full transition-colors ${config.enabled ? 'bg-red-500' : 'bg-slate-700'}`}>
                     <div className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${config.enabled ? 'translate-x-5' : ''}`}></div>
                   </div>
                 </div>
@@ -209,13 +209,13 @@ export default function WelcomeSetup() {
             {/* Bot Name */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-slate-300 mb-2">
-                Supreme bot
+                Nexus bot
               </label>
               <div className="flex items-center gap-3 bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3">
-                <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center font-bold shadow-lg shadow-indigo-500/20">
+                <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center font-bold shadow-lg shadow-red-500/20">
                   S
                 </div>
-                <span className="text-white font-medium">Supreme Bot</span>
+                <span className="text-white font-medium">Nexus Bot</span>
               </div>
             </div>
 
@@ -229,7 +229,7 @@ export default function WelcomeSetup() {
                 value={config.title}
                 onChange={(e) => setConfig({ ...config, title: e.target.value })}
                 placeholder="Welcome {username}"
-                className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
 
@@ -243,7 +243,7 @@ export default function WelcomeSetup() {
                 onChange={(e) => setConfig({ ...config, description: e.target.value })}
                 placeholder="Step 1 - Read rules...\nStep 2 - Reach out..."
                 rows={6}
-                className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
               />
             </div>
 
@@ -257,7 +257,7 @@ export default function WelcomeSetup() {
                 value={config.bannerUrl}
                 onChange={(e) => setConfig({ ...config, bannerUrl: e.target.value })}
                 placeholder="https://example.com/banner.gif"
-                className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
 
@@ -265,7 +265,7 @@ export default function WelcomeSetup() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="w-full gradient-bg hover:opacity-90 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-xl shadow-indigo-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full gradient-bg hover:opacity-90 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-xl shadow-red-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? (
                 <>
@@ -296,13 +296,13 @@ export default function WelcomeSetup() {
             <div className="bg-[#313338] rounded-lg p-4">
               {/* Bot header */}
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center font-bold shadow-lg shadow-indigo-500/20">
+                <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center font-bold shadow-lg shadow-red-500/20">
                   S
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-white font-semibold">Supreme Bot</span>
-                    <span className="bg-indigo-500 text-white text-xs px-1.5 py-0.5 rounded font-semibold">APP</span>
+                    <span className="text-white font-semibold">Nexus Bot</span>
+                    <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded font-semibold">APP</span>
                   </div>
                   <span className="text-xs text-slate-400">{new Date().toLocaleString()}</span>
                 </div>
@@ -310,11 +310,11 @@ export default function WelcomeSetup() {
 
               {/* Welcome message content */}
               <div className="mb-3">
-                <span className="text-white">@FocusedOVP Welcome To Supreme ! MM</span>
+                <span className="text-white">@FocusedOVP Welcome To Nexus ! MM</span>
               </div>
 
               {/* Embed */}
-              <div className="border-l-4 border-green-500 bg-[#2b2d31] rounded p-4">
+              <div className="border-l-4 border-red-500 bg-[#2b2d31] rounded p-4">
                 {config.title && (
                   <div className="text-white font-semibold mb-2">
                     {replaceVariables(config.title)}
@@ -339,7 +339,7 @@ export default function WelcomeSetup() {
                 )}
                 <div className="flex items-center gap-2 mt-3 pt-3 border-t border-white/5">
                   <div className="w-5 h-5 rounded-full bg-slate-700"></div>
-                  <span className="text-xs text-slate-400">Thank you for choosing Supreme ! MM!</span>
+                  <span className="text-xs text-slate-400">Thank you for choosing Nexus ! MM!</span>
                 </div>
               </div>
             </div>

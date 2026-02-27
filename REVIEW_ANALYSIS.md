@@ -1,8 +1,8 @@
-# SUPREME-BOT2 Repository Review & Analysis
+# NEXUS-BOT2 Repository Review & Analysis
 
 ## Repository Overview
 
-**Repository:** FocusedOVPDiscord/Supreme-BOT2  
+**Repository:** FocusedOVPDiscord/Nexus-BOT2  
 **Type:** Discord Bot with Web Dashboard  
 **Tech Stack:**
 - **Backend:** Node.js, Express, Discord.js
@@ -30,7 +30,7 @@
 #### Session Configuration:
 ```javascript
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'supreme-bot-secret-key-change-in-production',
+    secret: process.env.SESSION_SECRET || 'nexus-bot-secret-key-change-in-production',
     resave: false,
     saveUninitialized: false,
     cookie: { 

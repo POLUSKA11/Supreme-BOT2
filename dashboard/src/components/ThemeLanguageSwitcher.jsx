@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next';
 
 export default function ThemeLanguageSwitcher() {
   const { i18n } = useTranslation();
-  const [theme, setTheme] = useState(localStorage.getItem('supreme-theme') || 'dark');
-  const [language, setLanguage] = useState(localStorage.getItem('supreme-language') || 'en');
+  const [theme, setTheme] = useState(localStorage.getItem('nexus-theme') || 'dark');
+  const [language, setLanguage] = useState(localStorage.getItem('nexus-language') || 'en');
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 
   useEffect(() => {
     // Apply theme
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('supreme-theme', theme);
+    localStorage.setItem('nexus-theme', theme);
   }, [theme]);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function ThemeLanguageSwitcher() {
     i18n.changeLanguage(language);
     document.documentElement.setAttribute('lang', language);
     document.documentElement.setAttribute('dir', language === 'ar' ? 'rtl' : 'ltr');
-    localStorage.setItem('supreme-language', language);
+    localStorage.setItem('nexus-language', language);
   }, [language, i18n]);
 
   const toggleTheme = () => {
@@ -45,7 +45,7 @@ export default function ThemeLanguageSwitcher() {
       {/* Theme Toggle */}
       <button
         onClick={toggleTheme}
-        className="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/20 group"
+        className="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-red-500/10 to-purple-500/10 border border-red-500/20 hover:border-red-500/40 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/20 group"
         title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
       >
         {theme === 'dark' ? (
@@ -53,7 +53,7 @@ export default function ThemeLanguageSwitcher() {
             <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
           </svg>
         ) : (
-          <svg className="w-5 h-5 text-indigo-400 group-hover:text-indigo-300 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors" fill="currentColor" viewBox="0 0 20 20">
             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
           </svg>
         )}
@@ -63,12 +63,12 @@ export default function ThemeLanguageSwitcher() {
       <div className="relative flex-1">
         <button
           onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-          className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-indigo-500/20 group"
+          className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl bg-gradient-to-br from-red-500/10 to-purple-500/10 border border-red-500/20 hover:border-red-500/40 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-red-500/20 group"
         >
           <div className="flex items-center gap-2">
             {/* Globe Icon */}
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500/30 to-purple-500/30 flex items-center justify-center">
-              <svg className="w-4 h-4 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-red-500/30 to-purple-500/30 flex items-center justify-center">
+              <svg className="w-4 h-4 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
               </svg>
             </div>
@@ -96,14 +96,14 @@ export default function ThemeLanguageSwitcher() {
             />
             
             {/* Menu */}
-            <div className="absolute left-0 right-0 mt-2 rounded-xl bg-slate-800/95 backdrop-blur-xl border border-indigo-500/20 shadow-2xl shadow-black/50 z-50 overflow-hidden">
+            <div className="absolute left-0 right-0 mt-2 rounded-xl bg-slate-800/95 backdrop-blur-xl border border-red-500/20 shadow-2xl shadow-black/50 z-50 overflow-hidden">
               {languages.map((lang, index) => (
                 <button
                   key={lang.code}
                   onClick={() => changeLanguage(lang.code)}
                   className={`w-full flex items-center gap-3 px-4 py-3 transition-all duration-200 ${
                     language === lang.code 
-                      ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border-l-2 border-indigo-500' 
+                      ? 'bg-gradient-to-r from-red-500/20 to-purple-500/20 border-l-2 border-red-500' 
                       : 'hover:bg-white/5'
                   } ${index !== languages.length - 1 ? 'border-b border-white/5' : ''}`}
                 >
@@ -117,7 +117,7 @@ export default function ThemeLanguageSwitcher() {
                     <div className="text-xs text-slate-400">{lang.code.toUpperCase()}</div>
                   </div>
                   {language === lang.code && (
-                    <svg className="w-5 h-5 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   )}

@@ -81,7 +81,7 @@ async function generateAndSendTranscript(channel, closedBy, ticketData = {}) {
         // Create professional embed
         const embed = new EmbedBuilder()
             .setAuthor({ 
-                name: 'Supreme Ticket System', 
+                name: 'Nexus Ticket System', 
                 iconURL: guild.iconURL() || 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663279443187/quPXEUrjrufgRMwQ.webp'
             })
             .setTitle(`📋 Ticket #${ticketNumber} - Transcript`)
@@ -119,7 +119,7 @@ async function generateAndSendTranscript(channel, closedBy, ticketData = {}) {
                 }
             )
             .setTimestamp()
-            .setFooter({ text: 'Supreme Middleman Service', iconURL: guild.iconURL() });
+            .setFooter({ text: 'Nexus Middleman Service', iconURL: guild.iconURL() });
 
         // Add trade details if available
         if (ticketData.partner || ticketData.type || ticketData.details) {
@@ -191,7 +191,7 @@ function generateTextTranscript(ticketNumber, creator, closedBy, createdAt, clos
     
     // Header
     transcript += '═══════════════════════════════════════════════════════════════\n';
-    transcript += '                    SUPREME MIDDLEMAN SERVICE                    \n';
+    transcript += '                    NEXUS MIDDLEMAN SERVICE                    \n';
     transcript += '                      TICKET TRANSCRIPT                          \n';
     transcript += '═══════════════════════════════════════════════════════════════\n\n';
     

@@ -259,7 +259,7 @@ if (voiceChannel && !voiceChannel.name.includes("'s Room")) {
 
 ### 1. Commit and Push Changes
 ```bash
-cd /path/to/Supreme-BOT2
+cd /path/to/Nexus-BOT2
 git add index.js events/voiceStateUpdate.js events/interactionCreate.js
 git commit -m "Fix: Add GuildVoiceStates intent and improve deployment stability"
 git push origin main

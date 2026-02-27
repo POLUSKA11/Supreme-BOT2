@@ -59,7 +59,7 @@ module.exports = {
                 const embed = new EmbedBuilder()
                     .setTitle('Invites Leaderboard')
                     .setColor('#2F3136')
-                    .setFooter({ text: `Supreme Bot • Page ${page + 1} of ${totalPages}` })
+                    .setFooter({ text: `Nexus Bot • Page ${page + 1} of ${totalPages}` })
                     .setTimestamp();
 
                 let description = "";

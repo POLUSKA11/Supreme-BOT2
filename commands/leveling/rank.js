@@ -80,7 +80,7 @@ module.exports = {
         }
 
         embed
-            .setFooter({ text: 'Supreme Leveling System', iconURL: interaction.client.user.displayAvatarURL() })
+            .setFooter({ text: 'Nexus Leveling System', iconURL: interaction.client.user.displayAvatarURL() })
             .setTimestamp();
 
         await interaction.editReply({ embeds: [embed] });

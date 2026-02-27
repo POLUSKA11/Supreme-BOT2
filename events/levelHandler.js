@@ -1,6 +1,6 @@
 /**
  * ============================================================
- *  SUPREME BOT 2 — Level Handler Event
+ *  NEXUS BOT 2 — Level Handler Event
  *  Hooks into every message to award XP, announce level-ups,
  *  and assign reward roles automatically.
  * ============================================================
@@ -142,7 +142,7 @@ module.exports = {
             }
 
             embed.setFooter({
-                text: `Supreme Leveling System • Total XP: ${result.newXp.toLocaleString()}`,
+                text: `Nexus Leveling System • Total XP: ${result.newXp.toLocaleString()}`,
                 iconURL: message.client.user.displayAvatarURL(),
             }).setTimestamp();
 

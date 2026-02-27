@@ -1,6 +1,6 @@
 /**
  * ============================================================
- *  SUPREME BOT 2 — Leveling API Routes
+ *  NEXUS BOT 2 — Leveling API Routes
  *  Provides REST endpoints for the dashboard to manage
  *  the leveling system without touching existing APIs.
  * ============================================================

@@ -9,16 +9,16 @@ module.exports = {
         
         const helpEmbed = new EmbedBuilder()
             .setAuthor({ 
-                name: 'Supreme Support', 
+                name: 'Nexus Support', 
                 iconURL: client.user.displayAvatarURL() 
             })
             .setTitle('Bot Command Directory')
-            .setDescription('Welcome to the **Supreme** command menu. Below you will find all available commands categorized by their functionality.')
+            .setDescription('Welcome to the **Nexus** command menu. Below you will find all available commands categorized by their functionality.')
             .setColor('#00FFFF')
             .addFields(
                 { 
                     name: '🛡️ Information & Support', 
-                    value: '• `/help` - Show this menu\n• `/about` - Information about Supreme\n• `/info ping` - Check bot latency\n• `/info server` - Get server information\n• `/info user` - Get user information\n• `/info avatar` - Get a user\'s avatar',
+                    value: '• `/help` - Show this menu\n• `/about` - Information about Nexus\n• `/info ping` - Check bot latency\n• `/info server` - Get server information\n• `/info user` - Get user information\n• `/info avatar` - Get a user\'s avatar',
                     inline: false 
                 },
                 { 
@@ -42,7 +42,7 @@ module.exports = {
                     inline: false
                 }
             )
-            .setFooter({ text: 'Supreme | Professional Discord Solutions', iconURL: client.user.displayAvatarURL() })
+            .setFooter({ text: 'Nexus | Professional Discord Solutions', iconURL: client.user.displayAvatarURL() })
             .setTimestamp();
 
         await interaction.reply({ embeds: [helpEmbed] });

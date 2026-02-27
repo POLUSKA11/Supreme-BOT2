@@ -1,6 +1,6 @@
 /**
  * ============================================================
- *  SUPREME BOT 2 — Level System Core
+ *  NEXUS BOT 2 — Level System Core
  *  Handles XP tracking, level calculation, cooldowns,
  *  and role reward assignment.
  * ============================================================

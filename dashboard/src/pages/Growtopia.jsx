@@ -205,7 +205,7 @@ export default function Growtopia() {
                 </div>
                 <div className="bg-gray-700 rounded p-3">
                   <div className="text-gray-400 text-xs">Risk Level</div>
-                  <div className={`text-xl font-bold ${itemDetails.analysis.stats.riskLevel === 'High' ? 'text-red-400' : itemDetails.analysis.stats.riskLevel === 'Medium' ? 'text-yellow-400' : 'text-green-400'}`}>
+                  <div className={`text-xl font-bold ${itemDetails.analysis.stats.riskLevel === 'High' ? 'text-red-400' : itemDetails.analysis.stats.riskLevel === 'Medium' ? 'text-yellow-400' : 'text-red-400'}`}>
                     {itemDetails.analysis.stats.riskLevel}
                   </div>
                 </div>

@@ -99,10 +99,10 @@ def create_frame(frame_num, total_frames):
         font_large = ImageFont.load_default()
         font_small = ImageFont.load_default()
     
-    # Draw "SUPREME" text with gold color and glow
+    # Draw "NEXUS" text with gold color and glow
     text_glow = int(50 + 50 * abs(math.sin(progress * 2 * math.pi)))
-    supreme_color = (255, 215 - text_glow, 0)  # Gold color
-    draw.text((50, 70), "SUPREME", fill=supreme_color, font=font_large)
+    nexus_color = (255, 50, 50)  # Gold color
+    draw.text((50, 70), "NEXUS", fill=(255, 0, 0), font=font_large)
     
     # Draw "MIDDLEMAN SERVICES" text
     draw.text((50, 145), "MIDDLEMAN SERVICES", fill=(200, 220, 255), font=font_small)
@@ -120,7 +120,7 @@ for i in range(FRAMES):
 # Save as animated GIF
 print("Saving animated GIF...")
 frames[0].save(
-    '/home/ubuntu/Supreme-BOT2/supreme_bot_banner.gif',
+    '/home/ubuntu/Nexus-BOT2/nexus_bot_banner.gif',
     save_all=True,
     append_images=frames[1:],
     duration=100,  # 100ms per frame = 10 FPS
@@ -128,4 +128,4 @@ frames[0].save(
     optimize=True
 )
 
-print("✅ Animated banner created: supreme_bot_banner.gif")
+print("✅ Animated banner created: nexus_bot_banner.gif")

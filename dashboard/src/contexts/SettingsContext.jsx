@@ -14,7 +14,7 @@ export const useSettings = () => {
 export const SettingsProvider = ({ children }) => {
   // Load settings from localStorage or use defaults
   const [settings, setSettings] = useState(() => {
-    const saved = localStorage.getItem('supreme-bot-settings');
+    const saved = localStorage.getItem('nexus-bot-settings');
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -38,7 +38,7 @@ export const SettingsProvider = ({ children }) => {
 
   // Save settings to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('supreme-bot-settings', JSON.stringify(settings));
+    localStorage.setItem('nexus-bot-settings', JSON.stringify(settings));
     
     // Apply theme
     document.documentElement.setAttribute('data-theme', settings.theme);

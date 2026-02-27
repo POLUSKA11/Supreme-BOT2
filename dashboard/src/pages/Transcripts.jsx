@@ -36,16 +36,16 @@ export default function Transcripts({ selectedGuild }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {transcripts.map((transcript, index) => (
-          <div key={index} className="glass rounded-3xl p-6 border border-white/5 hover:border-indigo-500/30 transition-all group">
+          <div key={index} className="glass rounded-3xl p-6 border border-white/5 hover:border-red-500/30 transition-all group">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+              <div className="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-400">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
               </div>
               <span className="px-3 py-1 rounded-lg bg-slate-500/10 text-slate-400 text-xs font-bold border border-slate-500/20 uppercase">
                 Closed
               </span>
             </div>
-            <h3 className="text-xl font-bold text-white mb-1 group-hover:text-indigo-400 transition-colors">Ticket #{transcript.user}</h3>
+            <h3 className="text-xl font-bold text-white mb-1 group-hover:text-red-400 transition-colors">Ticket #{transcript.user}</h3>
             <p className="text-slate-500 text-sm mb-4">Closed on {new Date(transcript.closed_at).toLocaleDateString()}</p>
             <button 
               onClick={() => {
@@ -87,7 +87,7 @@ export default function Transcripts({ selectedGuild }) {
                 selectedTranscript.messages.map((msg, i) => (
                   <div key={i} className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-sm text-indigo-400">{msg.author}</span>
+                      <span className="font-bold text-sm text-red-400">{msg.author}</span>
                       <span className="text-[10px] text-slate-500">{new Date(msg.timestamp).toLocaleString()}</span>
                     </div>
                     <div className="text-slate-300 text-sm leading-relaxed break-words whitespace-pre-wrap bg-white/5 p-3 rounded-xl border border-white/5">

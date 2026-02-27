@@ -90,8 +90,8 @@ function App() {
     return (
       <div className="flex items-center justify-center h-screen bg-[#0f172a]">
         <div className="relative w-20 h-20">
-          <div className="absolute top-0 left-0 w-full h-full border-4 border-indigo-500/20 rounded-full"></div>
-          <div className="absolute top-0 left-0 w-full h-full border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="absolute top-0 left-0 w-full h-full border-4 border-red-500/20 rounded-full"></div>
+          <div className="absolute top-0 left-0 w-full h-full border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       </div>
     );
@@ -167,8 +167,8 @@ function App() {
                           </svg>
                         </button>
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-lg bg-black flex items-center justify-center shadow-lg shadow-green-500/20 overflow-hidden">
-                            <img src="/logo.webp" alt="SM" className="w-full h-full object-cover" />
+                          <div className="w-7 h-7 rounded-lg bg-black flex items-center justify-center shadow-lg shadow-red-500/20 overflow-hidden">
+                            <img src="/logo.webp" alt="NM" className="w-full h-full object-cover" />
                           </div>
                           <span className="text-white font-bold text-sm">{selectedGuild.name}</span>
                         </div>

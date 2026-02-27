@@ -129,7 +129,7 @@ export default function TicketSetup({ selectedGuild }) {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">
-          <span className="text-indigo-400">Ticket</span> Setup
+          <span className="text-red-400">Ticket</span> Setup
         </h1>
         <p className="text-slate-400">Configure and deploy your ticket panel with a live embed preview.</p>
       </div>
@@ -154,7 +154,7 @@ export default function TicketSetup({ selectedGuild }) {
           {/* Channel Selection */}
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" /></svg>
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" /></svg>
               Channel Configuration
             </h2>
 
@@ -164,7 +164,7 @@ export default function TicketSetup({ selectedGuild }) {
                 <select
                   value={selectedChannel}
                   onChange={(e) => setSelectedChannel(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all"
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all"
                 >
                   <option value="">Select a channel...</option>
                   {channels.map(ch => (
@@ -179,7 +179,7 @@ export default function TicketSetup({ selectedGuild }) {
                 <select
                   value={ticketCategory}
                   onChange={(e) => setTicketCategory(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all"
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all"
                 >
                   <option value="">Select a category...</option>
                   {categories.map(ch => (
@@ -194,7 +194,7 @@ export default function TicketSetup({ selectedGuild }) {
           {/* Embed Configuration */}
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" /></svg>
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" /></svg>
               Embed Configuration
             </h2>
 
@@ -205,7 +205,7 @@ export default function TicketSetup({ selectedGuild }) {
                   type="text"
                   value={embedTitle}
                   onChange={(e) => setEmbedTitle(e.target.value)}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all"
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all"
                   placeholder="Embed title..."
                 />
               </div>
@@ -216,7 +216,7 @@ export default function TicketSetup({ selectedGuild }) {
                   value={embedDescription}
                   onChange={(e) => setEmbedDescription(e.target.value)}
                   rows={10}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all resize-none font-mono text-sm"
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all resize-none font-mono text-sm"
                   placeholder="Embed description (supports **bold** and markdown)..."
                 />
               </div>
@@ -235,7 +235,7 @@ export default function TicketSetup({ selectedGuild }) {
                       type="text"
                       value={embedColor}
                       onChange={(e) => setEmbedColor(e.target.value)}
-                      className="flex-1 bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all font-mono"
+                      className="flex-1 bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all font-mono"
                     />
                   </div>
                 </div>
@@ -246,7 +246,7 @@ export default function TicketSetup({ selectedGuild }) {
                     type="text"
                     value={embedImage}
                     onChange={(e) => setEmbedImage(e.target.value)}
-                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-sm"
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all text-sm"
                     placeholder="https://..."
                   />
                 </div>
@@ -257,7 +257,7 @@ export default function TicketSetup({ selectedGuild }) {
           {/* Button Configuration */}
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg>
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg>
               Button & Creation Mode
             </h2>
 
@@ -269,7 +269,7 @@ export default function TicketSetup({ selectedGuild }) {
                     type="text"
                     value={buttonLabel}
                     onChange={(e) => setButtonLabel(e.target.value)}
-                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
                     placeholder="Button text..."
                   />
                 </div>
@@ -280,7 +280,7 @@ export default function TicketSetup({ selectedGuild }) {
                     type="text"
                     value={buttonEmoji}
                     onChange={(e) => setButtonEmoji(e.target.value)}
-                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
                     placeholder="🤝"
                   />
                 </div>
@@ -293,7 +293,7 @@ export default function TicketSetup({ selectedGuild }) {
                 </div>
                 <button
                   onClick={() => setUseModal(!useModal)}
-                  className={`w-12 h-6 rounded-full transition-all duration-300 relative ${useModal ? 'bg-indigo-600' : 'bg-slate-700'}`}
+                  className={`w-12 h-6 rounded-full transition-all duration-300 relative ${useModal ? 'bg-red-600' : 'bg-slate-700'}`}
                 >
                   <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all duration-300 ${useModal ? 'left-7' : 'left-1'}`} />
                 </button>
@@ -304,7 +304,7 @@ export default function TicketSetup({ selectedGuild }) {
           {/* Role Configuration */}
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 01-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 01-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
               Role Permissions
             </h2>
 
@@ -315,7 +315,7 @@ export default function TicketSetup({ selectedGuild }) {
                   {staffRoles.map(roleId => {
                     const role = roles.find(r => r.id === roleId);
                     return (
-                      <span key={roleId} className="px-2 py-1 bg-indigo-500/20 border border-indigo-500/30 rounded text-xs text-indigo-300 flex items-center gap-1">
+                      <span key={roleId} className="px-2 py-1 bg-red-500/20 border border-red-500/30 rounded text-xs text-red-300 flex items-center gap-1">
                         {role?.name || roleId}
                         <button onClick={() => setStaffRoles(staffRoles.filter(id => id !== roleId))} className="hover:text-white">×</button>
                       </span>
@@ -328,7 +328,7 @@ export default function TicketSetup({ selectedGuild }) {
                       setStaffRoles([...staffRoles, e.target.value]);
                     }
                   }}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
                 >
                   <option value="">Add a staff/support role...</option>
                   {roles.map(role => (
@@ -344,7 +344,7 @@ export default function TicketSetup({ selectedGuild }) {
                   multiple
                   value={blacklistRoles}
                   onChange={(e) => setBlacklistRoles(Array.from(e.target.selectedOptions, option => option.value))}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all h-32"
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all h-32"
                 >
                   {roles.map(role => (
                     <option key={role.id} value={role.id}>{role.name}</option>
@@ -358,7 +358,7 @@ export default function TicketSetup({ selectedGuild }) {
           {/* Ticket Content Configuration */}
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
               Ticket Welcome Message
             </h2>
 
@@ -369,7 +369,7 @@ export default function TicketSetup({ selectedGuild }) {
                   value={welcomeMessage}
                   onChange={(e) => setWelcomeMessage(e.target.value)}
                   rows={6}
-                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all resize-none text-sm"
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all resize-none text-sm"
                   placeholder="Message sent when a ticket is opened..."
                 />
                 <p className="text-xs text-slate-500 mt-1">This message appears at the top of every new ticket</p>
@@ -381,7 +381,7 @@ export default function TicketSetup({ selectedGuild }) {
           <button
             onClick={handleDeploy}
             disabled={saving || !selectedChannel}
-            className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all duration-300 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 flex items-center justify-center gap-3"
+            className="w-full py-4 bg-gradient-to-r from-red-600 to-purple-600 hover:from-red-500 hover:to-purple-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all duration-300 shadow-lg shadow-red-500/25 hover:shadow-red-500/40 flex items-center justify-center gap-3"
           >
             {saving ? (
               <>
@@ -400,7 +400,7 @@ export default function TicketSetup({ selectedGuild }) {
         {/* Right: Live Preview */}
         <div className="space-y-4">
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
-            <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+            <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
             Live Preview
           </h2>
 
@@ -413,7 +413,7 @@ export default function TicketSetup({ selectedGuild }) {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-white font-medium text-sm">Supreme</span>
+                  <span className="text-white font-medium text-sm">Nexus</span>
                   <span className="bg-[#5865f2] text-white text-[10px] px-1.5 py-0.5 rounded font-medium">BOT</span>
                   <span className="text-[#949ba4] text-xs">Today at {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
@@ -428,7 +428,7 @@ export default function TicketSetup({ selectedGuild }) {
                       {/* Author */}
                       <div className="flex items-center gap-2 mb-2">
                         <img src="/logo.webp" alt="" className="w-6 h-6 rounded-full" />
-                        <span className="text-white text-sm font-medium">Supreme</span>
+                        <span className="text-white text-sm font-medium">Nexus</span>
                       </div>
 
                       {/* Title */}
@@ -465,7 +465,7 @@ export default function TicketSetup({ selectedGuild }) {
                       {/* Footer */}
                       <div className="mt-3 flex items-center gap-2 text-xs text-[#949ba4]">
                         <img src="/logo.webp" alt="" className="w-5 h-5 rounded-full" />
-                        <span>Supreme Bot</span>
+                        <span>Nexus Bot</span>
                         <span>•</span>
                         <span>{new Date().toLocaleDateString()}</span>
                       </div>
@@ -492,23 +492,23 @@ export default function TicketSetup({ selectedGuild }) {
             </h3>
             <ul className="space-y-2 text-sm text-slate-400">
               <li className="flex items-start gap-2">
-                <span className="text-indigo-400 mt-0.5">1.</span>
+                <span className="text-red-400 mt-0.5">1.</span>
                 Configure the embed message and button above
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-indigo-400 mt-0.5">2.</span>
+                <span className="text-red-400 mt-0.5">2.</span>
                 Select the channel where the panel will be deployed
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-indigo-400 mt-0.5">3.</span>
+                <span className="text-red-400 mt-0.5">3.</span>
                 Optionally set a ticket category for organizing ticket channels
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-indigo-400 mt-0.5">4.</span>
+                <span className="text-red-400 mt-0.5">4.</span>
                 Click "Deploy Ticket Panel" to send it to Discord
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-indigo-400 mt-0.5">5.</span>
+                <span className="text-red-400 mt-0.5">5.</span>
                 Users click the button to create a new ticket
               </li>
             </ul>

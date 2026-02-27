@@ -1,7 +1,7 @@
 # Groq AI Integration Setup
 
 ## Overview
-Supreme Bot now includes Groq AI integration for automatic responses in ticket channels. The AI has conversation memory per user and provides helpful, professional responses.
+Nexus Bot now includes Groq AI integration for automatic responses in ticket channels. The AI has conversation memory per user and provides helpful, professional responses.
 
 ## Features
 - ✅ **Automatic responses** in ticket channels only
@@ -22,7 +22,7 @@ Supreme Bot now includes Groq AI integration for automatic responses in ticket c
 
 ### 2. Add to Koyeb Environment Variables
 1. Go to your Koyeb dashboard
-2. Select your Supreme-bot2 service
+2. Select your Nexus-bot2 service
 3. Go to **Settings** → **Environment Variables**
 4. Add a new variable:
    - **Name:** `GROQ_API_KEY`

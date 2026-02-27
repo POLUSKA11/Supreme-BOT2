@@ -111,7 +111,7 @@ export default function Settings({ selectedGuild }) {
       <div className="space-y-6">
         <section className="glass rounded-2xl md:rounded-3xl p-5 md:p-8 border border-white/5 space-y-6">
           <h2 className="text-lg md:text-xl font-bold text-white flex items-center gap-2">
-            <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+            <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
             Automation
           </h2>
           
@@ -132,7 +132,7 @@ export default function Settings({ selectedGuild }) {
               <select 
                 value={settings.autoRole} 
                 onChange={(e) => setSettings({...settings, autoRole: e.target.value})}
-                className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all appearance-none"
+                className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-red-500/50 outline-none transition-all appearance-none"
               >
                 <option value="">None</option>
                 {guildData.roles.map(role => (
@@ -146,7 +146,7 @@ export default function Settings({ selectedGuild }) {
 
         <section className="glass rounded-2xl md:rounded-3xl p-5 md:p-8 border border-white/5 space-y-6">
           <h2 className="text-lg md:text-xl font-bold text-white flex items-center gap-2">
-            <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4v-3a2 2 0 00-2-2H5z" /></svg>
+            <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4v-3a2 2 0 00-2-2H5z" /></svg>
             Ticket System
           </h2>
           <div className="space-y-2">
@@ -155,7 +155,7 @@ export default function Settings({ selectedGuild }) {
               type="text" 
               value={settings.ticketCategory} 
               onChange={(e) => setSettings({...settings, ticketCategory: e.target.value})}
-              className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all"
+              className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-red-500/50 outline-none transition-all"
               placeholder="Enter Category ID"
             />
             <p className="text-[10px] text-slate-500 px-2">Category where new ticket channels will be created.</p>
@@ -166,7 +166,7 @@ export default function Settings({ selectedGuild }) {
           <button 
             onClick={handleSave}
             disabled={saving}
-            className={`px-10 py-4 rounded-2xl gradient-bg text-white font-bold shadow-xl shadow-indigo-500/20 hover:scale-105 transition-all flex items-center gap-2 ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}
+            className={`px-10 py-4 rounded-2xl gradient-bg text-white font-bold shadow-xl shadow-red-500/20 hover:scale-105 transition-all flex items-center gap-2 ${saving ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
             {saving && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}
             {saving ? 'Saving...' : 'Save Changes'}

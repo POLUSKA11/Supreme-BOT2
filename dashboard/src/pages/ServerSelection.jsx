@@ -102,7 +102,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
     return (
       <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-indigo-600/30 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-red-600/30 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-slate-400">Loading your servers...</p>
         </div>
       </div>
@@ -120,14 +120,14 @@ export default function ServerSelection({ setSelectedGuild, user }) {
       )}
       <div className="min-h-screen bg-[#0f172a] relative overflow-hidden">
         {/* Animated Background */}
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600/20 blur-[120px] animate-pulse"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-red-600/20 blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-600/20 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
 
         <div className="relative z-10 container mx-auto px-4 py-12">
           {/* Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-black shadow-2xl shadow-green-500/40 mb-4 overflow-hidden">
-              <img src="/logo.webp" alt="SM Logo" className="w-full h-full object-cover" />
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-black shadow-2xl shadow-red-500/40 mb-4 overflow-hidden">
+              <img src="/logo.webp" alt="NM Logo" className="w-full h-full object-cover" />
             </div>
             <h1 className="text-4xl font-black text-white mb-2">
               Select a <span className="gradient-text">Server</span>
@@ -146,7 +146,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                     className="w-10 h-10 rounded-full"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-indigo-600/20 flex items-center justify-center text-indigo-400 font-bold">
+                  <div className="w-10 h-10 rounded-full bg-red-600/20 flex items-center justify-center text-red-400 font-bold">
                     {user.username.charAt(0)}
                   </div>
                 )}
@@ -179,7 +179,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
               </p>
               <button
                 onClick={handleLogout}
-                className="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-colors"
+                className="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-colors"
               >
                 Try Another Account
               </button>
@@ -194,7 +194,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                     onClick={() => handleSelectGuild(guild)}
                     className={`glass rounded-2xl p-6 border transition-all hover:scale-105 ${
                       guild.botInGuild
-                        ? 'border-white/10 hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/20'
+                        ? 'border-white/10 hover:border-red-500/50 hover:shadow-xl hover:shadow-red-500/20'
                         : 'border-amber-500/30 hover:border-amber-500/50 hover:shadow-xl hover:shadow-amber-500/20'
                     }`}
                   >
@@ -206,7 +206,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                           className="w-20 h-20 rounded-full mb-4"
                         />
                       ) : (
-                        <div className="w-20 h-20 rounded-full bg-indigo-600/20 flex items-center justify-center text-indigo-400 font-black text-2xl mb-4">
+                        <div className="w-20 h-20 rounded-full bg-red-600/20 flex items-center justify-center text-red-400 font-black text-2xl mb-4">
                           {guild.name.charAt(0)}
                         </div>
                       )}
@@ -222,7 +222,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                               {guild.memberCount.toLocaleString()} members
                             </p>
                           )}
-                          <div className="px-4 py-2 rounded-lg bg-indigo-600/20 text-indigo-400 text-xs font-bold">
+                          <div className="px-4 py-2 rounded-lg bg-red-600/20 text-red-400 text-xs font-bold">
                             Manage Server
                           </div>
                         </>
@@ -256,7 +256,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                     <p className="text-slate-400 text-xs">Total Servers</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-black text-indigo-400">
+                    <p className="text-2xl font-black text-red-400">
                       {guilds.filter(g => g.botInGuild).length}
                     </p>
                     <p className="text-slate-400 text-xs">With Bot</p>

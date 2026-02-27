@@ -51,7 +51,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setAuthor({ 
-                name: 'Supreme', 
+                name: 'Nexus', 
                 iconURL: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663279443187/quPXEUrjrufgRMwQ.webp' 
             })
             .setTimestamp();

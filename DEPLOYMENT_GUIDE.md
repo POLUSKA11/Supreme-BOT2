@@ -2,7 +2,7 @@
 
 ## ✅ Changes Successfully Pushed to GitHub
 
-All changes have been committed and pushed to your repository: `FocusedOVPDiscord/Supreme-BOT2`
+All changes have been committed and pushed to your repository: `FocusedOVPDiscord/Nexus-BOT2`
 
 ## What Was Changed
 

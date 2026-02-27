@@ -1,4 +1,4 @@
-# Supreme-BOT2 Optimization & Persistence Report
+# Nexus-BOT2 Optimization & Persistence Report
 
 ## 1. Rate Limit & Performance Fixes
 - **Smart Member Fetching**: Replaced heavy startup fetching with on-demand chunked fetching (200 members at a time).

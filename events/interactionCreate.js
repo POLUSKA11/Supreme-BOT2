@@ -14,7 +14,7 @@ const CONFIG = {
     TICKET_CATEGORY_ID: '1458907554573844715',
     CAN_CLOSE_ROLES: ['982731220913913856', '1457664338163667072'],
     DOT_EMOJI: '<:dot:1460754381447237785>',
-    SUPREME_LOGO: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663279443187/quPXEUrjrufgRMwQ.webp',
+    NEXUS_LOGO: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663279443187/quPXEUrjrufgRMwQ.webp',
     BANNER_URL: 'https://share.creavite.co/695b62345e75e9c085840fa9.gif'
 };
 
@@ -174,7 +174,7 @@ module.exports = {
                     .setDescription(
                         `We regret to inform you that your MM application has been **Denied**.\n\n` +
                         `This does not mean you are a bad trader – it simply means that at this time you do not fully meet the requirements for the **MM Trainee** role or we are looking for a different profile.\n\n` +
-                        `You are still welcome to trade using Supreme MM and to stay in the community. You may apply again in the future if your situation or experience changes.\n\n` +
+                        `You are still welcome to trade using Nexus MM and to stay in the community. You may apply again in the future if your situation or experience changes.\n\n` +
                         `Thank you for your interest and for respecting the decision.\n\n` +
                         `**Message from reviewer:**\n\`\`\`\n${reason}\n\`\`\``
                     )
@@ -248,7 +248,7 @@ module.exports = {
                     await storage.set(guild.id, 'active_tickets', activeTickets);
 
                     const policyEmbed = new EmbedBuilder()
-                        .setAuthor({ name: 'Supreme | MM', iconURL: CONFIG.SUPREME_LOGO })
+                        .setAuthor({ name: 'Nexus | MM', iconURL: CONFIG.NEXUS_LOGO })
                         .setTitle('Middleman Ticket Policy')
                         .setDescription(storage.get(guild.id, 'ticket_welcome_msg') || 'Welcome to your middleman ticket. Please follow these guidelines:\n\n• Be respectful and professional\n• Provide clear information about your trade\n• Wait for staff verification before proceeding\n• Do not share sensitive information')
                         .setColor('#00FFFF')
@@ -603,7 +603,7 @@ module.exports = {
                         await storage.set(guild.id, 'active_tickets', activeTickets);
 
                         const policyEmbed = new EmbedBuilder()
-                            .setAuthor({ name: 'Supreme | MM', iconURL: CONFIG.SUPREME_LOGO })
+                            .setAuthor({ name: 'Nexus | MM', iconURL: CONFIG.NEXUS_LOGO })
                             .setTitle('Middleman Ticket Policy')
                             .setDescription(storage.get(guild.id, 'ticket_welcome_msg') || 'Welcome to your middleman ticket. Please follow these guidelines:\n\n• Be respectful and professional\n• Provide clear information about your trade\n• Wait for staff verification before proceeding\n• Do not share sensitive information')
                             .setColor('#00FFFF')
@@ -638,7 +638,7 @@ module.exports = {
                 closingTickets.add(channel.id);
                 try { await channel.permissionOverwrites.edit(guild.id, { SendMessages: false }); } catch (e) {}
                 
-                const closeEmbed = new EmbedBuilder().setAuthor({ name: 'Supreme', iconURL: CONFIG.SUPREME_LOGO }).setTitle('Ticket Closed').setDescription(`Ticket Closed By ${user}\n\n📋 Generating transcript...\nDeleting in 10s.`).setColor('#FF0000').setTimestamp();
+                const closeEmbed = new EmbedBuilder().setAuthor({ name: 'Nexus', iconURL: CONFIG.NEXUS_LOGO }).setTitle('Ticket Closed').setDescription(`Ticket Closed By ${user}\n\n📋 Generating transcript...\nDeleting in 10s.`).setColor('#FF0000').setTimestamp();
                 
                 try {
                     await interaction.reply({ embeds: [closeEmbed] });

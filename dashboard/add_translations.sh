@@ -16,7 +16,7 @@ PAGES=(
 )
 
 for page in "${PAGES[@]}"; do
-  FILE="/home/ubuntu/Supreme-BOT2/dashboard/src/pages/${page}.jsx"
+  FILE="/home/ubuntu/Nexus-BOT2/dashboard/src/pages/${page}.jsx"
   
   if [ -f "$FILE" ]; then
     # Check if useTranslation is already imported

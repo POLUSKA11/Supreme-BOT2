@@ -18,7 +18,7 @@ This guide covers testing the new features and deploying them to production.
 ### 1. Install Dependencies
 
 ```bash
-cd /home/ubuntu/Supreme-BOT2
+cd /home/ubuntu/Nexus-BOT2
 npm install
 ```
 
@@ -56,14 +56,14 @@ NODE_ENV=production
 ### 1. Start the Bot
 
 ```bash
-cd /home/ubuntu/Supreme-BOT2
+cd /home/ubuntu/Nexus-BOT2
 npm start
 ```
 
 Expected output:
 ```
 📦 [SESSION] File-based session store initialized (30-day persistence)
-✅ [BOT] Online as Supreme Bot#1234
+✅ [BOT] Online as Nexus Bot#1234
 🚀 [SERVER] Running on port 8000
 ```
 
@@ -353,7 +353,7 @@ redisClient.connect().catch(console.error);
 
 const sessionStore = new RedisStore({
   client: redisClient,
-  prefix: 'supreme-bot:',
+  prefix: 'nexus-bot:',
   ttl: 30 * 24 * 60 * 60 // 30 days
 });
 ```

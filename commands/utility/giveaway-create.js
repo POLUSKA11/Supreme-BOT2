@@ -57,7 +57,7 @@ module.exports = {
             .setDescription(`${dot} Hosted by ${interaction.user}\n${dot} Ends: <t:${endTime}:F> (<t:${endTime}:R>)\n${dot} Winners: **${winnersCount}**\n\n${dot} Participants: **0**`)
             .setColor('#5865F2')
             .setFooter({ 
-                text: 'Supreme Bot', 
+                text: 'Nexus Bot', 
                 iconURL: interaction.client.user.displayAvatarURL() 
             })
             .setTimestamp();
@@ -124,7 +124,7 @@ module.exports = {
                         .setDescription(`${dot} Ended: <t:${endTime}:R> (<t:${endTime}:F>)\n${dot} Hosted by: ${interaction.user}\n${dot} Participants: **${participants.length}**\n${dot} Winners: ${winnersText}`)
                         .setColor('#2F3136')
                         .setFooter({ 
-                            text: 'Supreme Bot', 
+                            text: 'Nexus Bot', 
                             iconURL: interaction.client.user.displayAvatarURL() 
                         })
                         .setTimestamp(endTime * 1000);

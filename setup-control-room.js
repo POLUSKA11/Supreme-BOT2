@@ -22,7 +22,7 @@ client.once('ready', async () => {
         }
 
         const controlEmbed = new EmbedBuilder()
-            .setTitle('🔊 Supreme Voice Control Room')
+            .setTitle('🔊 Nexus Voice Control Room')
             .setDescription('Use the buttons below to manage your temporary voice channel.\n\n' +
                 '**How it works:**\n' +
                 '1. Join the **Join to Create** channel to get your own room.\n' +
@@ -41,7 +41,7 @@ client.once('ready', async () => {
                 '🔊 **Unmute**: Unmute a user (via @mention)\n' +
                 '👑 **Claim**: Claim an empty room')
             .setColor('#2F3136')
-            .setFooter({ text: 'Supreme Voice Control • Persistent Room' })
+            .setFooter({ text: 'Nexus Voice Control • Persistent Room' })
             .setTimestamp();
 
         const row1 = new ActionRowBuilder().addComponents(

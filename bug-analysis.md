@@ -3,7 +3,7 @@
 ## Problem Description
 When logging into the dashboard, the system repeatedly logs:
 ```
-✅ User focusedovp selected guild: Supreme〡MM
+✅ User focusedovp selected guild: Nexus〡MM
 ```
 This happens multiple times and causes automatic page refreshes in an infinite loop.
 

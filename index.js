@@ -439,13 +439,13 @@ client.once('ready', async () => {
         const controlChannel = await client.channels.fetch(CONTROL_CHANNEL_ID).catch(() => null);
         if (controlChannel) {
             const messages = await controlChannel.messages.fetch({ limit: 50 });
-            const existingPanel = messages.find(m => m.author.id === client.user.id && m.embeds.length > 0 && m.embeds[0].title === '🔊 Supreme Voice Control Room');
+            const existingPanel = messages.find(m => m.author.id === client.user.id && m.embeds.length > 0 && m.embeds[0].title === '🔊 Nexus Voice Control Room');
             
             if (!existingPanel) {
                 console.log('[VOICE] No persistent control panel found. Sending new one...');
                 
                 const controlEmbed = new EmbedBuilder()
-                    .setTitle('🔊 Supreme Voice Control Room')
+                    .setTitle('🔊 Nexus Voice Control Room')
                     .setDescription('Use the buttons below to manage your temporary voice channel.\n\n' +
                         '**How it works:**\n' +
                         '1. Join the **Join to Create** channel to get your own room.\n' +
@@ -464,7 +464,7 @@ client.once('ready', async () => {
                         '🔊 **Unmute**: Unmute a user (via @mention)\n' +
                         '👑 **Claim**: Claim an empty room')
                     .setColor('#2F3136')
-                    .setFooter({ text: 'Supreme Voice Control • Persistent Room' })
+                    .setFooter({ text: 'Nexus Voice Control • Persistent Room' })
                     .setTimestamp();
 
                 const row1 = new ActionRowBuilder().addComponents(
@@ -628,7 +628,7 @@ const sessionStore = new FileStore({
 
 app.use(session({
     store: sessionStore,
-    secret: process.env.SESSION_SECRET || 'supreme-bot-secret-key-change-in-production',
+    secret: process.env.SESSION_SECRET || 'nexus-bot-secret-key-change-in-production',
     resave: false,
     saveUninitialized: false,
     cookie: { 

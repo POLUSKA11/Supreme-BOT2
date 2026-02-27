@@ -150,16 +150,16 @@ export default function Login({ setIsAuthenticated, setUser }) {
       )}
       <div className="relative flex items-center justify-center h-screen bg-[#0f172a] overflow-hidden">
         {/* Animated Background Elements */}
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600/20 blur-[120px] animate-pulse"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-red-600/20 blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-600/20 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
 
         <div className="relative z-10 w-full max-w-md px-6 animate-in fade-in zoom-in duration-700">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-black shadow-2xl shadow-green-500/40 mb-6 overflow-hidden">
-              <img src="/logo.webp" alt="SM Logo" className="w-full h-full object-cover" />
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-black shadow-2xl shadow-red-500/40 mb-6 overflow-hidden">
+              <img src="/logo.webp" alt="NM Logo" className="w-full h-full object-cover" />
             </div>
             <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-2">
-              Supreme <span className="gradient-text">Bot</span>
+              Nexus <span className="gradient-text">Bot</span>
             </h1>
             <p className="text-slate-400 font-medium">Multi-Server Management Dashboard</p>
           </div>
@@ -172,7 +172,7 @@ export default function Login({ setIsAuthenticated, setUser }) {
 
             {loading ? (
               <div className="flex flex-col items-center justify-center py-8">
-                <div className="w-12 h-12 border-4 border-indigo-600/30 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+                <div className="w-12 h-12 border-4 border-red-600/30 border-t-red-600 rounded-full animate-spin mb-4"></div>
                 <p className="text-slate-400 text-sm">Authenticating with Discord...</p>
               </div>
             ) : (
@@ -190,7 +190,7 @@ export default function Login({ setIsAuthenticated, setUser }) {
                 <button
                   onClick={handleDiscordLogin}
                   disabled={loading || !turnstileToken}
-                  className="group relative w-full gradient-bg hover:opacity-90 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 shadow-xl shadow-indigo-500/25 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="group relative w-full gradient-bg hover:opacity-90 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 shadow-xl shadow-red-500/25 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                   <svg className="relative z-10 w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -199,8 +199,8 @@ export default function Login({ setIsAuthenticated, setUser }) {
                   <span className="relative z-10">{t('auth.loginWithDiscord')}</span>
                 </button>
 
-                <div className="mt-6 p-4 bg-indigo-600/10 border border-indigo-500/20 rounded-xl">
-                  <p className="text-xs text-indigo-300 font-medium mb-2">✨ What you can do:</p>
+                <div className="mt-6 p-4 bg-red-600/10 border border-red-500/20 rounded-xl">
+                  <p className="text-xs text-red-300 font-medium mb-2">✨ What you can do:</p>
                   <ul className="text-xs text-slate-400 space-y-1">
                     <li>• Manage multiple Discord servers</li>
                     <li>• View server statistics & analytics</li>
@@ -213,7 +213,7 @@ export default function Login({ setIsAuthenticated, setUser }) {
           </div>
           
           <p className="text-center mt-8 text-slate-600 text-xs font-medium tracking-widest uppercase">
-            &copy; 2026 Supreme Bot &bull; All Rights Reserved
+            &copy; 2026 Nexus Bot &bull; All Rights Reserved
           </p>
         </div>
       </div>

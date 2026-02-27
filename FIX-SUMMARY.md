@@ -3,7 +3,7 @@
 ## Problem
 The dashboard was experiencing an infinite loop where:
 - User logs in → Guild auto-selects → Page reloads → Guild auto-selects again → Loop continues
-- Backend logs showed repeated "✅ User focusedovp selected guild: Supreme〡MM" messages
+- Backend logs showed repeated "✅ User focusedovp selected guild: Nexus〡MM" messages
 - The page would refresh automatically and continuously
 
 ## Root Causes Identified

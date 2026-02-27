@@ -95,7 +95,7 @@ module.exports = {
 
         try {
             const startEmbed = new EmbedBuilder()
-                .setTitle('Supreme MM - MM Trainee Application')
+                .setTitle('Nexus MM - MM Trainee Application')
                 .setDescription('This application consists of **11 questions**.\n\n**Click "Start Application" to begin.**')
                 .setColor(0x00FF00);
 

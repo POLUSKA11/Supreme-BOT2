@@ -1,6 +1,6 @@
 # Web Dashboard Integration Guide
 
-This guide explains how to integrate the new web dashboard into your existing Supreme-BOT2 bot on Koyeb.
+This guide explains how to integrate the new web dashboard into your existing Nexus-BOT2 bot on Koyeb.
 
 ## Overview
 
@@ -9,7 +9,7 @@ The dashboard has been created in the `/dashboard` directory as a React + Vite a
 ## Structure
 
 ```
-Supreme-BOT2/
+Nexus-BOT2/
 ├── index.js                          (Main bot file - needs modification)
 ├── package.json                      (Root dependencies - needs update)
 ├── dashboard/                        (New dashboard application)

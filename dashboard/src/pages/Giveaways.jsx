@@ -165,7 +165,7 @@ export default function Giveaways({ selectedGuild }) {
             🎉
           </div>
           <p className="text-lg font-bold text-slate-400">No giveaways found</p>
-          <p className="text-sm text-slate-500 mt-1">Create one using <code className="px-2 py-0.5 bg-white/5 rounded text-indigo-400">/giveaway-create</code> in Discord</p>
+          <p className="text-sm text-slate-500 mt-1">Create one using <code className="px-2 py-0.5 bg-white/5 rounded text-red-400">/giveaway-create</code> in Discord</p>
         </div>
       ) : (
         <div className="space-y-8">
@@ -224,7 +224,7 @@ function GiveawayCard({ giveaway, formatTimeLeft, onEnd, onDelete, actionLoading
 
   return (
     <div className={`glass rounded-2xl md:rounded-3xl p-5 md:p-6 border transition-all card-hover ${
-      isActive ? 'border-indigo-500/20 hover:border-indigo-500/40' : 'border-white/5 opacity-80'
+      isActive ? 'border-red-500/20 hover:border-red-500/40' : 'border-white/5 opacity-80'
     }`}>
       {/* Header */}
       <div className="flex items-start justify-between mb-4">

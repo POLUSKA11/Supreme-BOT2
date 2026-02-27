@@ -175,7 +175,7 @@ export default function StaffVerification() {
                                 </div>
                                 <div className="bg-gray-800/50 px-4 py-2 rounded-lg">
                                     <span className="text-gray-400">Members:</span>
-                                    <span className="ml-2 font-bold text-green-400">{data?.guild.memberCount}</span>
+                                    <span className="ml-2 font-bold text-red-400">{data?.guild.memberCount}</span>
                                 </div>
                                 <div className="bg-gray-800/50 px-4 py-2 rounded-lg">
                                     <span className="text-gray-400">Created:</span>

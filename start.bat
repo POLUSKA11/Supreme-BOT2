@@ -1,6 +1,6 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
-title Supreme Bot
+title Nexus Bot
 color 0b
 
 :: Set working directory
@@ -10,7 +10,7 @@ cd /d "%~dp0"
 cls
 echo.
 echo  ================================================
-echo                  SUPREME BOT
+echo                  NEXUS BOT
 echo  ================================================
 echo.
 
@@ -59,7 +59,7 @@ if !errorlevel! neq 0 (
 echo.
 
 :: 4. Launch
-echo  [*] Initializing Supreme Bot...
+echo  [*] Initializing Nexus Bot...
 echo  ------------------------------------------------
 node index.js
 

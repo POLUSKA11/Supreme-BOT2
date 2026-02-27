@@ -81,7 +81,7 @@ export default function ServerSelector({ selectedGuild, onGuildChange }) {
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-3 w-full px-4 py-3 rounded-2xl transition-all group border ${
           currentGuild 
-            ? 'bg-indigo-600/10 border-indigo-500/30 shadow-lg shadow-indigo-500/10' 
+            ? 'bg-red-600/10 border-red-500/30 shadow-lg shadow-red-500/10' 
             : 'bg-white/5 hover:bg-white/10 border-white/10'
         }`}
       >
@@ -94,7 +94,7 @@ export default function ServerSelector({ selectedGuild, onGuildChange }) {
                 className="w-8 h-8 rounded-full"
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-indigo-600/20 flex items-center justify-center text-indigo-400 font-bold">
+              <div className="w-8 h-8 rounded-full bg-red-600/20 flex items-center justify-center text-red-400 font-bold">
                 {currentGuild.name.charAt(0)}
               </div>
             )}
@@ -107,12 +107,12 @@ export default function ServerSelector({ selectedGuild, onGuildChange }) {
           </>
         ) : (
           <div className="flex-1 text-left flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-indigo-600/20 flex items-center justify-center text-indigo-400">
+            <div className="w-8 h-8 rounded-full bg-red-600/20 flex items-center justify-center text-red-400">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
             </div>
-            <p className="text-sm font-bold text-indigo-400">Select a Server</p>
+            <p className="text-sm font-bold text-red-400">Select a Server</p>
           </div>
         )}
         <svg
@@ -134,7 +134,7 @@ export default function ServerSelector({ selectedGuild, onGuildChange }) {
                 onClick={() => handleSelectGuild(guild)}
                 className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all ${
                   currentGuild?.id === guild.id
-                    ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
+                    ? 'bg-red-600/20 text-red-400 border border-red-500/30'
                     : guild.botInGuild
                     ? 'text-slate-300 hover:bg-white/5'
                     : 'text-slate-400 hover:bg-white/5 border border-dashed border-slate-600'
@@ -147,7 +147,7 @@ export default function ServerSelector({ selectedGuild, onGuildChange }) {
                     className="w-7 h-7 rounded-full"
                   />
                 ) : (
-                  <div className="w-7 h-7 rounded-full bg-indigo-600/20 flex items-center justify-center text-indigo-400 font-bold text-xs">
+                  <div className="w-7 h-7 rounded-full bg-red-600/20 flex items-center justify-center text-red-400 font-bold text-xs">
                     {guild.name.charAt(0)}
                   </div>
                 )}
@@ -160,11 +160,11 @@ export default function ServerSelector({ selectedGuild, onGuildChange }) {
                   )}
                 </div>
                 {!guild.botInGuild ? (
-                  <div className="px-2 py-1 rounded-lg bg-indigo-600/20 text-indigo-400 text-xs font-bold">
+                  <div className="px-2 py-1 rounded-lg bg-red-600/20 text-red-400 text-xs font-bold">
                     Add Bot
                   </div>
                 ) : currentGuild?.id === guild.id ? (
-                  <svg className="w-5 h-5 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 ) : null}

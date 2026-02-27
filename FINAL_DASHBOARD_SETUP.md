@@ -1,6 +1,6 @@
 # Final Dashboard Setup Instructions
 
-Your Supreme-BOT2 Web Dashboard is now fully integrated and ready for deployment! Here's what has been completed and what you need to do next.
+Your Nexus-BOT2 Web Dashboard is now fully integrated and ready for deployment! Here's what has been completed and what you need to do next.
 
 ## ✅ What's Been Done
 
@@ -55,7 +55,7 @@ Your root `package.json` needs these scripts. Add or update them:
 ### Step 3: Commit and Push to GitHub
 
 ```bash
-cd /home/ubuntu/Supreme-BOT2
+cd /home/ubuntu/Nexus-BOT2
 git add .
 git commit -m "Add web dashboard with Discord OAuth2 and live data integration"
 git push origin main
@@ -72,7 +72,7 @@ Once you push to GitHub, Koyeb will automatically:
 
 Once deployed, visit:
 ```
-https://breakable-tiger-supremebot1-d8a3b39c.koyeb.app/dashboard
+https://breakable-tiger-nexusbot1-d8a3b39c.koyeb.app/dashboard
 ```
 
 You'll be redirected to Discord login. Only staff members will be able to access the dashboard.
@@ -82,7 +82,7 @@ You'll be redirected to Discord login. Only staff members will be able to access
 Here's what was added to your repository:
 
 ```
-Supreme-BOT2/
+Nexus-BOT2/
 ├── index.js                          (MODIFIED - Added dashboard integration)
 ├── package.json                      (MODIFIED - Added new dependencies)
 ├── routes/
@@ -122,11 +122,11 @@ If you want to test the dashboard locally before deploying:
 
 ```bash
 # Terminal 1: Start the bot
-cd /home/ubuntu/Supreme-BOT2
+cd /home/ubuntu/Nexus-BOT2
 npm start
 
 # Terminal 2: Start the dashboard dev server
-cd /home/ubuntu/Supreme-BOT2/dashboard
+cd /home/ubuntu/Nexus-BOT2/dashboard
 npm run dev
 ```
 
@@ -201,4 +201,4 @@ For issues or questions:
 3. **Visit your dashboard** and log in with Discord
 4. **Explore the features** and manage your bot from the web interface
 
-Your dashboard is now production-ready! Enjoy managing your Supreme Bot from the web! 🚀
+Your dashboard is now production-ready! Enjoy managing your Nexus Bot from the web! 🚀

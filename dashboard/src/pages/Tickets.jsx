@@ -85,21 +85,21 @@ export default function Tickets({ selectedGuild }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {tickets.map(ticket => (
-          <div key={ticket.id} className="glass rounded-3xl p-6 border border-white/5 hover:border-indigo-500/30 transition-all group">
+          <div key={ticket.id} className="glass rounded-3xl p-6 border border-white/5 hover:border-red-500/30 transition-all group">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+              <div className="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-400">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4v-3a2 2 0 00-2-2H5z" /></svg>
               </div>
               <span className="px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20 uppercase">
                 {ticket.status}
               </span>
             </div>
-            <h3 className="text-xl font-bold text-white mb-1 group-hover:text-indigo-400 transition-colors">Ticket #{ticket.ticketNumber}</h3>
+            <h3 className="text-xl font-bold text-white mb-1 group-hover:text-red-400 transition-colors">Ticket #{ticket.ticketNumber}</h3>
             <p className="text-slate-500 text-sm mb-4">Created by <span className="text-slate-300 font-medium">{ticket.user}</span> on {new Date(ticket.created).toLocaleDateString()}</p>
             <div className="flex gap-3">
               <button 
                 onClick={() => viewChat(ticket)}
-                className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold transition-all"
+                className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-sm font-bold transition-all"
               >
                 View Chat
               </button>
@@ -144,7 +144,7 @@ export default function Tickets({ selectedGuild }) {
             <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6 bg-slate-900/50">
               {loadingMessages ? (
                 <div className="flex flex-col items-center justify-center py-20 space-y-4">
-                  <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                   <p className="text-slate-400 font-medium">Loading messages...</p>
                 </div>
               ) : messages.length > 0 ? (
@@ -153,11 +153,11 @@ export default function Tickets({ selectedGuild }) {
                     <img src={msg.author.avatar} alt="" className="w-10 h-10 rounded-full border border-white/10 flex-shrink-0" />
                     <div className="space-y-1 min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className={`font-bold text-sm ${msg.author.bot ? 'text-indigo-400' : 'text-white'}`}>
+                        <span className={`font-bold text-sm ${msg.author.bot ? 'text-red-400' : 'text-white'}`}>
                           {msg.author.username}
                         </span>
                         {msg.author.bot && (
-                          <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase">Bot</span>
+                          <span className="px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 text-[10px] font-bold uppercase">Bot</span>
                         )}
                         <span className="text-[10px] text-slate-500">
                           {new Date(msg.timestamp).toLocaleString()}
@@ -169,7 +169,7 @@ export default function Tickets({ selectedGuild }) {
                       {msg.attachments && msg.attachments.length > 0 && (
                         <div className="pt-2 flex flex-wrap gap-2">
                           {msg.attachments.map((url, i) => (
-                            <a key={i} href={url} target="_blank" rel="noreferrer" className="block rounded-lg overflow-hidden border border-white/10 hover:border-indigo-500/50 transition-all">
+                            <a key={i} href={url} target="_blank" rel="noreferrer" className="block rounded-lg overflow-hidden border border-white/10 hover:border-red-500/50 transition-all">
                               <img src={url} alt="Attachment" className="max-w-[200px] max-h-[200px] object-contain bg-black/20" />
                             </a>
                           ))}

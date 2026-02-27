@@ -9,7 +9,7 @@ module.exports = {
         console.log(`✅ Ready! Logged in as ${client.user.tag}`);
 
         // Set the Bot Status
-        client.user.setActivity('Supreme | Market', { type: ActivityType.Listening });
+        client.user.setActivity('Nexus | Market', { type: ActivityType.Listening });
 
         // Run background tasks to avoid blocking the ready event
         (async () => {
@@ -21,15 +21,15 @@ module.exports = {
                 const channel = await client.channels.fetch(RECRUIT_CHANNEL_ID).catch(() => null);
                 if (channel) {
                     const messages = await channel.messages.fetch({ limit: 10 }).catch(() => null);
-                    const panelExists = messages && messages.some(m => m.embeds.length > 0 && m.embeds[0].title === 'Supreme | MM – MM Trainee Applications');
+                    const panelExists = messages && messages.some(m => m.embeds.length > 0 && m.embeds[0].title === 'Nexus | MM – MM Trainee Applications');
                     
                     if (!panelExists) {
                         const panelGifUrl = 'https://share.creavite.co/6973ecb1bab97f02c66bd444.gif';
                         const embed = new EmbedBuilder()
-                            .setTitle('Supreme | MM – MM Trainee Applications')
-                            .setDescription(`Supreme | MM ~by FocuesdOVP is a neutral Middleman & Escrow service for secure, ticket-only trades in the Steal The Brainrot ecosystem and beyond. We are opening applications for our entry-level staff rank: <@&1457664338163667072>\n\nMM Trainee is a learning-focused role in the Supreme | MM and learn the Supreme flow\n• help collect & structure information for the human MM\n• assist with small support tasks in tickets\n• but are never allowed to run trades alone or hold money/items themselves. This is not a clout title. It is for people who seriously want to learn Middleman work and maybe grow into Rookie / Verified MM later.\n\n**Requirements (must all apply)**\n• 16+ and at least 1 month active in the Supreme / STB community\n• no known scam cases, no major drama / toxic behaviour in trading servers\n• neutral behaviour (no favoritism, no ego / drama)\n• stable internet + can use Discord confidently (threads, screenshots, etc.)\n• able to record short clips (gameplay or delivery proof) and upload them to Discord\n• at least 2 usable Fortnite accounts for trade-related tasks\n• can understand and write English clearly\n\n**Role Limits**\nAs an MM Trainee you:\n• never hold money or items yourself\n• never run trades alone – always under supervision of a Rookie / Verified / Senior MM or FocusedOVP\n• do not run your own MM service outside Supreme\n• are never MM in your own trades – only a trader there\n• only work inside official Supreme tickets. The role can be changed or removed at any time if there are doubts about your trust, behaviour, or fit.\n\n**About the Application**\nPlease answer honestly and in English. Low-effort or dishonest applications may be denied.\n\nIf you meet the requirements and want to continue:\nClick the button below to start your MM Trainee application.`)
+                            .setTitle('Nexus | MM – MM Trainee Applications')
+                            .setDescription(`Nexus | MM ~by FocuesdOVP is a neutral Middleman & Escrow service for secure, ticket-only trades in the Steal The Brainrot ecosystem and beyond. We are opening applications for our entry-level staff rank: <@&1457664338163667072>\n\nMM Trainee is a learning-focused role in the Nexus | MM and learn the Nexus flow\n• help collect & structure information for the human MM\n• assist with small support tasks in tickets\n• but are never allowed to run trades alone or hold money/items themselves. This is not a clout title. It is for people who seriously want to learn Middleman work and maybe grow into Rookie / Verified MM later.\n\n**Requirements (must all apply)**\n• 16+ and at least 1 month active in the Nexus / STB community\n• no known scam cases, no major drama / toxic behaviour in trading servers\n• neutral behaviour (no favoritism, no ego / drama)\n• stable internet + can use Discord confidently (threads, screenshots, etc.)\n• able to record short clips (gameplay or delivery proof) and upload them to Discord\n• at least 2 usable Fortnite accounts for trade-related tasks\n• can understand and write English clearly\n\n**Role Limits**\nAs an MM Trainee you:\n• never hold money or items yourself\n• never run trades alone – always under supervision of a Rookie / Verified / Senior MM or FocusedOVP\n• do not run your own MM service outside Nexus\n• are never MM in your own trades – only a trader there\n• only work inside official Nexus tickets. The role can be changed or removed at any time if there are doubts about your trust, behaviour, or fit.\n\n**About the Application**\nPlease answer honestly and in English. Low-effort or dishonest applications may be denied.\n\nIf you meet the requirements and want to continue:\nClick the button below to start your MM Trainee application.`)
                             .setColor(0x00FF00)
-                            .setFooter({ text: 'Supreme BOT', iconURL: client.user.displayAvatarURL() })
+                            .setFooter({ text: 'Nexus BOT', iconURL: client.user.displayAvatarURL() })
                             .setImage(panelGifUrl);
 
                         const row = new ActionRowBuilder()

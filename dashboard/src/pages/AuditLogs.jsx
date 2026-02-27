@@ -96,7 +96,7 @@ export default function AuditLogs({ selectedGuild }) {
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="bg-slate-800/50 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 appearance-none pr-10"
+            className="bg-slate-800/50 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500/50 appearance-none pr-10"
           >
             <option value="all">All Actions</option>
             {uniqueActions.map(action => (
@@ -135,7 +135,7 @@ export default function AuditLogs({ selectedGuild }) {
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-white">
-                      <span className="font-bold text-indigo-400">{log.executor}</span>
+                      <span className="font-bold text-red-400">{log.executor}</span>
                       <span className="text-slate-400 mx-1.5">performed</span>
                       <span className={`inline-block px-2 py-0.5 rounded-lg text-xs font-bold border ${colorClass}`}>{log.action}</span>
                     </p>

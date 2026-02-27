@@ -1,16 +1,16 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 /**
- * SUPREME ABOUT COMMAND
+ * NEXUS ABOUT COMMAND
  * - Matches the exact layout from the provided image
- * - Supreme branding & FocusedOVP as developer
+ * - Nexus branding & FocusedOVP as developer
  * - Real-time uptime calculation
  */
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('about')
-        .setDescription('Display information about Supreme Bot'),
+        .setDescription('Display information about Nexus Bot'),
     async execute(interaction) {
         // Calculate Uptime
         let totalSeconds = (interaction.client.uptime / 1000);
@@ -24,9 +24,9 @@ module.exports = {
         const uptimeString = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
         
         const embed = new EmbedBuilder()
-            .setAuthor({ name: 'Supreme', iconURL: interaction.client.user.displayAvatarURL() })
+            .setAuthor({ name: 'Nexus', iconURL: interaction.client.user.displayAvatarURL() })
             .setDescription(
-                'Supreme is a professional Discord bot designed to provide elite security, ' +
+                'Nexus is a professional Discord bot designed to provide elite security, ' +
                 'seamless ticket management, and advanced utility for your server.'
             )
             .addFields(
@@ -37,7 +37,7 @@ module.exports = {
                 }
             )
             .setFooter({
-                text: 'Thank you for using Supreme!',
+                text: 'Thank you for using Nexus!',
                 iconURL: interaction.client.user.displayAvatarURL()
             })
             .setColor('#00FFFF') // Matching the cyan/blue color from the image

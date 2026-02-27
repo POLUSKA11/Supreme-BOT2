@@ -67,7 +67,7 @@ module.exports = {
                     `${dot} **Participants**: **${participants.length}**\n` +
                     `${dot} **Winners**: ${winnerMentions}`
                 )
-                .setFooter({ text: 'Supreme Bot', iconURL: interaction.client.user.displayAvatarURL() })
+                .setFooter({ text: 'Nexus Bot', iconURL: interaction.client.user.displayAvatarURL() })
                 .setTimestamp();
 
             await message.edit({ embeds: [endEmbed], components: [] });

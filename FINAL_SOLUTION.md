@@ -1,6 +1,6 @@
-# Final Solution for Supreme Bot 2 on Koyeb
+# Final Solution for Nexus Bot 2 on Koyeb
 
-This document outlines the steps taken to resolve the issues encountered with your Supreme Bot 2 deployment on Koyeb, specifically addressing the `express` module not found error and the missing Discord commands.
+This document outlines the steps taken to resolve the issues encountered with your Nexus Bot 2 deployment on Koyeb, specifically addressing the `express` module not found error and the missing Discord commands.
 
 ## Summary of the Problem
 
@@ -10,12 +10,12 @@ Upon further investigation, it was discovered that:
 
 1.  **Two `index.js` files**: Your repository contained two main entry points: `index.js` (in the root) and `src/index.js`. The `src/index.js` had a limited command set, while the root `index.js` was designed to load a broader range of commands from the `commands` directory.
 2.  **Incorrect `Dockerfile` entry point**: The `Dockerfile` was configured to run `src/index.js`, leading to the limited command set being loaded.
-3.  **Missing `express` dependency**: When the `Dockerfile` was updated to run the root `index.js` (which uses `express` for the health check server), the `express` package was not listed in `package.json` for the `Supreme-BOT2` repository, causing the `MODULE_NOT_FOUND` error during deployment.
-4.  **Commands in wrong repository**: The utility commands you expected were actually present in your `supreme-ai` repository, not `Supreme-BOT2`.
+3.  **Missing `express` dependency**: When the `Dockerfile` was updated to run the root `index.js` (which uses `express` for the health check server), the `express` package was not listed in `package.json` for the `Nexus-BOT2` repository, causing the `MODULE_NOT_FOUND` error during deployment.
+4.  **Commands in wrong repository**: The utility commands you expected were actually present in your `nexus-ai` repository, not `Nexus-BOT2`.
 
 ## Solution Implemented
 
-To address these issues, the following modifications have been made to your `Supreme-BOT2` repository:
+To address these issues, the following modifications have been made to your `Nexus-BOT2` repository:
 
 ### 1. `package.json` Update
 
@@ -23,9 +23,9 @@ The `express` package has been added to the `dependencies` in `package.json` to 
 
 ```json
 {
-  "name": "supreme-bot-2",
+  "name": "nexus-bot-2",
   "version": "1.0.0",
-  "description": "SUPREME BOT - Discord Bot running 24/7 on Koyeb",
+  "description": "NEXUS BOT - Discord Bot running 24/7 on Koyeb",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -51,12 +51,12 @@ The `express` package has been added to the `dependencies` in `package.json` to 
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FocusedOVPDiscord/Supreme-BOT2.git"
+    "url": "git+https://github.com/FocusedOVPDiscord/Nexus-BOT2.git"
   },
   "bugs": {
-    "url": "https://github.com/FocusedOVPDiscord/Supreme-BOT2/issues"
+    "url": "https://github.com/FocusedOVPDiscord/Nexus-BOT2/issues"
   },
-  "homepage": "https://github.com/FocusedOVPDiscord/Supreme-BOT2#readme"
+  "homepage": "https://github.com/FocusedOVPDiscord/Nexus-BOT2#readme"
 }
 ```
 
@@ -139,7 +139,7 @@ client.login(TOKEN) // <--- Using the flexible TOKEN variable
 
 ### 4. Commands Sync
 
-The utility commands from your `supreme-ai` repository (`commands/utility/*`) have been copied into the `Supreme-BOT2/commands/utility/` directory. This ensures that all your intended commands are available to the bot when it starts.
+The utility commands from your `nexus-ai` repository (`commands/utility/*`) have been copied into the `Nexus-BOT2/commands/utility/` directory. This ensures that all your intended commands are available to the bot when it starts.
 
 ## Next Steps for You
 

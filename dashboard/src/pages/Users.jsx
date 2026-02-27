@@ -66,7 +66,7 @@ export default function Users({ selectedGuild }) {
 
   if (loading && users.length === 0) return (
     <div className="flex items-center justify-center h-full">
-      <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
 
@@ -81,7 +81,7 @@ export default function Users({ selectedGuild }) {
           <input 
             type="text" 
             placeholder="Search users..." 
-            className="bg-slate-800/50 border border-white/10 rounded-2xl px-12 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 w-full md:w-80 transition-all"
+            className="bg-slate-800/50 border border-white/10 rounded-2xl px-12 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 w-full md:w-80 transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -121,7 +121,7 @@ export default function Users({ selectedGuild }) {
                           className="w-10 h-10 rounded-full border border-white/10 bg-slate-800" 
                           onError={(e) => { e.target.src = 'https://cdn.discordapp.com/embed/avatars/0.png'; }}
                         />
-                        <span className="text-white font-bold group-hover:text-indigo-400 transition-colors">{user.username}</span>
+                        <span className="text-white font-bold group-hover:text-red-400 transition-colors">{user.username}</span>
                       </div>
                     </td>
                     <td className="px-8 py-5 text-slate-400 font-mono text-sm">{user.id}</td>
@@ -152,7 +152,7 @@ export default function Users({ selectedGuild }) {
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                               Warn User
                             </button>
-                            <button onClick={() => { setModAction({ type: 'mute', user }); setSelectedUser(null); }} className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold text-indigo-400 hover:bg-indigo-400/10 transition-all flex items-center gap-3">
+                            <button onClick={() => { setModAction({ type: 'mute', user }); setSelectedUser(null); }} className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold text-red-400 hover:bg-red-400/10 transition-all flex items-center gap-3">
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg>
                               Mute User
                             </button>
@@ -195,7 +195,7 @@ export default function Users({ selectedGuild }) {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
               Previous
             </button>
-            <div className="px-4 py-2 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 text-sm font-bold">
+            <div className="px-4 py-2 rounded-xl bg-red-600/20 border border-red-500/30 text-red-400 text-sm font-bold">
               Page {pagination.page} of {pagination.totalPages}
             </div>
             <button 
@@ -233,7 +233,7 @@ export default function Users({ selectedGuild }) {
                 <textarea 
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500/50 outline-none transition-all h-32 resize-none"
+                  className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500/50 outline-none transition-all h-32 resize-none"
                   placeholder={`Enter a professional reason for this ${modAction.type}...`}
                 />
               </div>
@@ -243,7 +243,7 @@ export default function Users({ selectedGuild }) {
                 className={`w-full py-4 rounded-2xl font-bold text-white transition-all flex items-center justify-center gap-2 ${
                   modAction.type === 'ban' ? 'bg-red-600 hover:bg-red-500' : 
                   modAction.type === 'kick' ? 'bg-orange-600 hover:bg-orange-500' :
-                  modAction.type === 'mute' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-amber-600 hover:bg-amber-500'
+                  modAction.type === 'mute' ? 'bg-red-600 hover:bg-red-500' : 'bg-amber-600 hover:bg-amber-500'
                 } ${processing || !reason ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
               >
                 {processing && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}

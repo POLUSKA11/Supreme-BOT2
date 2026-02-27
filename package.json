@@ -1,7 +1,7 @@
 {
-  "name": "supreme-bot-2",
+  "name": "nexus-bot-2",
   "version": "1.0.0",
-  "description": "SUPREME BOT - Discord Bot running 24/7 on Koyeb",
+  "description": "NEXUS BOT - Discord Bot running 24/7 on Koyeb",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -33,10 +33,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FocusedOVPDiscord/Supreme-BOT2.git"
+    "url": "git+https://github.com/FocusedOVPDiscord/Nexus-BOT2.git"
   },
   "bugs": {
-    "url": "https://github.com/FocusedOVPDiscord/Supreme-BOT2/issues"
+    "url": "https://github.com/FocusedOVPDiscord/Nexus-BOT2/issues"
   },
-  "homepage": "https://github.com/FocusedOVPDiscord/Supreme-BOT2#readme"
+  "homepage": "https://github.com/FocusedOVPDiscord/Nexus-BOT2#readme"
 }

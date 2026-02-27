@@ -89,10 +89,10 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
       <div className="p-4 lg:p-6 flex items-center justify-between border-b border-white/5">
         {isOpen && (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center shadow-lg shadow-green-500/20 overflow-hidden">
-              <img src="/logo.webp" alt="SM" className="w-full h-full object-cover" />
+            <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center shadow-lg shadow-red-500/20 overflow-hidden">
+              <img src="/logo.webp" alt="NM" className="w-full h-full object-cover" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight">Supreme <span className="text-indigo-400">Bot</span></h1>
+            <h1 className="text-xl font-bold tracking-tight">Nexus <span className="text-red-400">Bot</span></h1>
           </div>
         )}
         <div className="flex items-center gap-1">
@@ -131,7 +131,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Server</p>
             <button
               onClick={handleChangeServer}
-              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
+              className="text-xs text-red-400 hover:text-red-300 font-medium transition-colors"
               title="Change server"
             >
               Change
@@ -167,16 +167,16 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
                     ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/30 shadow-lg shadow-amber-500/10'
                     : 'text-amber-400/70 hover:bg-amber-500/10 hover:text-amber-400'
                   : isActive(item.path)
-                    ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 shadow-lg shadow-indigo-500/10'
+                    ? 'bg-red-600/20 text-red-400 border border-red-500/30 shadow-lg shadow-red-500/10'
                     : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
               }`}
             >
-              <div className={`transition-colors duration-300 ${item.special === 'premium' ? 'text-amber-400' : isActive(item.path) ? 'text-indigo-400' : 'group-hover:text-slate-200'}`}>
+              <div className={`transition-colors duration-300 ${item.special === 'premium' ? 'text-amber-400' : isActive(item.path) ? 'text-red-400' : 'group-hover:text-slate-200'}`}>
                 {item.icon}
               </div>
               {isOpen && <span className="font-medium">{item.label}</span>}
               {isActive(item.path) && isOpen && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.8)]"></div>
+                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div>
               )}
             </Link>
           );
@@ -190,7 +190,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
             <img 
               src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : 'https://cdn.discordapp.com/embed/avatars/0.png'} 
               alt="Avatar" 
-              className="w-10 h-10 rounded-full border-2 border-indigo-500/30"
+              className="w-10 h-10 rounded-full border-2 border-red-500/30"
             />
             {isOpen && (
               <div className="flex-1 min-w-0">

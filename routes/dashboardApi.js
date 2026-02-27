@@ -10,7 +10,7 @@ const { saveTranscriptToDashboard, formatMessagesForDashboard } = require('../ut
 // Configuration
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID || '1459183931005075701';
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || '2HFpZf8paKaxZnSfuhbAFr4nx8hn-ymg';
-const REDIRECT_URI = process.env.REDIRECT_URI || 'https://breakable-tiger-supremebot1-d8a3b39c.koyeb.app/dashboard/login';
+const REDIRECT_URI = process.env.REDIRECT_URI || 'https://breakable-tiger-nexusbot1-d8a3b39c.koyeb.app/dashboard/login';
 const BOT_INVITE_URL = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&permissions=8&scope=bot%20applications.commands`;
 
 // Audit log action name mapping
@@ -1128,12 +1128,12 @@ router.post('/ticket-setup/deploy', requireAuth, requireGuildAccess, async (req,
 
         // Build the embed
         const ticketEmbed = new EmbedBuilder()
-            .setAuthor({ name: 'Supreme', iconURL: client.user.displayAvatarURL() })
+            .setAuthor({ name: 'Nexus', iconURL: client.user.displayAvatarURL() })
             .setTitle(embed.title || 'Middleman Tickets')
             .setDescription(embed.description || 'Click the button below to create a ticket.')
             .setColor(embed.color ? parseInt(embed.color.replace('#', ''), 16) : 0x00FF00)
             .setThumbnail(client.user.displayAvatarURL())
-            .setFooter({ text: 'Supreme Bot', iconURL: client.user.displayAvatarURL() })
+            .setFooter({ text: 'Nexus Bot', iconURL: client.user.displayAvatarURL() })
             .setTimestamp();
 
         if (embed.image) {
@@ -1263,7 +1263,7 @@ router.post('/premium/paypal/create-order', async (req, res) => {
             plan,
             amount: price,
             currency: 'USD',
-            description: `Supreme Bot ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan - 30 Days`
+            description: `Nexus Bot ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan - 30 Days`
         });
     } catch (error) {
         console.error('PayPal create order error:', error);
@@ -1300,7 +1300,7 @@ router.post('/premium/crypto/create-order', async (req, res) => {
             amount: price,
             currency: 'USDT',
             network: 'BEP20',
-            description: `Supreme Bot ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan - 30 Days`,
+            description: `Nexus Bot ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan - 30 Days`,
             // The wallet address should be set via environment variable
             walletAddress: process.env.CRYPTO_WALLET_ADDRESS || 'YOUR_WALLET_ADDRESS_HERE',
             supportedCoins: ['USDT', 'BTC', 'ETH', 'BNB']
@@ -1333,7 +1333,7 @@ router.post('/premium/stripe/create-session', async (req, res) => {
                 price_data: {
                     currency: 'usd',
                     product_data: {
-                        name: `Supreme Bot ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`,
+                        name: `Nexus Bot ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`,
                         description: '30-day premium subscription',
                     },
                     unit_amount: Math.round(parseFloat(price) * 100),
@@ -1341,8 +1341,8 @@ router.post('/premium/stripe/create-session', async (req, res) => {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: `${process.env.BASE_URL || 'https://breakable-tiger-supremebot1-d8a3b39c.koyeb.app'}/dashboard/premium?success=true&plan=${plan}`,
-            cancel_url: `${process.env.BASE_URL || 'https://breakable-tiger-supremebot1-d8a3b39c.koyeb.app'}/dashboard/premium?canceled=true`,
+            success_url: `${process.env.BASE_URL || 'https://breakable-tiger-nexusbot1-d8a3b39c.koyeb.app'}/dashboard/premium?success=true&plan=${plan}`,
+            cancel_url: `${process.env.BASE_URL || 'https://breakable-tiger-nexusbot1-d8a3b39c.koyeb.app'}/dashboard/premium?canceled=true`,
             metadata: {
                 guildId,
                 plan

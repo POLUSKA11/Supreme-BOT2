@@ -157,7 +157,7 @@ module.exports = {
                 .setColor('#00FFFF')
                 .setTitle('🏆 Level Role Rewards')
                 .setDescription(lines.join('\n'))
-                .setFooter({ text: 'Supreme Leveling System', iconURL: interaction.client.user.displayAvatarURL() })
+                .setFooter({ text: 'Nexus Leveling System', iconURL: interaction.client.user.displayAvatarURL() })
                 .setTimestamp();
 
             return interaction.editReply({ embeds: [embed] });

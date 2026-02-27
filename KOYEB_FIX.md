@@ -1,4 +1,4 @@
-# Fixing TCP Health Check on Koyeb for Supreme Bot 2
+# Fixing TCP Health Check on Koyeb for Nexus Bot 2
 
 The "TCP health check failed on port 8000" error occurs because Koyeb's **Web Service** expects a process to listen on a specific port (defaulting to 8000 or the `PORT` environment variable) to verify the application is running. Since a Discord bot is a background worker, it doesn't naturally listen for incoming network connections.
 

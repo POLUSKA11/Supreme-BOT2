@@ -37,8 +37,8 @@ export default function Dashboard({ selectedGuild }) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="relative w-20 h-20">
-          <div className="absolute top-0 left-0 w-full h-full border-4 border-indigo-500/20 rounded-full"></div>
-          <div className="absolute top-0 left-0 w-full h-full border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="absolute top-0 left-0 w-full h-full border-4 border-red-500/20 rounded-full"></div>
+          <div className="absolute top-0 left-0 w-full h-full border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       </div>
     );
@@ -48,16 +48,16 @@ export default function Dashboard({ selectedGuild }) {
   if (!stats && !error) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center space-y-6 animate-in fade-in duration-700">
-        <div className="w-24 h-24 rounded-3xl bg-indigo-600/10 flex items-center justify-center text-indigo-400 shadow-xl shadow-indigo-500/10 border border-indigo-500/20">
+        <div className="w-24 h-24 rounded-3xl bg-red-600/10 flex items-center justify-center text-red-400 shadow-xl shadow-red-500/10 border border-red-500/20">
           <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-7-4h.01M12 16h.01" />
           </svg>
         </div>
         <div className="max-w-md space-y-2">
-          <h2 className="text-3xl font-black text-white tracking-tight">Welcome to <span className="gradient-text">Supreme Dashboard</span></h2>
+          <h2 className="text-3xl font-black text-white tracking-tight">Welcome to <span className="gradient-text">Nexus Dashboard</span></h2>
           <p className="text-slate-400">Please select a server from the sidebar to view its statistics and manage its settings.</p>
         </div>
-        <div className="flex items-center gap-2 text-indigo-400 font-bold animate-bounce mt-4">
+        <div className="flex items-center gap-2 text-red-400 font-bold animate-bounce mt-4">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
@@ -75,7 +75,7 @@ export default function Dashboard({ selectedGuild }) {
           <p className="text-slate-400 mt-1 text-sm md:text-base">{t('dashboard.subtitle')} <strong>{stats?.serverName}</strong>.</p>
         </div>
         <div className="flex items-center gap-3 bg-slate-800/50 p-1.5 rounded-2xl border border-white/5">
-          <div className="px-4 py-2 rounded-xl bg-indigo-600/10 text-indigo-400 text-sm font-bold border border-indigo-500/20">
+          <div className="px-4 py-2 rounded-xl bg-red-600/10 text-red-400 text-sm font-bold border border-red-500/20">
             v2.4.0 {t('common.stable')}
           </div>
           <div className="flex items-center gap-2 px-4 py-2">
@@ -91,7 +91,7 @@ export default function Dashboard({ selectedGuild }) {
           title={t('dashboard.totalMembers')}
           value={stats?.totalMembers?.toLocaleString() || 0}
           icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>}
-          color="from-blue-600/20 to-indigo-600/20"
+          color="from-blue-600/20 to-red-600/20"
           borderColor="border-blue-500/30"
           textColor="text-blue-400"
         />
@@ -125,7 +125,7 @@ export default function Dashboard({ selectedGuild }) {
         {/* Server Info */}
         <div className="lg:col-span-1 glass rounded-2xl md:rounded-3xl p-5 md:p-8 space-y-6">
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             {t('dashboard.serverDetails')}
           </h2>
           <div className="space-y-4">
@@ -148,10 +148,10 @@ export default function Dashboard({ selectedGuild }) {
         <div className="lg:col-span-2 glass rounded-2xl md:rounded-3xl p-5 md:p-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               {t('dashboard.recentActivity')}
             </h2>
-            <button className="text-sm text-indigo-400 font-bold hover:text-indigo-300 transition-colors">{t('common.viewAll')}</button>
+            <button className="text-sm text-red-400 font-bold hover:text-red-300 transition-colors">{t('common.viewAll')}</button>
           </div>
           
           <div className="space-y-4">
@@ -159,11 +159,11 @@ export default function Dashboard({ selectedGuild }) {
               stats.recentTickets.map((ticket) => (
                 <div key={ticket.id} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all group">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                    <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4v-3a2 2 0 00-2-2H5z" /></svg>
                     </div>
                     <div>
-                      <p className="text-white font-bold group-hover:text-indigo-400 transition-colors">{ticket.title}</p>
+                      <p className="text-white font-bold group-hover:text-red-400 transition-colors">{ticket.title}</p>
                       <p className="text-xs text-slate-500">Ticket #{ticket.id.slice(-4)}</p>
                     </div>
                   </div>
