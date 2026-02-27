@@ -1131,7 +1131,7 @@ router.post('/ticket-setup/deploy', requireAuth, requireGuildAccess, async (req,
             .setAuthor({ name: 'Nexus', iconURL: client.user.displayAvatarURL() })
             .setTitle(embed.title || 'Middleman Tickets')
             .setDescription(embed.description || 'Click the button below to create a ticket.')
-            .setColor(embed.color ? parseInt(embed.color.replace('#', ''), 16) : 0x00FF00)
+            .setColor(embed.color ? parseInt(embed.color.replace('#', ''), 16) : 0xFF0000)
             .setThumbnail(client.user.displayAvatarURL())
             .setFooter({ text: 'Nexus Bot', iconURL: client.user.displayAvatarURL() })
             .setTimestamp();

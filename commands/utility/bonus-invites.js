@@ -34,7 +34,7 @@ module.exports = {
 
             // Create embed response
             const bonusEmbed = new EmbedBuilder()
-                .setColor(amount > 0 ? '#00FF00' : '#FF9900')
+                .setColor(amount > 0 ? '#FF0000' : '#FF9900')
                 .setTitle(`Bonus Invites ${amount > 0 ? 'Added' : 'Removed'}`)
                 .setDescription(`Successfully ${amount > 0 ? 'added' : 'removed'} **${Math.abs(amount)}** bonus invite${Math.abs(amount) !== 1 ? 's' : ''} ${amount > 0 ? 'to' : 'from'} ${targetUser}.`)
                 .addFields(

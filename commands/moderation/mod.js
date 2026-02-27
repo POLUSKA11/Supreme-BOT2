@@ -52,7 +52,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setAuthor({ 
                 name: 'Nexus', 
-                iconURL: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663279443187/quPXEUrjrufgRMwQ.webp' 
+                iconURL: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663388975384/hqANtMiovQSJdCrO.png' 
             })
             .setTimestamp();
 
@@ -90,13 +90,13 @@ module.exports = {
 
                 case 'unmute':
                     await target.timeout(null);
-                    embed.setColor('#00FF00').setTitle('Member Unmuted').setDescription(`**User:** ${target.user.tag}`);
+                    embed.setColor('#FF0000').setTitle('Member Unmuted').setDescription(`**User:** ${target.user.tag}`);
                     break;
 
                 case 'clear':
                     const amount = interaction.options.getInteger('amount');
                     const deleted = await interaction.channel.bulkDelete(amount, true);
-                    embed.setColor('#00FFFF').setTitle('Messages Cleared').setDescription(`Successfully deleted **${deleted.size}** messages.`);
+                    embed.setColor('#FF0000').setTitle('Messages Cleared').setDescription(`Successfully deleted **${deleted.size}** messages.`);
                     return interaction.reply({ embeds: [embed], flags: [MessageFlags.Ephemeral] });
 
                 case 'warn':

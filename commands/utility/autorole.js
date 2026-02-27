@@ -48,7 +48,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle('Auto-Role Set')
             .setDescription(`New members will now automatically receive the ${role} role.`)
-            .setColor('#00FF00')
+            .setColor('#FF0000')
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });

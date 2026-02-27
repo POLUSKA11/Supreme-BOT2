@@ -55,7 +55,7 @@ module.exports = {
         }));
 
         const embed = new EmbedBuilder()
-            .setColor('#00FFFF')
+            .setColor('#FF0000')
             .setTitle(`🏆 XP Leaderboard — ${guild.name}`)
             .setThumbnail(guild.iconURL({ dynamic: true }))
             .setDescription(lines.join('\n'))

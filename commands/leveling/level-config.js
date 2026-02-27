@@ -154,7 +154,7 @@ module.exports = {
             });
 
             const embed = new EmbedBuilder()
-                .setColor('#00FFFF')
+                .setColor('#FF0000')
                 .setTitle('🏆 Level Role Rewards')
                 .setDescription(lines.join('\n'))
                 .setFooter({ text: 'Nexus Leveling System', iconURL: interaction.client.user.displayAvatarURL() })
@@ -257,7 +257,7 @@ module.exports = {
 
 function successEmbed(title, description) {
     return new EmbedBuilder()
-        .setColor('#00FFFF')
+        .setColor('#FF0000')
         .setTitle(title)
         .setDescription(description)
         .setTimestamp();

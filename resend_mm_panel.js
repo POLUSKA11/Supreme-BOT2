@@ -55,7 +55,7 @@ Please answer honestly and in English. Low-effort or dishonest applications may 
 
 If you meet the requirements and want to continue:
 Click the button below to start your MM Trainee application.`)
-        .setColor(0x00FF00)
+        .setColor(0xFF0000)
         .setImage('https://share.creavite.co/6973ecb1bab97f02c66bd444.gif')
         .setFooter({ 
             text: 'Nexus BOT • FocusedOVP', 

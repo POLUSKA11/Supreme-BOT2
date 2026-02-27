@@ -40,7 +40,7 @@ module.exports = {
                 text: 'Thank you for using Nexus!',
                 iconURL: interaction.client.user.displayAvatarURL()
             })
-            .setColor('#00FFFF') // Matching the cyan/blue color from the image
+            .setColor('#FF0000') // Matching the cyan/blue color from the image
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });

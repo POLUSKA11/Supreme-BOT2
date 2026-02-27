@@ -389,7 +389,7 @@ async function buildStaffEmbed(guild, staffInfo) {
     }
 
     const embed = new EmbedBuilder()
-        .setColor('#00FF00')
+        .setColor('#FF0000')
         .setTitle('✅ Nexus Officials')
         .setDescription(
             `Welcome to the **only official verification hub** of Nexus MM.\n` +

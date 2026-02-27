@@ -33,7 +33,7 @@ module.exports = {
             const unlockEmbed = new EmbedBuilder()
                 .setTitle('Channel Unlocked')
                 .setDescription(`This channel has been unlocked, Everyone can send messages again.`)
-                .setColor('#00FF00')
+                .setColor('#FF0000')
                 .setTimestamp();
 
             await interaction.reply({ embeds: [unlockEmbed] });

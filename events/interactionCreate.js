@@ -14,7 +14,7 @@ const CONFIG = {
     TICKET_CATEGORY_ID: '1458907554573844715',
     CAN_CLOSE_ROLES: ['982731220913913856', '1457664338163667072'],
     DOT_EMOJI: '<:dot:1460754381447237785>',
-    NEXUS_LOGO: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663279443187/quPXEUrjrufgRMwQ.webp',
+    NEXUS_LOGO: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663388975384/hqANtMiovQSJdCrO.png',
     BANNER_URL: 'https://share.creavite.co/695b62345e75e9c085840fa9.gif'
 };
 
@@ -150,13 +150,13 @@ module.exports = {
                 const acceptEmbed = new EmbedBuilder()
                     .setTitle('MM Application Accepted')
                     .setDescription(`Congratulations! Your MM application has been **Accepted**.\n\n**Reason:** ${reason}`)
-                    .setColor(0x00FF00)
+                    .setColor(0xFF0000)
                     .setTimestamp();
 
                 if (applicant) await applicant.send({ embeds: [acceptEmbed] }).catch(() => null);
                 
                 const logEmbed = EmbedBuilder.from(interaction.message.embeds[0])
-                    .setColor(0x00FF00)
+                    .setColor(0xFF0000)
                     .setTitle('MM Application - Accepted')
                     .addFields({ name: 'Decision by', value: `${user.tag}`, inline: true }, { name: 'Reason', value: reason });
 
@@ -251,7 +251,7 @@ module.exports = {
                         .setAuthor({ name: 'Nexus | MM', iconURL: CONFIG.NEXUS_LOGO })
                         .setTitle('Middleman Ticket Policy')
                         .setDescription(storage.get(guild.id, 'ticket_welcome_msg') || 'Welcome to your middleman ticket. Please follow these guidelines:\n\n• Be respectful and professional\n• Provide clear information about your trade\n• Wait for staff verification before proceeding\n• Do not share sensitive information')
-                        .setColor('#00FFFF')
+                        .setColor('#FF0000')
                         .setImage('attachment://banner.gif');
 
                     const row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('close_ticket').setLabel('Close Ticket').setStyle(ButtonStyle.Danger));
@@ -606,7 +606,7 @@ module.exports = {
                             .setAuthor({ name: 'Nexus | MM', iconURL: CONFIG.NEXUS_LOGO })
                             .setTitle('Middleman Ticket Policy')
                             .setDescription(storage.get(guild.id, 'ticket_welcome_msg') || 'Welcome to your middleman ticket. Please follow these guidelines:\n\n• Be respectful and professional\n• Provide clear information about your trade\n• Wait for staff verification before proceeding\n• Do not share sensitive information')
-                            .setColor('#00FFFF')
+                            .setColor('#FF0000')
                             .setImage('attachment://banner.gif');
 
                         const row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('close_ticket').setLabel('Close Ticket').setStyle(ButtonStyle.Danger));

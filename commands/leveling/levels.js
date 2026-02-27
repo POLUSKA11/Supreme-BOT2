@@ -35,7 +35,7 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setColor('#00FFFF')
+            .setColor('#FF0000')
             .setTitle('📈 Level Rewards & XP Requirements')
             .setDescription(
                 '> Earn XP by chatting! Messages, links, and images all give different XP amounts.\n' +

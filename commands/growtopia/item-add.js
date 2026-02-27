@@ -84,7 +84,7 @@ module.exports = {
           { name: '🎯 Rarity', value: rarity || 'Not specified', inline: true },
           { name: '📁 Category', value: category || 'Not specified', inline: true }
         )
-        .setColor('#57F287')
+        .setColor('#FF0000')
         .setFooter({ text: `Added by ${interaction.user.tag}` })
         .setTimestamp();
 

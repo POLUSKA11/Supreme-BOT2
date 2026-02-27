@@ -97,7 +97,7 @@ module.exports = {
             const startEmbed = new EmbedBuilder()
                 .setTitle('Nexus MM - MM Trainee Application')
                 .setDescription('This application consists of **11 questions**.\n\n**Click "Start Application" to begin.**')
-                .setColor(0x00FF00);
+                .setColor(0xFF0000);
 
             const startRow = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('confirm_start_mm_app').setLabel('Start Application').setStyle(ButtonStyle.Success),

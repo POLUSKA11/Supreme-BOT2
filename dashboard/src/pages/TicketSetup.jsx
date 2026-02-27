@@ -28,7 +28,7 @@ export default function TicketSetup({ selectedGuild }) {
     '**Item For Money trades 💸:**\n' +
     '• Tax Included Depends On The Trade'
   );
-  const [embedColor, setEmbedColor] = useState('#00FF00');
+  const [embedColor, setEmbedColor] = useState('#FF0000');
   const [embedImage, setEmbedImage] = useState('https://cdn.discordapp.com/attachments/1354437993024454817/1461387048639266899/banner.gif');
   const [buttonLabel, setButtonLabel] = useState('Create Middleman Ticket');
   const [buttonEmoji, setButtonEmoji] = useState('🤝');

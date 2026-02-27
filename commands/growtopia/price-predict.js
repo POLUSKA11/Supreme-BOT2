@@ -126,7 +126,7 @@ module.exports = {
           { name: '🔴 Best Sell Price', value: `${stats.bestSellPrice} WL`, inline: true },
           { name: '🎯 Confidence', value: `${predictions.confidence}%`, inline: true }
         )
-        .setColor(stats.riskLevel === 'High' ? '#e74c3c' : stats.riskLevel === 'Medium' ? '#f39c12' : '#2ecc71')
+        .setColor(stats.riskLevel === 'High' ? '#e74c3c' : stats.riskLevel === 'Medium' ? '#f39c12' : '#FF0000')
         .setFooter({ text: `Use /price-chart ${item.item_name} to see a visual chart` })
         .setTimestamp();
 

@@ -118,7 +118,7 @@ module.exports = {
           { name: '⭐ Points Earned', value: `+${POINTS_PER_PRICE}`, inline: true },
           { name: '📊 Your Stats', value: `**${stats.total_prices_added}** prices added\n**${stats.total_points}** total points`, inline: false }
         )
-        .setColor('#57F287')
+        .setColor('#FF0000')
         .setFooter({ text: `Submitted by ${interaction.user.tag}` })
         .setTimestamp();
 

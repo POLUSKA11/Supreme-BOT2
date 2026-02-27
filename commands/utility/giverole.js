@@ -57,11 +57,11 @@ module.exports = {
             const successEmbed = new EmbedBuilder()
                 .setAuthor({ 
                     name: 'Nexus', 
-                    iconURL: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663279443187/quPXEUrjrufgRMwQ.webp' 
+                    iconURL: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663388975384/hqANtMiovQSJdCrO.png' 
                 })
                 .setTitle('Role Given')
                 .setDescription(`Successfully gave the role ${role} to ${user}.`)
-                .setColor('#00FF00')
+                .setColor('#FF0000')
                 .setTimestamp();
 
             await interaction.reply({ embeds: [successEmbed] });

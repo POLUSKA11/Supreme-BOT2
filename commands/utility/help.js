@@ -14,7 +14,7 @@ module.exports = {
             })
             .setTitle('Bot Command Directory')
             .setDescription('Welcome to the **Nexus** command menu. Below you will find all available commands categorized by their functionality.')
-            .setColor('#00FFFF')
+            .setColor('#FF0000')
             .addFields(
                 { 
                     name: '🛡️ Information & Support', 

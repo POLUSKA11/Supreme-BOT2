@@ -82,7 +82,7 @@ async function generateAndSendTranscript(channel, closedBy, ticketData = {}) {
         const embed = new EmbedBuilder()
             .setAuthor({ 
                 name: 'Nexus Ticket System', 
-                iconURL: guild.iconURL() || 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663279443187/quPXEUrjrufgRMwQ.webp'
+                iconURL: guild.iconURL() || 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663388975384/hqANtMiovQSJdCrO.png'
             })
             .setTitle(`📋 Ticket #${ticketNumber} - Transcript`)
             .setColor('#2B2D31')

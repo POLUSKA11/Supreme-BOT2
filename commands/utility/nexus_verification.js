@@ -21,13 +21,13 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     
     async execute(interaction) {
-        const LOGO_URL = 'https://images-ext-1.discordapp.net/external/aCiECEdiMvNhJHuMZaRCI_eD7MACnR--l7RkryVvJUw/https/files.manuscdn.com/user_upload_by_module/session_file/310519663279443187/quPXEUrjrufgRMwQ.webp';
+        const LOGO_URL = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663388975384/hqANtMiovQSJdCrO.png';
         const BANNER_GIF = 'https://cdn.discordapp.com/attachments/1458034966465351700/1460429764354379880/banner.gif?ex=6966e2b5&is=69659135&hm=ebb46cbd285138761a9ed4c86bcce0161842b3587af9d0991f5a3100de36ce14&';
         
         const embed = new EmbedBuilder()
             .setTitle('**__Nexus MM Rules & Middleman Policy__**')
             .setDescription('Welcome to **Nexus MM**. Before accessing the full server and using any **Middleman services**, please read and agree to the following rules and policies.')
-            .setColor(0x00FF00) // Professional Green
+            .setColor(0xFF0000) // Professional Green
             .addFields(
                 { 
                     name: ':one: __**Respect & Behavior**__', 

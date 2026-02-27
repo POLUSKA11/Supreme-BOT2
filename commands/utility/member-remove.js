@@ -51,7 +51,7 @@ module.exports = {
             const removeEmbed = new EmbedBuilder()
                 .setAuthor({ 
                     name: 'Nexus', 
-                    iconURL: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663279443187/quPXEUrjrufgRMwQ.webp' 
+                    iconURL: 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663388975384/hqANtMiovQSJdCrO.png' 
                 })
                 .setTitle('Member Removed')
                 .setDescription(`${userToRemove} has been removed from this ticket by ${interaction.user}.`)

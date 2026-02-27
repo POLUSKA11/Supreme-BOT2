@@ -130,7 +130,7 @@ module.exports = {
             .setImage(config.bannerUrl)
             .setFooter({ text: `Thank you for choosing ${member.guild.name}!`, iconURL: member.guild.iconURL() })
             .setTimestamp()
-            .setColor('#00FF00');
+            .setColor('#FF0000');
 
         try {
             await channel.send({ 
