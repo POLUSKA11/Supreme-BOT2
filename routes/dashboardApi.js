@@ -1099,6 +1099,52 @@ router.get('/channels', requireAuth, requireGuildAccess, async (req, res) => {
     }
 });
 
+// ==================== TICKET SETUP CONFIG (GET) ====================
+router.get('/ticket-setup/config', requireAuth, requireGuildAccess, async (req, res) => {
+    try {
+        const guild = getSelectedGuild(req);
+        if (!guild) return res.status(400).json({ error: 'No guild selected' });
+
+        const config = {
+            staffRoles: storage.get(guild.id, 'ticket_staff_roles') || [],
+            blacklistRoles: storage.get(guild.id, 'ticket_blacklist_roles') || [],
+            closeRoles: storage.get(guild.id, 'ticket_close_roles') || [],
+            viewRoles: storage.get(guild.id, 'ticket_view_roles') || [],
+            useModal: storage.get(guild.id, 'ticket_use_modal') !== 'false',
+            welcomeMessage: storage.get(guild.id, 'ticket_welcome_msg') || '',
+            ticketCategoryId: storage.get(guild.id, 'ticketCategoryId') || ''
+        };
+
+        res.json(config);
+    } catch (error) {
+        console.error('Ticket config fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch ticket config' });
+    }
+});
+
+// ==================== TICKET SETUP SAVE CONFIG (POST, no deploy) ====================
+router.post('/ticket-setup/save-config', requireAuth, requireGuildAccess, async (req, res) => {
+    try {
+        const guild = getSelectedGuild(req);
+        if (!guild) return res.status(400).json({ error: 'No guild selected' });
+
+        const { staffRoles, blacklistRoles, closeRoles, viewRoles, useModal, welcomeMessage, ticketCategoryId } = req.body;
+
+        if (staffRoles !== undefined) storage.set(guild.id, 'ticket_staff_roles', staffRoles);
+        if (blacklistRoles !== undefined) storage.set(guild.id, 'ticket_blacklist_roles', blacklistRoles);
+        if (closeRoles !== undefined) storage.set(guild.id, 'ticket_close_roles', closeRoles);
+        if (viewRoles !== undefined) storage.set(guild.id, 'ticket_view_roles', viewRoles);
+        if (useModal !== undefined) storage.set(guild.id, 'ticket_use_modal', String(useModal));
+        if (welcomeMessage !== undefined) storage.set(guild.id, 'ticket_welcome_msg', welcomeMessage);
+        if (ticketCategoryId !== undefined) storage.set(guild.id, 'ticketCategoryId', ticketCategoryId || null);
+
+        res.json({ success: true, message: 'Ticket configuration saved successfully!' });
+    } catch (error) {
+        console.error('Ticket config save error:', error);
+        res.status(500).json({ error: 'Failed to save ticket config' });
+    }
+});
+
 // ==================== TICKET SETUP DEPLOY ====================
 router.post('/ticket-setup/deploy', requireAuth, requireGuildAccess, async (req, res) => {
     try {
@@ -1120,8 +1166,10 @@ router.post('/ticket-setup/deploy', requireAuth, requireGuildAccess, async (req,
         // Save additional config if provided
         if (config) {
             if (config.whitelistRoles) storage.set(guild.id, 'ticket_whitelist_roles', config.whitelistRoles);
-            if (config.blacklistRoles) storage.set(guild.id, 'ticket_blacklist_roles', config.blacklistRoles);
-            if (config.staffRoles) storage.set(guild.id, 'ticket_staff_roles', config.staffRoles);
+            if (config.blacklistRoles !== undefined) storage.set(guild.id, 'ticket_blacklist_roles', config.blacklistRoles);
+            if (config.staffRoles !== undefined) storage.set(guild.id, 'ticket_staff_roles', config.staffRoles);
+            if (config.closeRoles !== undefined) storage.set(guild.id, 'ticket_close_roles', config.closeRoles);
+            if (config.viewRoles !== undefined) storage.set(guild.id, 'ticket_view_roles', config.viewRoles);
             if (config.useModal !== undefined) storage.set(guild.id, 'ticket_use_modal', String(config.useModal));
             if (config.welcomeMessage) storage.set(guild.id, 'ticket_welcome_msg', config.welcomeMessage);
         }

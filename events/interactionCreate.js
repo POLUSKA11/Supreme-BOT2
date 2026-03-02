@@ -217,6 +217,8 @@ module.exports = {
 
                     // Get staff roles from storage or fallback to CONFIG
                     const staffRoles = storage.get(guild.id, 'ticket_staff_roles') || CONFIG.ALLOWED_STAFF_ROLES;
+                    // Get view-only roles from storage
+                    const viewRolesModal = storage.get(guild.id, 'ticket_view_roles') || [];
 
                     const ticketChannel = await guild.channels.create({
                         name: `ticket-${ticketNumber}`,
@@ -225,7 +227,8 @@ module.exports = {
                         permissionOverwrites: [
                             { id: guild.id, deny: [PermissionFlagsBits.ViewChannel] },
                             { id: user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
-                            ...staffRoles.map(roleId => ({ id: roleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] }))
+                            ...staffRoles.map(roleId => ({ id: roleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] })),
+                            ...viewRolesModal.filter(roleId => !staffRoles.includes(roleId)).map(roleId => ({ id: roleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory] }))
                         ]
                     });
 
@@ -576,6 +579,8 @@ module.exports = {
                         
                         // Get staff roles from storage or fallback to CONFIG
                         const staffRoles = storage.get(guild.id, 'ticket_staff_roles') || CONFIG.ALLOWED_STAFF_ROLES;
+                        // Get view-only roles from storage
+                        const viewRolesNoModal = storage.get(guild.id, 'ticket_view_roles') || [];
 
                         const ticketChannel = await guild.channels.create({
                             name: `ticket-${ticketNumber}`,
@@ -584,7 +589,8 @@ module.exports = {
                             permissionOverwrites: [
                                 { id: guild.id, deny: [PermissionFlagsBits.ViewChannel] },
                                 { id: user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
-                                ...staffRoles.map(roleId => ({ id: roleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] }))
+                                ...staffRoles.map(roleId => ({ id: roleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] })),
+                                ...viewRolesNoModal.filter(roleId => !staffRoles.includes(roleId)).map(roleId => ({ id: roleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory] }))
                             ]
                         });
 
@@ -631,7 +637,10 @@ module.exports = {
             if (customId === 'stop_mm_app') return await appManager.stopApplication(interaction);
 
             if (customId === 'close_ticket') {
-                const canClose = member.roles.cache.some(role => CONFIG.CAN_CLOSE_ROLES.includes(role.id));
+                // Check close roles from storage first, fall back to CONFIG
+                const closeRoles = storage.get(guild.id, 'ticket_close_roles');
+                const allowedCloseRoles = (closeRoles && closeRoles.length > 0) ? closeRoles : CONFIG.CAN_CLOSE_ROLES;
+                const canClose = member.roles.cache.some(role => allowedCloseRoles.includes(role.id));
                 if (!canClose) return await interaction.reply({ content: '❌ No permission.', flags: [MessageFlags.Ephemeral] }).catch(() => {});
                 if (closingTickets.has(channel.id)) return await interaction.reply({ content: '⚠️ Already closing.', flags: [MessageFlags.Ephemeral] }).catch(() => {});
                 
