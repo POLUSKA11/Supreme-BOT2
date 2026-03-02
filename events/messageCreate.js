@@ -24,11 +24,12 @@ module.exports = {
 
 	            // 2. Anti-Link & Anti-Promotion
 	            const linkRegex = /(https?:\/\/[^\s]+)/g;
-	            const inviteRegex = /(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+/i;
+	            // Enhanced promotion regex: Discord, Telegram, and other common ones
+	            const promoRegex = /(discord\.(gg|io|me|li|link|chat|direct)|discordapp\.com\/invite|t\.me|telegram\.me|bit\.ly|tinyurl\.com|shorturl\.at|rebrand\.ly)\/.+/i;
 	            
-	            if (!shouldDelete && antiRaidConfig.anti_promo && inviteRegex.test(content)) {
+	            if (!shouldDelete && antiRaidConfig.anti_promo && promoRegex.test(content)) {
 	                shouldDelete = true;
-	                reason = "Discord Invite/Promotion Link";
+	                reason = "Promotion/Invite Link (Discord/Telegram/Shortener)";
 	            } else if (!shouldDelete && antiRaidConfig.anti_link && linkRegex.test(content)) {
 	                shouldDelete = true;
 	                reason = "External Link";
