@@ -1513,7 +1513,7 @@ router.post('/bot/customization', requireAuth, requireGuildAccess, async (req, r
 // GET anti-raid config
 router.get('/anti-raid/config', requireAuth, requireGuildAccess, async (req, res) => {
     try {
-        const guildId = req.session.guildId;
+        const guildId = req.session.selectedGuildId;
         const config = storage.get(guildId, 'anti_raid_config') || {
             anti_link: false,
             anti_spam: false,
@@ -1534,7 +1534,7 @@ router.get('/anti-raid/config', requireAuth, requireGuildAccess, async (req, res
 // POST anti-raid config (save)
 router.post('/anti-raid/config', requireAuth, requireGuildAccess, async (req, res) => {
     try {
-        const guildId = req.session.guildId;
+        const guildId = req.session.selectedGuildId;
         const { anti_link, anti_spam, anti_promo, anti_badwords, lockdown, log_channel, banned_words, spam_threshold } = req.body;
 
         const config = {
@@ -1548,7 +1548,8 @@ router.post('/anti-raid/config', requireAuth, requireGuildAccess, async (req, re
             spam_threshold: parseInt(spam_threshold) || 5
         };
 
-        storage.set(guildId, 'anti_raid_config', config);
+        // This handles both memory cache and TiDB persistence automatically
+        await storage.set(guildId, 'anti_raid_config', config);
         res.json({ success: true, config });
     } catch (err) {
         console.error('[ANTI-RAID] Error saving config:', err);

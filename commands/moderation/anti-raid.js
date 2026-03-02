@@ -70,7 +70,13 @@ module.exports = {
             spam_threshold: 5
         };
 
-        let config = storage.get(guild.id, 'anti_raid_config') || defaultConfig;
+        // Always fetch fresh data from storage to ensure sync with dashboard
+        let config = storage.get(guild.id, 'anti_raid_config');
+        
+        // If no config exists, use defaults but don't save yet to avoid clutter
+        if (!config) {
+            config = { ...defaultConfig };
+        }
 
         if (subcommand === 'status') {
             const embed = new EmbedBuilder()
