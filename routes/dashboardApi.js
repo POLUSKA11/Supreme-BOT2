@@ -1454,6 +1454,60 @@ router.get('/premium/features', async (req, res) => {
 module.exports = router;
 
 
+// ===== BOT CUSTOMIZATION ENDPOINTS =====
+
+// GET bot customization settings
+router.get('/bot/customization', requireAuth, requireGuildAccess, async (req, res) => {
+    try {
+        const guildId = req.session.selectedGuildId;
+        const customization = storage.get(guildId, 'bot_customization') || {
+            avatar: '',
+            banner: '',
+            bio: ''
+        };
+        res.json(customization);
+    } catch (err) {
+        console.error('[BOT-CUSTOM] Error fetching customization:', err);
+        res.status(500).json({ error: 'Failed to fetch bot customization' });
+    }
+});
+
+// POST bot customization settings (save)
+router.post('/bot/customization', requireAuth, requireGuildAccess, async (req, res) => {
+    try {
+        const guildId = req.session.selectedGuildId;
+        
+        // Check premium status
+        const premiumData = storage.get(guildId, 'premium');
+        const isPremium = premiumData && (!premiumData.expiresAt || Date.now() < premiumData.expiresAt);
+        
+        if (!isPremium) {
+            return res.status(403).json({ error: 'Premium subscription required to customize bot information' });
+        }
+
+        const { avatar, banner, bio } = req.body;
+
+        const customization = {
+            avatar: avatar || '',
+            banner: banner || '',
+            bio: bio || ''
+        };
+
+        storage.set(guildId, 'bot_customization', customization);
+        
+        // Save to settings table for TiDB persistence
+        await query(
+            'INSERT INTO settings (guild_id, setting_key, setting_value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE setting_value = ?',
+            [guildId, 'bot_customization', JSON.stringify(customization), JSON.stringify(customization)]
+        );
+
+        res.json({ success: true, customization });
+    } catch (err) {
+        console.error('[BOT-CUSTOM] Error saving customization:', err);
+        res.status(500).json({ error: 'Failed to save bot customization' });
+    }
+});
+
 // ===== ANTI-RAID ENDPOINTS =====
 
 // GET anti-raid config
