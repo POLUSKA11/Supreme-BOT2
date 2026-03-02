@@ -17,7 +17,7 @@ import Transcripts from './pages/Transcripts';
 import AI from './pages/AI';
 import StaffVerification from './pages/StaffVerification';
 import WelcomeSetup from './pages/WelcomeSetup';
-import Growtopia from './pages/Growtopia';
+import AntiRaid from './pages/AntiRaid';
 import Premium from './pages/Premium';
 import TicketSetup from './pages/TicketSetup';
 import Sidebar from './components/Sidebar';
@@ -185,7 +185,7 @@ function App() {
                         <Route path="/ai" element={<AI selectedGuild={selectedGuild} />} />
                         <Route path="/staff-verification/:guildId" element={<StaffVerification />} />
                         <Route path="/welcome-setup/:guildId" element={<WelcomeSetup />} />
-                        <Route path="/growtopia" element={<Growtopia selectedGuild={selectedGuild} />} />
+                        <Route path="/anti-raid" element={<AntiRaid selectedGuild={selectedGuild} />} />
                         <Route path="/premium" element={<Premium selectedGuild={selectedGuild} />} />
                         <Route path="/ticket-setup" element={<TicketSetup selectedGuild={selectedGuild} />} />
                         <Route path="*" element={<Navigate to="/dashboard" replace />} />

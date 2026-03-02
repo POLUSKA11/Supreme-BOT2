@@ -1452,3 +1452,52 @@ router.get('/premium/features', async (req, res) => {
 });
 
 module.exports = router;
+
+
+// ===== ANTI-RAID ENDPOINTS =====
+
+// GET anti-raid config
+router.get('/anti-raid/config', requireAuth, requireGuildAccess, async (req, res) => {
+    try {
+        const guildId = req.session.guildId;
+        const config = storage.get(guildId, 'anti_raid_config') || {
+            anti_link: false,
+            anti_spam: false,
+            anti_promo: false,
+            anti_badwords: false,
+            lockdown: false,
+            log_channel: '',
+            banned_words: [],
+            spam_threshold: 5
+        };
+        res.json(config);
+    } catch (err) {
+        console.error('[ANTI-RAID] Error fetching config:', err);
+        res.status(500).json({ error: 'Failed to fetch anti-raid config' });
+    }
+});
+
+// POST anti-raid config (save)
+router.post('/anti-raid/config', requireAuth, requireGuildAccess, async (req, res) => {
+    try {
+        const guildId = req.session.guildId;
+        const { anti_link, anti_spam, anti_promo, anti_badwords, lockdown, log_channel, banned_words, spam_threshold } = req.body;
+
+        const config = {
+            anti_link: Boolean(anti_link),
+            anti_spam: Boolean(anti_spam),
+            anti_promo: Boolean(anti_promo),
+            anti_badwords: Boolean(anti_badwords),
+            lockdown: Boolean(lockdown),
+            log_channel: log_channel || '',
+            banned_words: Array.isArray(banned_words) ? banned_words : [],
+            spam_threshold: parseInt(spam_threshold) || 5
+        };
+
+        storage.set(guildId, 'anti_raid_config', config);
+        res.json({ success: true, config });
+    } catch (err) {
+        console.error('[ANTI-RAID] Error saving config:', err);
+        res.status(500).json({ error: 'Failed to save anti-raid config' });
+    }
+});
