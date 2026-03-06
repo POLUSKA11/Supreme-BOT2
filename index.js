@@ -17,6 +17,7 @@ const axios = require('axios');
 const { initializeDataDirectory } = require('./dataInit');
 const { query } = require('./utils/db');
 const { fixDatabase } = require('./fix_db');
+const { initializePlayer } = require('./utils/musicPlayer');
 require('dotenv').config();
 
 // --- CRASH RECOVERY ---
@@ -293,6 +294,14 @@ setInterval(() => {
 client.once('ready', async () => {
     console.log(`✅ [BOT] Online as ${client.user.tag}`);
     console.log(`📡 [BOT] Monitoring ${client.guilds.cache.size} guilds`);
+
+    // ─── Initialize Music Player ─────────────────────────────────────────────────
+    try {
+        await initializePlayer(client);
+        console.log('🎵 [MUSIC] Player initialized successfully!');
+    } catch (err) {
+        console.error('❌ [MUSIC] Failed to initialize player:', err.message);
+    }
     
     // CRITICAL FIX: Cache invites BEFORE the bot is fully ready
     // This prevents race conditions where members join before cache is loaded

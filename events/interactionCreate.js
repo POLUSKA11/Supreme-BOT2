@@ -31,6 +31,18 @@ module.exports = {
             }
         }
 
+        // ─── Autocomplete Handler ─────────────────────────────────────────────────
+        if (interaction.isAutocomplete()) {
+            const command = client.commands.get(interaction.commandName);
+            if (!command || !command.autocomplete) return;
+            try {
+                await command.autocomplete(interaction);
+            } catch (err) {
+                console.error('❌ [AUTOCOMPLETE ERROR]:', err.message);
+            }
+            return;
+        }
+
         if (interaction.isChatInputCommand()) {
             const command = client.commands.get(interaction.commandName);
             if (!command) return;
@@ -286,6 +298,67 @@ module.exports = {
 
         if (interaction.isButton()) {
             const { customId } = interaction;
+
+            // ─── Music Control Buttons ────────────────────────────────────────────────
+            if (customId.startsWith('music_')) {
+                try {
+                    const { useQueue, useHistory } = require('discord-player');
+                    const { buildNowPlayingEmbed, buildQueueEmbed, buildMusicControlsRow } = require('../utils/musicPlayer');
+                    const queue = useQueue(interaction.guild.id);
+
+                    if (!queue) {
+                        return interaction.reply({ content: '❌ Nothing is playing!', ephemeral: true }).catch(() => {});
+                    }
+
+                    await interaction.deferUpdate().catch(() => {});
+
+                    if (customId === 'music_pause_resume') {
+                        if (queue.node.isPaused()) {
+                            queue.node.resume();
+                        } else {
+                            queue.node.pause();
+                        }
+                        const track = queue.currentTrack;
+                        if (track) {
+                            const embed = buildNowPlayingEmbed(track, queue, client);
+                            const row = buildMusicControlsRow(queue.node.isPaused());
+                            await interaction.editReply({ embeds: [embed], components: [row] }).catch(() => {});
+                        }
+                        return;
+                    }
+
+                    if (customId === 'music_skip') {
+                        if (queue.isPlaying()) queue.node.skip();
+                        await interaction.editReply({ components: [] }).catch(() => {});
+                        return;
+                    }
+
+                    if (customId === 'music_stop') {
+                        queue.delete();
+                        await interaction.editReply({ components: [] }).catch(() => {});
+                        return;
+                    }
+
+                    if (customId === 'music_prev') {
+                        const history = useHistory(interaction.guild.id);
+                        if (history && !history.isEmpty()) {
+                            await history.previous().catch(() => {});
+                        }
+                        await interaction.editReply({ components: [] }).catch(() => {});
+                        return;
+                    }
+
+                    if (customId === 'music_queue') {
+                        const embed = buildQueueEmbed(queue, 1, client);
+                        await interaction.followUp({ embeds: [embed], ephemeral: true }).catch(() => {});
+                        return;
+                    }
+                } catch (err) {
+                    console.error('❌ [MUSIC BUTTON ERROR]:', err.message);
+                }
+                return;
+            }
+
 
             // --- VOICE CHANNEL CONTROL HANDLERS ---
             if (customId.startsWith('vc_')) {

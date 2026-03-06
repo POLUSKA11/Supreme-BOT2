@@ -40,6 +40,11 @@ module.exports = {
                     name: '⭐ Leveling System',
                     value: '• `/rank` - Check your level and XP progress\n• `/leaderboard` - View the top XP earners\n• `/levels` - View level rewards and XP requirements\n• `/level-config` - *(Admin)* Configure the leveling system',
                     inline: false
+                },
+                {
+                    name: '🎵 Music',
+                    value: '• `/play` - Play from YouTube, Spotify, SoundCloud, Apple Music\n• `/search` - Interactive track search\n• `/nowplaying` - Current track info & progress\n• `/queue` - View queue with pagination\n• `/skip` `/pause` `/resume` `/stop` - Playback controls\n• `/loop` `/shuffle` `/volume` - Queue controls\n• `/lyrics` - Get song lyrics\n• `/filter` - Audio effects (bass boost, nightcore, 8D...)\n• `/musichelp` - Full music command reference',
+                    inline: false
                 }
             )
             .setFooter({ text: 'Nexus | Professional Discord Solutions', iconURL: client.user.displayAvatarURL() })
