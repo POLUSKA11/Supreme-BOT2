@@ -304,10 +304,21 @@ module.exports = {
                 try {
                     const { useQueue, useHistory } = require('discord-player');
                     const { buildNowPlayingEmbed, buildQueueEmbed, buildMusicControlsRow } = require('../utils/musicPlayer');
-                    const queue = useQueue(interaction.guild.id);
 
+                    // Validate user is in a voice channel for control buttons (not for queue view)
+                    const memberVoice = interaction.member?.voice?.channel;
+                    if (!memberVoice && customId !== 'music_queue') {
+                        return interaction.reply({ content: '❌ You must be in a voice channel to use music controls!', ephemeral: true }).catch(() => {});
+                    }
+
+                    const queue = useQueue(interaction.guild.id);
                     if (!queue) {
                         return interaction.reply({ content: '❌ Nothing is playing!', ephemeral: true }).catch(() => {});
+                    }
+
+                    // Ensure user is in the same voice channel as the bot (except for queue view)
+                    if (customId !== 'music_queue' && memberVoice && queue.channel && memberVoice.id !== queue.channel.id) {
+                        return interaction.reply({ content: `❌ You must be in <#${queue.channel.id}> to control the music!`, ephemeral: true }).catch(() => {});
                     }
 
                     await interaction.deferUpdate().catch(() => {});
@@ -328,7 +339,9 @@ module.exports = {
                     }
 
                     if (customId === 'music_skip') {
-                        if (queue.isPlaying()) queue.node.skip();
+                        if (queue.isPlaying()) {
+                            queue.node.skip();
+                        }
                         await interaction.editReply({ components: [] }).catch(() => {});
                         return;
                     }
@@ -343,6 +356,8 @@ module.exports = {
                         const history = useHistory(interaction.guild.id);
                         if (history && !history.isEmpty()) {
                             await history.previous().catch(() => {});
+                        } else {
+                            await interaction.followUp({ content: '⚠️ No previous track in session history!', ephemeral: true }).catch(() => {});
                         }
                         await interaction.editReply({ components: [] }).catch(() => {});
                         return;
@@ -355,6 +370,7 @@ module.exports = {
                     }
                 } catch (err) {
                     console.error('❌ [MUSIC BUTTON ERROR]:', err.message);
+                    await interaction.reply({ content: `❌ Music button error: ${err.message}`, ephemeral: true }).catch(() => {});
                 }
                 return;
             }

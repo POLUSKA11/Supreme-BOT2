@@ -18,7 +18,8 @@ module.exports = {
             .setTitle('All Music Commands')
             .setDescription(
                 'Supreme Music supports **YouTube**, **Spotify**, **SoundCloud**, **Apple Music**, **Vimeo**, **Reverbnation**, and **direct file attachments**.\n\n' +
-                'Simply paste any URL or search by name — the bot will automatically detect the platform!'
+                'Simply paste any URL or search by name — the bot will automatically detect the platform!\n\n' +
+                '🗄️ **All history, saved tracks, and playlists are stored in TiDB** — they persist across bot restarts!'
             )
             .addFields(
                 {
@@ -65,8 +66,10 @@ module.exports = {
                     name: '🎛️ Effects & Filters',
                     value: [
                         '`/filter <effect>` — Apply audio effects:',
-                        '`bass boost` • `nightcore` • `vaporwave` • `8D audio`',
-                        '`tremolo` • `vibrato` • `lo-fi` • `normalizer`',
+                        '`bass boost` • `bass boost high` • `nightcore` • `vaporwave`',
+                        '`8D audio` • `tremolo` • `vibrato` • `lo-fi` • `normalizer`',
+                        '`karaoke` • `earrape` • `chorus` • `phaser` • `reverse`',
+                        '`clear all` — Remove all active filters',
                     ].join('\n'),
                     inline: false
                 },
@@ -76,8 +79,24 @@ module.exports = {
                         '`/nowplaying` — Current track with progress bar',
                         '`/lyrics [song]` — Get song lyrics',
                         '`/trackinfo [query]` — Detailed track info',
-                        '`/history` — Recently played tracks',
-                        '`/save [note]` — Save current track to DMs',
+                    ].join('\n'),
+                    inline: false
+                },
+                {
+                    name: '🗄️ TiDB — Persistent Data',
+                    value: [
+                        '`/history [scope] [limit]` — Play history:',
+                        '  • `Session` — This session only (in-memory)',
+                        '  • `Server` — All-time server history (TiDB)',
+                        '  • `Mine` — Your personal history (TiDB)',
+                        '`/save [action]` — Save tracks to TiDB:',
+                        '  • `Save` — Save current track',
+                        '  • `List` — View your saved tracks',
+                        '  • `Remove` — Remove a saved track by ID',
+                        '`/playlist <subcommand>` — Personal playlists (TiDB):',
+                        '  • `create` • `add` • `list` • `view` • `play` • `delete`',
+                        '`/stats [type]` — Server music statistics:',
+                        '  • `Overview` • `Top Tracks` • `Top Listeners`',
                     ].join('\n'),
                     inline: false
                 },
@@ -91,13 +110,22 @@ module.exports = {
                     inline: false
                 },
                 {
+                    name: '🎮 Music Control Buttons',
+                    value: [
+                        '⏮️ Previous • ⏸️/▶️ Pause/Resume • ⏭️ Skip • ⏹️ Stop • 📋 Queue',
+                        '*Buttons appear automatically when a track starts playing.*',
+                        '*You must be in the same voice channel to use them.*',
+                    ].join('\n'),
+                    inline: false
+                },
+                {
                     name: '🌐 Supported Platforms',
                     value: '▶️ YouTube • 🟢 Spotify • ☁️ SoundCloud • 🍎 Apple Music • 🎬 Vimeo • 🎸 ReverbNation • 📎 File Attachments',
                     inline: false
                 },
             )
             .setFooter({
-                text: 'Supreme BOT2 • Music powered by discord-player v7',
+                text: 'Supreme BOT2 • Music powered by discord-player v7 • History/Playlists stored in TiDB',
                 iconURL: interaction.client.user.displayAvatarURL()
             })
             .setTimestamp();

@@ -18,6 +18,7 @@ const { initializeDataDirectory } = require('./dataInit');
 const { query } = require('./utils/db');
 const { fixDatabase } = require('./fix_db');
 const { initializePlayer } = require('./utils/musicPlayer');
+const { initMusicSchema } = require('./utils/musicDb');
 require('dotenv').config();
 
 // --- CRASH RECOVERY ---
@@ -295,7 +296,13 @@ client.once('ready', async () => {
     console.log(`✅ [BOT] Online as ${client.user.tag}`);
     console.log(`📡 [BOT] Monitoring ${client.guilds.cache.size} guilds`);
 
-    // ─── Initialize Music Player ─────────────────────────────────────────────────
+    // ─── Initialize Music Player + TiDB Schema ──────────────────────────────────
+    try {
+        await initMusicSchema();
+        console.log('🎵 [MUSIC DB] Music schema ready.');
+    } catch (err) {
+        console.error('❌ [MUSIC DB] Schema initialization failed:', err.message);
+    }
     try {
         await initializePlayer(client);
         console.log('🎵 [MUSIC] Player initialized successfully!');

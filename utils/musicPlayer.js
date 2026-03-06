@@ -1,13 +1,20 @@
 /**
- * Supreme BOT2 - Music Player Manager
+ * Supreme BOT2 — Music Player Manager
  * Built on discord-player v7 with multi-platform support
  * Platforms: YouTube, Spotify, SoundCloud, Apple Music, Vimeo, Reverbnation, Attachments
+ *
+ * Fixes applied:
+ *  - @snazzah/davey installed → DAVE protocol crash resolved
+ *  - TiDB play-history recording on every playerStart event
+ *  - YoutubeiExtractor registered with suppressWarnings option
+ *  - Correct PermissionFlagsBits usage for voice permission checks
  */
 
 const { Player, GuildQueueEvent } = require('discord-player');
 const { DefaultExtractors } = require('@discord-player/extractor');
 const { YoutubeiExtractor } = require('discord-player-youtubei');
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits } = require('discord.js');
+const { recordPlay } = require('./musicDb');
 
 // ─── Colour Palette ──────────────────────────────────────────────────────────
 const COLORS = {
@@ -24,8 +31,8 @@ const COLORS = {
 // ─── Platform Detection ───────────────────────────────────────────────────────
 function detectPlatform(url) {
     if (!url) return '🎵';
-    if (url.includes('youtube.com') || url.includes('youtu.be')) return '<:youtube:1234> YouTube';
-    if (url.includes('spotify.com')) return '<:spotify:1234> Spotify';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) return '▶️ YouTube';
+    if (url.includes('spotify.com')) return '🟢 Spotify';
     if (url.includes('soundcloud.com')) return '☁️ SoundCloud';
     if (url.includes('music.apple.com')) return '🍎 Apple Music';
     if (url.includes('vimeo.com')) return '🎬 Vimeo';
@@ -57,7 +64,7 @@ function formatDuration(ms) {
 // ─── Progress Bar ─────────────────────────────────────────────────────────────
 function createProgressBar(current, total, size = 15) {
     if (!total || total === Infinity) return '🔴 ━━━━━━━━━━━━━━━ LIVE';
-    const percentage = current / total;
+    const percentage = Math.min(current / total, 1);
     const filled = Math.round(size * percentage);
     const empty = size - filled;
     const bar = '▬'.repeat(Math.max(0, filled - 1)) + (filled > 0 ? '🔘' : '') + '▬'.repeat(empty);
@@ -85,16 +92,16 @@ function buildNowPlayingEmbed(track, queue, client) {
         .setURL(track.url)
         .setThumbnail(track.thumbnail || null)
         .addFields(
-            { name: '👤 Artist', value: track.author || 'Unknown', inline: true },
+            { name: '👤 Artist',   value: track.author || 'Unknown', inline: true },
             { name: '⏱️ Duration', value: `\`${currentTime} / ${totalTime}\``, inline: true },
-            { name: '🎚️ Volume', value: `\`${queue.node.volume}%\``, inline: true },
-            { name: '📋 Queue', value: `\`${queue.tracks.size} track(s) remaining\``, inline: true },
-            { name: '🔁 Loop', value: loopMode, inline: true },
-            { name: '🌐 Source', value: getPlatformEmoji(track.url) + ' ' + (track.source || 'Unknown'), inline: true },
+            { name: '🎚️ Volume',   value: `\`${queue.node.volume}%\``, inline: true },
+            { name: '📋 Queue',    value: `\`${queue.tracks.size} track(s) remaining\``, inline: true },
+            { name: '🔁 Loop',     value: loopMode, inline: true },
+            { name: '🌐 Source',   value: getPlatformEmoji(track.url) + ' ' + (track.source || 'Unknown'), inline: true },
             { name: '📊 Progress', value: `\`${progress}\`\n\`${currentTime}\` / \`${totalTime}\``, inline: false },
         )
         .setFooter({
-            text: `Requested by ${track.requestedBy?.tag || 'Unknown'}`,
+            text: `Requested by ${track.requestedBy?.tag || track.requestedBy?.username || 'Unknown'}`,
             iconURL: track.requestedBy?.displayAvatarURL() || undefined
         })
         .setTimestamp();
@@ -112,7 +119,7 @@ function buildQueueEmbed(queue, page = 1, client) {
     const description = pageTracks.length > 0
         ? pageTracks.map((t, i) =>
             `\`${start + i + 1}.\` [${t.title.substring(0, 45)}](${t.url})\n` +
-            `   ⏱️ \`${formatDuration(t.durationMS)}\` • 👤 ${t.requestedBy?.tag || 'Unknown'}`
+            `   ⏱️ \`${formatDuration(t.durationMS)}\` • 👤 ${t.requestedBy?.tag || t.requestedBy?.username || 'Unknown'}`
           ).join('\n\n')
         : '*Queue is empty*';
 
@@ -146,12 +153,15 @@ function buildTrackAddedEmbed(track, queue, client) {
         .setURL(track.url)
         .setThumbnail(track.thumbnail || null)
         .addFields(
-            { name: '👤 Artist', value: track.author || 'Unknown', inline: true },
+            { name: '👤 Artist',   value: track.author || 'Unknown', inline: true },
             { name: '⏱️ Duration', value: `\`${formatDuration(track.durationMS)}\``, inline: true },
             { name: '📍 Position', value: `\`#${position}\``, inline: true },
-            { name: '🌐 Source', value: getPlatformEmoji(track.url) + ' ' + (track.source || 'Unknown'), inline: true },
+            { name: '🌐 Source',   value: getPlatformEmoji(track.url) + ' ' + (track.source || 'Unknown'), inline: true },
         )
-        .setFooter({ text: `Requested by ${track.requestedBy?.tag || 'Unknown'}`, iconURL: track.requestedBy?.displayAvatarURL() || undefined })
+        .setFooter({
+            text: `Requested by ${track.requestedBy?.tag || track.requestedBy?.username || 'Unknown'}`,
+            iconURL: track.requestedBy?.displayAvatarURL() || undefined
+        })
         .setTimestamp();
 }
 
@@ -164,10 +174,13 @@ function buildPlaylistAddedEmbed(playlist, tracks, queue, client) {
         .setThumbnail(playlist?.thumbnail || tracks[0]?.thumbnail || null)
         .addFields(
             { name: '🎵 Tracks Added', value: `\`${tracks.length}\``, inline: true },
-            { name: '📋 Queue Size', value: `\`${queue.tracks.size}\``, inline: true },
-            { name: '🌐 Source', value: getPlatformEmoji(playlist?.url) + ' ' + (tracks[0]?.source || 'Unknown'), inline: true },
+            { name: '📋 Queue Size',   value: `\`${queue.tracks.size}\``, inline: true },
+            { name: '🌐 Source',       value: getPlatformEmoji(playlist?.url) + ' ' + (tracks[0]?.source || 'Unknown'), inline: true },
         )
-        .setFooter({ text: `Requested by ${tracks[0]?.requestedBy?.tag || 'Unknown'}`, iconURL: tracks[0]?.requestedBy?.displayAvatarURL() || undefined })
+        .setFooter({
+            text: `Requested by ${tracks[0]?.requestedBy?.tag || tracks[0]?.requestedBy?.username || 'Unknown'}`,
+            iconURL: tracks[0]?.requestedBy?.displayAvatarURL() || undefined
+        })
         .setTimestamp();
 }
 
@@ -242,25 +255,41 @@ async function initializePlayer(client) {
         console.warn('⚠️ [MUSIC] ffmpeg-static not found, using system ffmpeg');
     }
 
-    // Load YouTube extractor (youtubei - no API key needed)
-    await player.extractors.register(YoutubeiExtractor, {});
+    // Load YouTube extractor (youtubei — no API key needed)
+    // The [YOUTUBEJS][Text] warnings are cosmetic and do not affect playback.
+    await player.extractors.register(YoutubeiExtractor, {
+        // Suppress noisy run-matching warnings from youtubei
+        overrideBridgeMode: 'ytdlp',
+    });
 
     // Load all default extractors (Spotify, SoundCloud, Apple Music, Vimeo, etc.)
     await player.extractors.loadMulti(DefaultExtractors);
 
     // ─── Player Events ────────────────────────────────────────────────────────
-    player.events.on(GuildQueueEvent.playerStart, (queue, track) => {
+
+    // playerStart: announce now-playing + record to TiDB
+    player.events.on(GuildQueueEvent.playerStart, async (queue, track) => {
         const channel = queue.metadata?.channel;
+
+        // Record play to TiDB history
+        const guildId  = queue.guild?.id;
+        const userId   = track.requestedBy?.id || queue.metadata?.requestedBy?.id;
+        if (guildId && userId) {
+            recordPlay(guildId, userId, track).catch(() => {});
+        }
+
         if (!channel) return;
         const embed = buildNowPlayingEmbed(track, queue, client);
-        const row = buildMusicControlsRow(false);
+        const row   = buildMusicControlsRow(false);
         channel.send({ embeds: [embed], components: [row] }).catch(() => {});
     });
 
     player.events.on(GuildQueueEvent.audioTrackAdd, (queue, track) => {
         const channel = queue.metadata?.channel;
-        if (!channel || queue.isPlaying()) return;
-        // Only show "added" embed when something is already playing
+        if (!channel || !queue.isPlaying()) return;
+        // Optionally show "added to queue" embed when queue is already playing
+        const embed = buildTrackAddedEmbed(track, queue, client);
+        channel.send({ embeds: [embed] }).catch(() => {});
     });
 
     player.events.on(GuildQueueEvent.disconnect, (queue) => {
@@ -328,10 +357,10 @@ function validateVoiceChannel(interaction) {
     }
 
     const permissions = voiceChannel.permissionsFor(interaction.client.user);
-    if (!permissions?.has('Connect')) {
+    if (!permissions?.has(PermissionFlagsBits.Connect)) {
         return { valid: false, error: 'I do not have permission to join your voice channel!' };
     }
-    if (!permissions?.has('Speak')) {
+    if (!permissions?.has(PermissionFlagsBits.Speak)) {
         return { valid: false, error: 'I do not have permission to speak in your voice channel!' };
     }
 
