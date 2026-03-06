@@ -20,6 +20,7 @@ import WelcomeSetup from './pages/WelcomeSetup';
 import AntiRaid from './pages/AntiRaid';
 import Premium from './pages/Premium';
 import TicketSetup from './pages/TicketSetup';
+import AdminPanel from './pages/AdminPanel';
 import Sidebar from './components/Sidebar';
 import CursorFollower from './components/CursorFollower';
 import './App.css';
@@ -188,6 +189,7 @@ function App() {
                         <Route path="/anti-raid" element={<AntiRaid selectedGuild={selectedGuild} />} />
                         <Route path="/premium" element={<Premium selectedGuild={selectedGuild} />} />
                         <Route path="/ticket-setup" element={<TicketSetup selectedGuild={selectedGuild} />} />
+                        <Route path="/admin" element={<AdminPanel user={user} />} />
                         <Route path="*" element={<Navigate to="/dashboard" replace />} />
                       </Routes>
                     </main>

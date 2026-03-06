@@ -244,6 +244,39 @@ router.post('/auth/callback', async (req, res) => {
             });
         });
 
+        // Log this web login for admin panel tracking (non-fatal)
+        try {
+            await query(
+                `CREATE TABLE IF NOT EXISTS web_login_logs (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id VARCHAR(32) NOT NULL,
+                    username VARCHAR(100) NOT NULL,
+                    discriminator VARCHAR(10) DEFAULT '0',
+                    avatar VARCHAR(255),
+                    ip_address VARCHAR(64),
+                    user_agent TEXT,
+                    logged_in_at BIGINT NOT NULL,
+                    INDEX idx_user_id (user_id),
+                    INDEX idx_logged_in_at (logged_in_at)
+                )`
+            );
+            await query(
+                `INSERT INTO web_login_logs (user_id, username, discriminator, avatar, ip_address, user_agent, logged_in_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    discordUser.id,
+                    discordUser.username,
+                    discordUser.discriminator || '0',
+                    discordUser.avatar || null,
+                    req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || null,
+                    req.headers['user-agent']?.substring(0, 500) || null,
+                    Date.now()
+                ]
+            );
+        } catch (logErr) {
+            console.error('[AUTH] Failed to log web login:', logErr.message);
+        }
+
         res.json({ success: true, user: req.session.user });
     } catch (error) {
         console.error('OAuth callback error:', error.response?.data || error.message);

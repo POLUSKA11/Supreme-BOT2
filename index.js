@@ -601,6 +601,10 @@ app.use('/api/welcome', welcomeApi);
 const levelingApi = require('./routes/levelingApi');
 app.use('/api/leveling', levelingApi);
 
+// Admin Panel API routes (restricted to Discord user 982731220913913856)
+const adminApi = require('./routes/adminApi');
+app.use('/api/admin', adminApi);
+
 
 
 // Serve static files for the React dashboard
