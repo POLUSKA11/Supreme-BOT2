@@ -21,6 +21,7 @@ import AntiRaid from './pages/AntiRaid';
 import Premium from './pages/Premium';
 import TicketSetup from './pages/TicketSetup';
 import AdminPanel from './pages/AdminPanel';
+import LandingPage from './pages/LandingPage';
 import Sidebar from './components/Sidebar';
 import CursorFollower from './components/CursorFollower';
 import './App.css';
@@ -102,6 +103,16 @@ function App() {
     <Router>
       <CursorFollower />
       <Routes>
+        {/* Landing page */}
+        <Route 
+          path="/" 
+          element={<LandingPage />} 
+        />
+        <Route 
+          path="/landing" 
+          element={<LandingPage />} 
+        />
+
         {/* Public routes */}
         <Route 
           path="/dashboard/login" 

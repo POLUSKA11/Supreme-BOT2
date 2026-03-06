@@ -649,10 +649,10 @@ if (fs.existsSync(dashboardDistPath)) {
     });
 }
 
-// Redirect root to dashboard
+// Serve landing page or dashboard at root
 app.get('/', (req, res) => {
     if (fs.existsSync(dashboardDistPath)) {
-        res.redirect('/dashboard');
+        res.sendFile(path.join(dashboardDistPath, 'index.html'));
     } else {
         const isDiscordReady = client.isReady();
         res.status(isDiscordReady ? 200 : 503).json({
@@ -664,6 +664,15 @@ app.get('/', (req, res) => {
             timestamp: new Date().toISOString(),
             message: 'Dashboard not built yet. Run: cd dashboard && npm run build'
         });
+    }
+});
+
+// Serve landing page at /landing
+app.get('/landing', (req, res) => {
+    if (fs.existsSync(dashboardDistPath)) {
+        res.sendFile(path.join(dashboardDistPath, 'index.html'));
+    } else {
+        res.status(404).send('Landing page not found');
     }
 });
 
