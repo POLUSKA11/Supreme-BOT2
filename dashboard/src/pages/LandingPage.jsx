@@ -193,10 +193,10 @@ export default function LandingPage() {
     { iconKey: 'users', title: 'Middleman Services', description: 'Secure, verified middleman system with DM questionnaires and staff review.', delay: 100 },
     { iconKey: 'lightning', title: 'Leveling System', description: 'Engage your community with XP-based leveling, custom rank cards, and role rewards.', delay: 200 },
     { iconKey: 'gift', title: 'Giveaway Manager', description: 'Create and manage giveaways with role requirements and winner selection.', delay: 300 },
-    { iconKey: 'brain', title: 'AI Assistant', description: 'Powered by advanced AI, Nexus can answer questions and provide server assistance.', delay: 400 },
+
     { iconKey: 'ticket', title: 'Ticket System', description: 'Professional support tickets with transcripts and staff assignment.', delay: 500 },
     { iconKey: 'userCheck', title: 'Invite Tracking', description: 'Track who invited whom and manage detailed invite leaderboards.', delay: 600 },
-    { iconKey: 'home', title: 'Web Dashboard', description: 'Manage everything from a beautiful, responsive web-based control panel.', delay: 700 },
+    { iconKey: 'home', title: 'Web Dashboard', description: 'Manage everything from a beautiful, responsive web-based control panel.', delay: 400 },
   ];
 
   return (
