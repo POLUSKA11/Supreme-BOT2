@@ -17,13 +17,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install root dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application
 COPY . .
 
 # Build the dashboard
-RUN cd dashboard && npm install && npm run build
+RUN cd dashboard && npm install --legacy-peer-deps && npm run build
 
 # Prune root dependencies to production only
 RUN npm prune --production
