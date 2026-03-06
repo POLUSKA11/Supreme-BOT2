@@ -165,10 +165,10 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
-    // Silently fetch stats to avoid crashing if 401 occurs
+    // Fetch public stats for the landing page
     const fetchStats = async () => {
       try {
-        const response = await fetch('/api/admin/stats', { credentials: 'include' });
+        const response = await fetch('/api/dashboard/public-stats');
         if (response.ok) {
           const data = await response.json();
           if (data && typeof data === 'object') {

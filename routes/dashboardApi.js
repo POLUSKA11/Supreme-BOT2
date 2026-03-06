@@ -124,6 +124,42 @@ router.get('/auth/me', async (req, res) => {
 });
 
 /**
+ * GET /api/dashboard/public-stats
+ * Public endpoint for landing page statistics
+ */
+router.get('/public-stats', async (req, res) => {
+    try {
+        const client = req.app.locals.client;
+        
+        // Bot guild count
+        const totalGuilds = client ? client.guilds.cache.size : 0;
+        const totalUsers = client
+            ? client.guilds.cache.reduce((acc, g) => acc + (g.memberCount || 0), 0)
+            : 0;
+
+        // Premium count
+        let premiumCount = 0;
+        try {
+            const premRows = await query(
+                `SELECT COUNT(*) as cnt FROM premium_subscriptions WHERE expires_at > NOW()`
+            );
+            premiumCount = premRows[0]?.cnt || 0;
+        } catch (_) {}
+
+        res.json({
+            totalGuilds,
+            totalUsers,
+            premiumCount,
+            botStatus: client ? (client.isReady() ? 'online' : 'connecting') : 'offline',
+            uptime: process.uptime(),
+        });
+    } catch (err) {
+        console.error('[PUBLIC-STATS] Error:', err.message);
+        res.status(500).json({ error: 'Failed to fetch public stats' });
+    }
+});
+
+/**
  * GET /api/dashboard/auth/url
  * Returns the Discord OAuth2 URL
  */
