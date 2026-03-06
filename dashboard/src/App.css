@@ -176,6 +176,80 @@ select {
   }
 }
 
+/* Tablet and mobile responsive fixes */
+@media (max-width: 1024px) {
+  /* Ensure main content area scrolls properly */
+  main {
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Fix page content padding and spacing */
+  [class*="p-"] {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}
+
+/* Ensure all content is scrollable on mobile */
+@media (max-width: 768px) {
+  /* Fix table overflow */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Ensure modals don't cut off content */
+  .fixed.inset-0 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+  
+  /* Fix grid layouts on small screens */
+  [class*="grid"] {
+    grid-auto-flow: row;
+  }
+  
+  /* Ensure all text wraps properly */
+  p, span, div {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  /* Reduce padding on very small screens */
+  .p-4 { padding: 0.75rem; }
+  .p-6 { padding: 1rem; }
+  .p-8 { padding: 1rem; }
+  
+  /* Ensure buttons are always tappable */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Fix spacing in containers */
+  .space-y-4 > * + * { margin-top: 0.75rem; }
+  .space-y-6 > * + * { margin-top: 1rem; }
+  .space-y-8 > * + * { margin-top: 1.5rem; }
+  
+  /* Ensure all modals are properly sized */
+  .fixed.inset-0 > div {
+    max-height: 90vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 /* Smooth page transitions */
 .animate-in {
   animation: fadeIn 0.4s ease-out;

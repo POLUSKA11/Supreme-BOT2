@@ -119,3 +119,44 @@ body {
 [data-theme="light"] .to-gray-900 {
   --tw-gradient-to: var(--bg-secondary);
 }
+
+/* Mobile responsive content fixes */
+@media (max-width: 1024px) {
+  /* Ensure content doesn't overflow */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Fix flex containers on mobile */
+  .flex {
+    flex-wrap: wrap;
+  }
+  
+  /* Ensure scrollable areas work on mobile */
+  .overflow-auto, .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Ensure all containers are responsive */
+  .container {
+    padding: 0 1rem;
+    max-width: 100%;
+  }
+  
+  /* Fix modal content visibility */
+  [role="dialog"] {
+    max-height: 90vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Ensure cards don't overflow */
+  .glass, .card {
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}
