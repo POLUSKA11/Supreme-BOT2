@@ -629,8 +629,22 @@ if (fs.existsSync(dashboardDistPath)) {
         }
     });
     
-    // Serve static assets with a trailing slash redirect
-    app.use('/dashboard', express.static(dashboardDistPath, { index: false }));
+    // Serve static assets (CSS, JS, images, etc.) from /assets and root
+    app.use('/assets', express.static(path.join(dashboardDistPath, 'assets')));
+    app.use('/dashboard/assets', express.static(path.join(dashboardDistPath, 'assets')));
+    
+    // Serve other static files (logo, favicon, etc.)
+    app.use(express.static(dashboardDistPath, { 
+        index: false,
+        setHeaders: (res, path) => {
+            // Set proper MIME types for assets
+            if (path.endsWith('.js')) res.setHeader('Content-Type', 'application/javascript');
+            if (path.endsWith('.css')) res.setHeader('Content-Type', 'text/css');
+            if (path.endsWith('.woff2')) res.setHeader('Content-Type', 'font/woff2');
+            if (path.endsWith('.woff')) res.setHeader('Content-Type', 'font/woff');
+            if (path.endsWith('.ttf')) res.setHeader('Content-Type', 'font/ttf');
+        }
+    });
     
     // Handle the dashboard root specifically
     app.get('/dashboard', (req, res) => {
@@ -638,14 +652,14 @@ if (fs.existsSync(dashboardDistPath)) {
     });
 
     // SPA fallback: for any route under /dashboard, serve the dashboard's index.html
+    // IMPORTANT: This must come AFTER static file serving to avoid interfering with assets
     app.get('/dashboard/*', (req, res) => {
-        // If it's a request for a file that doesn't exist, still serve index.html for React Router
-        const filePath = path.join(dashboardDistPath, req.params[0]);
-        if (fs.existsSync(filePath) && !req.path.endsWith('/')) {
-            res.sendFile(filePath);
-        } else {
-            res.sendFile(path.join(dashboardDistPath, 'index.html'));
+        // Exclude asset requests from SPA fallback
+        if (req.path.includes('/assets/') || req.path.match(/\.(js|css|png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|eot)$/i)) {
+            return res.status(404).send('Not found');
         }
+        // For all other routes, serve index.html for React Router
+        res.sendFile(path.join(dashboardDistPath, 'index.html'));
     });
 }
 
