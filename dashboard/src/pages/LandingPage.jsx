@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 // Safe count-up hook with validation
 function useCountUp(target, duration = 2000, start = false) {
@@ -199,7 +200,7 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+    <div className="min-h-screen bg-black text-white overflow-y-auto selection:bg-red-500/30">
       {/* Background gradient orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-red-600/5 rounded-full blur-[150px]" />
@@ -217,12 +218,12 @@ export default function LandingPage() {
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between relative z-10">
-          <a href="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group">
             <div className="w-9 h-9 rounded-lg overflow-hidden shadow-lg shadow-red-500/20 group-hover:shadow-red-500/40 transition-shadow duration-300">
               <img src="/nexus_logo.png" alt="Nexus" className="w-full h-full object-cover" />
             </div>
             <span className="text-lg font-black tracking-tight">Nexus<span className="text-red-500">Bot</span></span>
-          </a>
+          </Link>
 
           <ul className="hidden md:flex items-center gap-8 list-none m-0 p-0">
             <li><a href="#features" className="text-slate-400 hover:text-white text-sm font-semibold transition-colors duration-200">Features</a></li>
@@ -230,7 +231,7 @@ export default function LandingPage() {
           </ul>
 
           <div className="hidden md:flex items-center gap-3">
-            <a href="/dashboard/login" className="text-slate-400 hover:text-white text-sm font-semibold transition-colors px-4 py-2">Login</a>
+            <Link to="/dashboard/login" className="text-slate-400 hover:text-white text-sm font-semibold transition-colors px-4 py-2">Login</Link>
             <a href={BOT_INVITE} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg transition-all duration-200 shadow-lg shadow-red-600/30 hover:shadow-red-600/50 hover:-translate-y-0.5">
               Add to Discord
             </a>
@@ -265,9 +266,9 @@ export default function LandingPage() {
                 <a href={BOT_INVITE} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-base rounded-lg transition-all duration-200 shadow-xl shadow-red-600/30 hover:shadow-red-600/50 hover:-translate-y-1">
                   Add to Discord — Free
                 </a>
-                <a href="/dashboard/login" className="flex items-center justify-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-base rounded-lg transition-all duration-200 hover:-translate-y-1">
+                <Link to="/dashboard/login" className="flex items-center justify-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-base rounded-lg transition-all duration-200 hover:-translate-y-1">
                   Open Dashboard
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -328,7 +329,7 @@ export default function LandingPage() {
           <SectionHeading eyebrow="Premium" title={<>Unlock <span className="text-red-500">Premium</span> Power</>} subtitle="Take your server to the next level with exclusive features." />
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {['Free', 'Pro', 'Ultimate'].map((plan, i) => (
-              <div key={plan} className={`relative rounded-2xl p-8 border transition-all duration-300 ${i === 1 ? 'bg-red-600/10 border-red-500/30 scale-105' : 'bg-slate-900/50 border-white/10'}`}>
+              <div key={plan} className={`relative rounded-2xl p-8 border transition-all duration-300 ${i === 1 ? 'bg-red-600/10 border-red-500/30 scale-105 shadow-2xl shadow-red-600/10' : 'bg-slate-900/50 border-white/10'}`}>
                 {i === 1 && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-red-600 text-white text-xs font-bold rounded-full">Most Popular</div>}
                 <div className="mb-8">
                   <div className="text-slate-400 text-xs font-bold uppercase mb-2">{plan}</div>
@@ -351,13 +352,44 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="relative border-t border-white/5 py-16 px-4" style={{ zIndex: 1, background: 'rgba(0,0,0,0.5)' }}>
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg overflow-hidden"><img src="/nexus_logo.png" alt="Nexus" className="w-full h-full object-cover" /></div>
-            <span className="text-white font-black text-xl">NexusBot</span>
+      <footer className="relative border-t border-white/5 py-16 px-4 bg-black/50" style={{ zIndex: 1 }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg overflow-hidden"><img src="/nexus_logo.png" alt="Nexus" className="w-full h-full object-cover" /></div>
+                <span className="text-white font-black text-xl">NexusBot</span>
+              </div>
+              <p className="text-slate-500 text-sm leading-relaxed">The ultimate Discord bot for trading communities. Secure, powerful, and always online.</p>
+            </div>
+            <div>
+              <h4 className="text-white font-bold text-sm mb-4 uppercase tracking-wider">Product</h4>
+              <ul className="space-y-3 text-sm text-slate-500">
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#premium" className="hover:text-white transition-colors">Premium</a></li>
+                <li><Link to="/dashboard/login" className="hover:text-white transition-colors">Dashboard</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-bold text-sm mb-4 uppercase tracking-wider">Legal</h4>
+              <ul className="space-y-3 text-sm text-slate-500">
+                <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                <li><Link to="/cookies" className="hover:text-white transition-colors">Cookie Policy</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-bold text-sm mb-4 uppercase tracking-wider">Support</h4>
+              <ul className="space-y-3 text-sm text-slate-500">
+                <li><a href="#" className="hover:text-white transition-colors">Support Server</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
+              </ul>
+            </div>
           </div>
-          <p className="text-slate-600 text-sm">© {new Date().getFullYear()} NexusBot. All rights reserved.</p>
+          <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span className="text-slate-600 text-sm">© {new Date().getFullYear()} NexusBot. All rights reserved.</span>
+            <span className="text-slate-600 text-sm">Made with ❤️ for the community</span>
+          </div>
         </div>
       </footer>
     </div>

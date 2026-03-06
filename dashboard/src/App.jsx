@@ -22,6 +22,7 @@ import Premium from './pages/Premium';
 import TicketSetup from './pages/TicketSetup';
 import AdminPanel from './pages/AdminPanel';
 import LandingPage from './pages/LandingPage';
+import { PrivacyPolicy, TermsOfService, CookiePolicy } from './pages/Legal';
 import Sidebar from './components/Sidebar';
 import CursorFollower from './components/CursorFollower';
 import './App.css';
@@ -104,14 +105,13 @@ function App() {
       <CursorFollower />
       <Routes>
         {/* Landing page */}
-        <Route 
-          path="/" 
-          element={<LandingPage />} 
-        />
-        <Route 
-          path="/landing" 
-          element={<LandingPage />} 
-        />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/landing" element={<LandingPage />} />
+        
+        {/* Legal pages */}
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/cookies" element={<CookiePolicy />} />
 
         {/* Public routes */}
         <Route 
