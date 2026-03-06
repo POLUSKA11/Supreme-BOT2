@@ -225,7 +225,22 @@ async function initializePlayer(client) {
     const player = new Player(client, {
         skipFFmpeg: false,
         useLegacyFFmpeg: false,
+        ytdlOptions: {
+            quality: 'highestaudio',
+            highWaterMark: 1 << 25,
+        }
     });
+
+    // Use ffmpeg-static if available
+    try {
+        const ffmpeg = require('ffmpeg-static');
+        if (ffmpeg) {
+            process.env.FFMPEG_PATH = ffmpeg;
+            console.log('🎵 [MUSIC] Using ffmpeg-static:', ffmpeg);
+        }
+    } catch (err) {
+        console.warn('⚠️ [MUSIC] ffmpeg-static not found, using system ffmpeg');
+    }
 
     // Load YouTube extractor (youtubei - no API key needed)
     await player.extractors.register(YoutubeiExtractor, {});
