@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 function useCountUp(target, duration = 2000, start = false) {
   const [count, setCount] = useState(0);
   useEffect(() => {
-    if (!start || target === 0) return;
+    if (!start || !target || target <= 0) return;
     let startTime = null;
     const step = (timestamp) => {
       if (!startTime) startTime = timestamp;
@@ -32,16 +32,65 @@ function useInView(threshold = 0.1) {
 }
 
 function StatCard({ value, label, suffix = '', start }) {
-  const count = useCountUp(value, 2200, start);
+  const count = useCountUp(value || 0, 2200, start);
   return (
     <div className="text-center">
       <div className="text-5xl md:text-6xl font-black text-white tabular-nums tracking-tight">
-        {count.toLocaleString()}{suffix}
+        {(count || 0).toLocaleString()}{suffix}
       </div>
       <div className="text-slate-500 text-xs mt-3 font-bold uppercase tracking-[0.15em]">{label}</div>
     </div>
   );
 }
+
+// SVG Icon Components - properly structured to avoid React errors
+const ShieldIcon = () => (
+  <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+  </svg>
+);
+
+const UsersIcon = () => (
+  <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
+const LightningIcon = () => (
+  <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+  </svg>
+);
+
+const GiftIcon = () => (
+  <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+  </svg>
+);
+
+const BrainIcon = () => (
+  <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+);
+
+const TicketIcon = () => (
+  <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4v-3a2 2 0 00-2-2H5z" />
+  </svg>
+);
+
+const UserCheckIcon = () => (
+  <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+  </svg>
+);
+
+const HomeIcon = () => (
+  <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+  </svg>
+);
 
 function FeatureCard({ icon: Icon, title, description, delay = 0 }) {
   const [ref, inView] = useInView(0.15);
@@ -58,7 +107,7 @@ function FeatureCard({ icon: Icon, title, description, delay = 0 }) {
       <div className="absolute inset-0 bg-gradient-to-br from-red-500/0 to-red-500/0 group-hover:from-red-500/3 group-hover:to-red-500/5 rounded-2xl transition-all duration-500" />
       <div className="relative z-10">
         <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-6 group-hover:from-red-500/30 group-hover:to-red-600/20 group-hover:border-red-500/40 transition-all duration-300">
-          <Icon className="w-7 h-7" />
+          <Icon />
         </div>
         <h3 className="text-lg font-bold text-white mb-3">{title}</h3>
         <p className="text-slate-400 text-sm leading-relaxed">{description}</p>
@@ -109,11 +158,13 @@ export default function LandingPage() {
     fetch('/api/admin/stats', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (data) setStats({
-          guilds: data.totalGuilds || 12,
-          users: data.totalUsers || 5000,
-          premium: data.premiumCount || 3,
-        });
+        if (data && typeof data === 'object') {
+          setStats({
+            guilds: parseInt(data.totalGuilds) || 12,
+            users: parseInt(data.totalUsers) || 5000,
+            premium: parseInt(data.premiumCount) || 3,
+          });
+        }
       })
       .catch(() => {});
   }, []);
@@ -122,49 +173,49 @@ export default function LandingPage() {
 
   const features = [
     {
-      Icon: () => <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>,
+      Icon: ShieldIcon,
       title: 'Elite Moderation',
       description: 'Advanced anti-raid, auto-mod, link filtering, spam detection, and comprehensive audit logs to keep your server safe 24/7.',
       delay: 0,
     },
     {
-      Icon: () => <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>,
+      Icon: UsersIcon,
       title: 'Middleman Services',
       description: 'Secure, verified middleman application system with DM questionnaires, staff review, and transaction logging.',
       delay: 100,
     },
     {
-      Icon: () => <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>,
+      Icon: LightningIcon,
       title: 'Leveling System',
       description: 'Engage your community with XP-based leveling, custom rank cards, leaderboards, and role rewards.',
       delay: 200,
     },
     {
-      Icon: () => <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>,
+      Icon: GiftIcon,
       title: 'Giveaway Manager',
       description: 'Create, manage, and auto-end giveaways with role requirements, winner selection, and re-roll.',
       delay: 300,
     },
     {
-      Icon: () => <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>,
+      Icon: BrainIcon,
       title: 'AI Assistant',
       description: 'Powered by advanced AI, Nexus can answer questions, analyze prices, and provide personalized server assistance.',
       delay: 400,
     },
     {
-      Icon: () => <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4v-3a2 2 0 00-2-2H5z"/></svg>,
+      Icon: TicketIcon,
       title: 'Ticket System',
       description: 'Professional support tickets with categories, transcripts, staff assignment, and full dashboard management.',
       delay: 500,
     },
     {
-      Icon: () => <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>,
+      Icon: UserCheckIcon,
       title: 'Invite Tracking',
       description: 'Track who invited whom, manage fake invites, bonus invites, and display detailed invite leaderboards.',
       delay: 600,
     },
     {
-      Icon: () => <svg className="w-full h-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>,
+      Icon: HomeIcon,
       title: 'Web Dashboard',
       description: 'Manage everything from a beautiful, responsive dashboard. Configure settings, view stats, and control your bot.',
       delay: 700,
