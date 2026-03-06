@@ -200,7 +200,7 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-y-auto selection:bg-red-500/30">
+    <div className="min-h-screen bg-black text-white selection:bg-red-500/30">
       {/* Background gradient orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-red-600/5 rounded-full blur-[150px]" />
@@ -245,6 +245,18 @@ export default function LandingPage() {
             </div>
           </button>
         </div>
+
+        {/* Mobile menu dropdown */}
+        {menuOpen && (
+          <div className="md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-b border-white/10 px-4 py-4 flex flex-col gap-3 z-50">
+            <a href="#features" className="text-slate-300 hover:text-white text-sm font-semibold py-2 transition-colors" onClick={() => setMenuOpen(false)}>Features</a>
+            <a href="#premium" className="text-slate-300 hover:text-white text-sm font-semibold py-2 transition-colors" onClick={() => setMenuOpen(false)}>Premium</a>
+            <Link to="/dashboard/login" className="text-slate-300 hover:text-white text-sm font-semibold py-2 transition-colors" onClick={() => setMenuOpen(false)}>Login</Link>
+            <a href={BOT_INVITE} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg transition-all duration-200" onClick={() => setMenuOpen(false)}>
+              Add to Discord
+            </a>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}

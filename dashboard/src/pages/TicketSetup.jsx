@@ -272,6 +272,37 @@ export default function TicketSetup({ selectedGuild }) {
         <p className="text-slate-400">Configure and deploy your ticket panel with a live embed preview.</p>
       </div>
 
+      {/* Mobile Quick Deploy Bar */}
+      <div className="lg:hidden mb-6 p-4 bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/10">
+        <p className="text-xs text-slate-400 mb-3">Quick deploy — select a channel below and tap Deploy</p>
+        <div className="flex gap-3 items-center">
+          <select
+            value={selectedChannel}
+            onChange={(e) => setSelectedChannel(e.target.value)}
+            className="flex-1 bg-slate-900/50 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
+          >
+            <option value="">Select channel...</option>
+            {channels.map(ch => (
+              <option key={ch.id} value={ch.id}>#{ch.name}</option>
+            ))}
+          </select>
+          <button
+            onClick={handleDeploy}
+            disabled={saving || !selectedChannel}
+            className="px-4 py-2.5 bg-gradient-to-r from-red-600 to-purple-600 hover:from-red-500 hover:to-purple-500 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all duration-300 flex items-center gap-2 text-sm whitespace-nowrap"
+          >
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            )}
+            Deploy
+          </button>
+        </div>
+      </div>
+
       {success && (
         <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 flex items-center gap-3">
           <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -290,7 +321,7 @@ export default function TicketSetup({ selectedGuild }) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left: Configuration */}
         <div className="space-y-6">
 
@@ -550,7 +581,7 @@ export default function TicketSetup({ selectedGuild }) {
             </div>
           </div>
 
-          {/* Deploy Button */}
+          {/* Deploy Button - shown on all screens, mobile also has quick bar at top */}
           <button
             onClick={handleDeploy}
             disabled={saving || !selectedChannel}
@@ -594,7 +625,7 @@ export default function TicketSetup({ selectedGuild }) {
                   <span className="bg-[#5865f2] text-white text-[10px] px-1.5 py-0.5 rounded font-medium">BOT</span>
                   <span className="text-[#949ba4] text-xs">Today at {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
-                <div className="mt-1 max-w-[520px]">
+                <div className="mt-1 w-full max-w-[520px]">
                   <div className="flex rounded overflow-hidden bg-[#2b2d31]">
                     <div className="w-1 flex-shrink-0" style={{ backgroundColor: embedColor }} />
                     <div className="p-4 flex-1">

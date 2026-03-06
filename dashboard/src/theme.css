@@ -122,17 +122,6 @@ body {
 
 /* Mobile responsive content fixes */
 @media (max-width: 1024px) {
-  /* Ensure content doesn't overflow */
-  * {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-  
-  /* Fix flex containers on mobile */
-  .flex {
-    flex-wrap: wrap;
-  }
-  
   /* Ensure scrollable areas work on mobile */
   .overflow-auto, .overflow-y-auto {
     -webkit-overflow-scrolling: touch;

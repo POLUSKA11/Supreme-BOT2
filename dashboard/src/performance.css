@@ -24,8 +24,8 @@ html[data-performance="low"] * {
   transition-duration: 0.01ms !important;
 }
 
-/* Apply transitions based on performance */
-* {
+/* Apply transitions based on performance - only for theme/color transitions */
+.theme-transition {
   transition-duration: var(--transition-speed);
 }
 
@@ -59,16 +59,7 @@ html[dir="rtl"] .sidebar {
   /* Ensure main layout doesn't have overflow issues */
   body, html, #root {
     width: 100%;
-    height: 100%;
     overflow-x: hidden;
-  }
-  
-  /* Fix main content area scrolling */
-  main {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
   
   /* Ensure all content is visible */
@@ -79,17 +70,6 @@ html[dir="rtl"] .sidebar {
 }
 
 @media (max-width: 768px) {
-  /* Reduce padding for better space usage */
-  [class*="p-"][class*="8"] {
-    padding: 1rem;
-  }
-  
-  /* Fix grid and flex layouts */
-  [class*="grid"], [class*="flex"] {
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  
   /* Ensure all text is readable */
   body {
     font-size: 16px;
@@ -102,17 +82,6 @@ html[dir="rtl"] .sidebar {
 }
 
 @media (max-width: 480px) {
-  /* Extra padding reduction */
-  [class*="p-4"] { padding: 0.75rem; }
-  [class*="p-6"] { padding: 1rem; }
-  [class*="p-8"] { padding: 1rem; }
-  [class*="p-12"] { padding: 1.5rem; }
-  
-  /* Reduce gaps in flex/grid */
-  [class*="gap-"] {
-    gap: 0.5rem;
-  }
-  
   /* Ensure modals fit on screen */
   .fixed.inset-0 > * {
     max-height: calc(100vh - 2rem);

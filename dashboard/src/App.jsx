@@ -144,7 +144,7 @@ function App() {
               path="/dashboard/*" 
               element={
                 selectedGuild ? (
-                  <div className="flex h-screen bg-[#0f172a] overflow-hidden">
+                  <div className="flex h-screen bg-[#0f172a] overflow-hidden" style={{height: '100dvh'}}>
                     {/* Mobile overlay */}
                     <div 
                       className={`sidebar-overlay ${sidebarOpen ? 'active' : ''} lg:hidden`}
@@ -167,7 +167,7 @@ function App() {
                     </div>
 
                     {/* Main content */}
-                    <main className="flex-1 overflow-auto relative">
+                    <main className="flex-1 overflow-y-auto overflow-x-hidden relative" style={{WebkitOverflowScrolling: 'touch'}}>
                       {/* Mobile header bar */}
                       <div className="sticky top-0 z-30 lg:hidden bg-slate-900/80 backdrop-blur-xl border-b border-white/5 px-4 py-3 flex items-center gap-3">
                         <button
