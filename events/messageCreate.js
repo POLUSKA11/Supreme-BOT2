@@ -5,87 +5,94 @@ const CONTROL_CHANNEL_ID = '1470577900540661925';
 
 module.exports = {
     name: Events.MessageCreate,
-	    async execute(message) {
-	        if (message.author.bot || !message.guild) return;
-	
-	        const { guild, author, channel, mentions, member, content } = message;
+    async execute(message) {
+        if (message.author.bot) return;
 
-	        // --- ANTI-RAID SYSTEM ---
-	        const antiRaidConfig = storage.get(guild.id, 'anti_raid_config');
-	        if (antiRaidConfig && !member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-	            let shouldDelete = false;
-	            let reason = "";
+        // Handle DM responses for MM Application FIRST (before guild check)
+        if (!message.guild) {
+            const appManager = require('../applicationManager.js');
+            await appManager.handleDMResponse(message, message.client);
+            return;
+        }
 
-	            // 1. Lockdown Mode
-	            if (antiRaidConfig.lockdown) {
-	                shouldDelete = true;
-	                reason = "Server is in Lockdown Mode";
-	            }
+        const { guild, author, channel, mentions, member, content } = message;
 
-	            // 2. Anti-Link & Anti-Promotion
-	            const linkRegex = /(https?:\/\/[^\s]+)/g;
-	            // Enhanced promotion regex: Discord, Telegram, and other common ones
-	            const promoRegex = /(discord\.(gg|io|me|li|link|chat|direct)|discordapp\.com\/invite|t\.me|telegram\.me|bit\.ly|tinyurl\.com|shorturl\.at|rebrand\.ly)\/.+/i;
-	            
-	            if (!shouldDelete && antiRaidConfig.anti_promo && promoRegex.test(content)) {
-	                shouldDelete = true;
-	                reason = "Promotion/Invite Link (Discord/Telegram/Shortener)";
-	            } else if (!shouldDelete && antiRaidConfig.anti_link && linkRegex.test(content)) {
-	                shouldDelete = true;
-	                reason = "External Link";
-	            }
+        // --- ANTI-RAID SYSTEM ---
+        const antiRaidConfig = storage.get(guild.id, 'anti_raid_config');
+        if (antiRaidConfig && !member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+            let shouldDelete = false;
+            let reason = "";
 
-	            // 3. Anti-BadWords
-	            if (!shouldDelete && antiRaidConfig.anti_badwords && antiRaidConfig.banned_words?.length > 0) {
-	                const lowerContent = content.toLowerCase();
-	                if (antiRaidConfig.banned_words.some(word => lowerContent.includes(word.toLowerCase()))) {
-	                    shouldDelete = true;
-	                    reason = "Banned Word Usage";
-	                }
-	            }
+            // 1. Lockdown Mode
+            if (antiRaidConfig.lockdown) {
+                shouldDelete = true;
+                reason = "Server is in Lockdown Mode";
+            }
 
-	            // 4. Anti-Spam (Simple Rate Limiting)
-	            if (!shouldDelete && antiRaidConfig.anti_spam) {
-	                const now = Date.now();
-	                const userSpamKey = `spam_${guild.id}_${author.id}`;
-	                let userMsgs = storage.get(guild.id, userSpamKey) || [];
-	                userMsgs = userMsgs.filter(timestamp => now - timestamp < 5000); // Keep last 5s
-	                userMsgs.push(now);
-	                storage.set(guild.id, userSpamKey, userMsgs);
+            // 2. Anti-Link & Anti-Promotion
+            const linkRegex = /(https?:\/\/[^\s]+)/g;
+            // Enhanced promotion regex: Discord, Telegram, and other common ones
+            const promoRegex = /(discord\.(gg|io|me|li|link|chat|direct)|discordapp\.com\/invite|t\.me|telegram\.me|bit\.ly|tinyurl\.com|shorturl\.at|rebrand\.ly)\/.+/i;
+            
+            if (!shouldDelete && antiRaidConfig.anti_promo && promoRegex.test(content)) {
+                shouldDelete = true;
+                reason = "Promotion/Invite Link (Discord/Telegram/Shortener)";
+            } else if (!shouldDelete && antiRaidConfig.anti_link && linkRegex.test(content)) {
+                shouldDelete = true;
+                reason = "External Link";
+            }
 
-	                if (userMsgs.length > (antiRaidConfig.spam_threshold || 5)) {
-	                    shouldDelete = true;
-	                    reason = "Message Spamming";
-	                }
-	            }
+            // 3. Anti-BadWords
+            if (!shouldDelete && antiRaidConfig.anti_badwords && antiRaidConfig.banned_words?.length > 0) {
+                const lowerContent = content.toLowerCase();
+                if (antiRaidConfig.banned_words.some(word => lowerContent.includes(word.toLowerCase()))) {
+                    shouldDelete = true;
+                    reason = "Banned Word Usage";
+                }
+            }
 
-	            if (shouldDelete) {
-	                await message.delete().catch(() => null);
-	                
-	                // Log to channel if configured
-	                if (antiRaidConfig.log_channel) {
-	                    const logChannel = guild.channels.cache.get(antiRaidConfig.log_channel);
-	                    if (logChannel) {
-	                        const logEmbed = {
-	                            title: '🛡️ Anti-Raid Action',
-	                            color: 0xFF0000,
-	                            fields: [
-	                                { name: 'User', value: `${author.tag} (${author.id})`, inline: true },
-	                                { name: 'Channel', value: `<#${channel.id}>`, inline: true },
-	                                { name: 'Reason', value: reason, inline: true },
-	                                { name: 'Message Content', value: content.substring(0, 1024) || "*No Content*" }
-	                            ],
-	                            timestamp: new Date().toISOString()
-	                        };
-	                        logChannel.send({ embeds: [logEmbed] }).catch(() => null);
-	                    }
-	                }
+            // 4. Anti-Spam (Simple Rate Limiting)
+            if (!shouldDelete && antiRaidConfig.anti_spam) {
+                const now = Date.now();
+                const userSpamKey = `spam_${guild.id}_${author.id}`;
+                let userMsgs = storage.get(guild.id, userSpamKey) || [];
+                userMsgs = userMsgs.filter(timestamp => now - timestamp < 5000); // Keep last 5s
+                userMsgs.push(now);
+                storage.set(guild.id, userSpamKey, userMsgs);
 
-	                const warning = await channel.send(`⚠️ <@${author.id}>, your message was removed: **${reason}**`).catch(() => null);
-	                if (warning) setTimeout(() => warning.delete().catch(() => null), 5000);
-	                return;
-	            }
-	        }
+                if (userMsgs.length > (antiRaidConfig.spam_threshold || 5)) {
+                    shouldDelete = true;
+                    reason = "Message Spamming";
+                }
+            }
+
+            if (shouldDelete) {
+                await message.delete().catch(() => null);
+                
+                // Log to channel if configured
+                if (antiRaidConfig.log_channel) {
+                    const logChannel = guild.channels.cache.get(antiRaidConfig.log_channel);
+                    if (logChannel) {
+                        const logEmbed = {
+                            title: '🛡️ Anti-Raid Action',
+                            color: 0xFF0000,
+                            fields: [
+                                { name: 'User', value: `${author.tag} (${author.id})`, inline: true },
+                                { name: 'Channel', value: `<#${channel.id}>`, inline: true },
+                                { name: 'Reason', value: reason, inline: true },
+                                { name: 'Message Content', value: content.substring(0, 1024) || "*No Content*" }
+                            ],
+                            timestamp: new Date().toISOString()
+                        };
+                        logChannel.send({ embeds: [logEmbed] }).catch(() => null);
+                    }
+                }
+
+                const warning = await channel.send(`⚠️ <@${author.id}>, your message was removed: **${reason}**`).catch(() => null);
+                if (warning) setTimeout(() => warning.delete().catch(() => null), 5000);
+                return;
+            }
+        }
 
         // Handle persistent control room mute/unmute logic
         if (channel.id === CONTROL_CHANNEL_ID) {
@@ -175,7 +182,6 @@ module.exports = {
                     }
                 } else {
                     // If they sent a message but didn't mention anyone, we might want to wait or cancel
-                    // For now, let's just cancel if it's not a mention to avoid locking them out without a way to finish
                     if (message.content.toLowerCase() === 'cancel') {
                         await channel.permissionOverwrites.edit(author.id, { [PermissionFlagsBits.SendMessages]: false });
                         await storage.delete(guild.id, `vc_action_${author.id}`);
@@ -185,7 +191,6 @@ module.exports = {
                             reply.delete().catch(() => null);
                         }, 5000);
                     } else {
-                        // If they sent a message but didn't mention anyone and didn't say cancel
                         const reply = await message.reply(`⚠️ Please **@mention** a user to perform this action, or type \`cancel\` to stop.`);
                         setTimeout(() => {
                             message.delete().catch(() => null);
@@ -202,13 +207,6 @@ module.exports = {
                 }, 1000);
                 return;
             }
-        }
-
-        // Handle DM responses for MM Application
-        if (!message.guild && message.channel.type === 1) {
-            const appManager = require('../applicationManager.js');
-            await appManager.handleDMResponse(message, message.client);
-            return;
         }
     }
 };

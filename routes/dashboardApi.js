@@ -1493,11 +1493,25 @@ module.exports = router;
 router.get('/bot/customization', requireAuth, requireGuildAccess, async (req, res) => {
     try {
         const guildId = req.session.selectedGuildId;
-        const customization = storage.get(guildId, 'bot_customization') || {
-            avatar: '',
-            banner: '',
-            bio: ''
-        };
+        // Try memory first, then fall back to TiDB for persistence across restarts
+        let customization = storage.get(guildId, 'bot_customization');
+        if (!customization) {
+            try {
+                const rows = await query(
+                    'SELECT setting_value FROM settings WHERE guild_id = ? AND setting_key = ?',
+                    [guildId, 'bot_customization']
+                );
+                if (rows && rows.length > 0) {
+                    customization = JSON.parse(rows[0].setting_value);
+                    // Cache in memory for this guild
+                    storage.set(guildId, 'bot_customization', customization);
+                }
+            } catch (dbErr) {
+                console.error('[BOT-CUSTOM] DB load error:', dbErr.message);
+            }
+        }
+        // Return guild-specific customization (empty defaults if none saved)
+        customization = customization || { avatar: '', banner: '', bio: '' };
         res.json(customization);
     } catch (err) {
         console.error('[BOT-CUSTOM] Error fetching customization:', err);

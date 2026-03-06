@@ -159,8 +159,8 @@ router.get('/stats', requireAdmin, async (req, res) => {
 router.get('/web-logins', requireAdmin, async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 50;
-        const offset = (page - 1) * limit;
+        const limit = parseInt(req.query.limit) || 30;
+        const offset = parseInt((page - 1) * limit);
         const search = req.query.search || '';
 
         let rows, countRows;
@@ -168,8 +168,8 @@ router.get('/web-logins', requireAdmin, async (req, res) => {
         if (search) {
             rows = await query(
                 `SELECT * FROM web_login_logs WHERE username LIKE ? OR user_id LIKE ?
-                 ORDER BY logged_in_at DESC LIMIT ? OFFSET ?`,
-                [`%${search}%`, `%${search}%`, limit, offset]
+                 ORDER BY logged_in_at DESC LIMIT ${limit} OFFSET ${offset}`,
+                [`%${search}%`, `%${search}%`]
             );
             countRows = await query(
                 `SELECT COUNT(*) as cnt FROM web_login_logs WHERE username LIKE ? OR user_id LIKE ?`,
@@ -177,8 +177,8 @@ router.get('/web-logins', requireAdmin, async (req, res) => {
             );
         } else {
             rows = await query(
-                `SELECT * FROM web_login_logs ORDER BY logged_in_at DESC LIMIT ? OFFSET ?`,
-                [limit, offset]
+                `SELECT * FROM web_login_logs ORDER BY logged_in_at DESC LIMIT ${limit} OFFSET ${offset}`,
+                []
             );
             countRows = await query(`SELECT COUNT(*) as cnt FROM web_login_logs`);
         }
@@ -224,8 +224,8 @@ router.delete('/web-logins/clear', requireAdmin, async (req, res) => {
 router.get('/registered-users', requireAdmin, async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 50;
-        const offset = (page - 1) * limit;
+        const limit = parseInt(req.query.limit) || 30;
+        const offset = parseInt((page - 1) * limit);
         const search = req.query.search || '';
 
         let rows, countRows;
@@ -239,8 +239,8 @@ router.get('/registered-users', requireAdmin, async (req, res) => {
                  FROM web_login_logs
                  WHERE username LIKE ? OR user_id LIKE ?
                  GROUP BY user_id, username, discriminator, avatar
-                 ORDER BY last_login DESC LIMIT ? OFFSET ?`,
-                [`%${search}%`, `%${search}%`, limit, offset]
+                 ORDER BY last_login DESC LIMIT ${limit} OFFSET ${offset}`,
+                [`%${search}%`, `%${search}%`]
             );
             countRows = await query(
                 `SELECT COUNT(DISTINCT user_id) as cnt FROM web_login_logs WHERE username LIKE ? OR user_id LIKE ?`,
@@ -254,8 +254,8 @@ router.get('/registered-users', requireAdmin, async (req, res) => {
                          MIN(logged_in_at) as first_login
                  FROM web_login_logs
                  GROUP BY user_id, username, discriminator, avatar
-                 ORDER BY last_login DESC LIMIT ? OFFSET ?`,
-                [limit, offset]
+                 ORDER BY last_login DESC LIMIT ${limit} OFFSET ${offset}`,
+                []
             );
             countRows = await query(`SELECT COUNT(DISTINCT user_id) as cnt FROM web_login_logs`);
         }
@@ -287,10 +287,9 @@ router.get('/registered-users', requireAdmin, async (req, res) => {
 router.get('/premium/all', requireAdmin, async (req, res) => {
     try {
         const client = req.app.locals.client;
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 50;
-        const offset = (page - 1) * limit;
-
+         const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 30;
+        const offset = parseInt((page - 1) * limit);
         let rows = [];
         let total = 0;
 
@@ -299,8 +298,8 @@ router.get('/premium/all', requireAdmin, async (req, res) => {
             total = countRows[0]?.cnt || 0;
 
             rows = await query(
-                `SELECT * FROM premium_subscriptions ORDER BY expires_at DESC LIMIT ? OFFSET ?`,
-                [limit, offset]
+                `SELECT * FROM premium_subscriptions ORDER BY expires_at DESC LIMIT ${limit} OFFSET ${offset}`,
+                []
             );
         } catch (dbErr) {
             console.error('[ADMIN] Premium DB error:', dbErr.message);
