@@ -44,7 +44,7 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center shadow-lg shadow-red-500/50">
               <span className="font-bold text-lg">⚡</span>
             </div>
-            <span className="text-xl font-bold tracking-tight">Supreme<span className="text-red-400">BOT2</span></span>
+            <span className="text-xl font-bold tracking-tight">Nexus<span className="text-red-400">Bot</span></span>
           </div>
           <div className="flex items-center gap-4">
             <a href="/dashboard/login" className="text-slate-300 hover:text-white transition-colors">Dashboard</a>
@@ -52,7 +52,7 @@ export default function LandingPage() {
               onClick={handleAddToDiscord}
               className="px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-lg font-semibold transition-all shadow-lg shadow-red-500/30 hover:shadow-red-500/50"
             >
-              Add to Discord
+              Add Nexus to Discord
             </button>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function LandingPage() {
                 Unleash the <span className="bg-gradient-to-r from-red-400 via-red-500 to-orange-400 bg-clip-text text-transparent">Ultimate Discord</span> Experience
               </h1>
               <p className="text-xl text-slate-300 leading-relaxed">
-                Supreme-BOT2 is the next-generation Discord bot, empowering your community with unparalleled moderation, AI-driven insights, and seamless server management. Built for performance and designed for engagement.
+                Nexus is the next-generation Discord bot, empowering your community with unparalleled moderation, AI-driven insights, and seamless server management. Built for performance and designed for engagement.
               </p>
             </div>
 
@@ -81,7 +81,7 @@ export default function LandingPage() {
                 onClick={handleAddToDiscord}
                 className="px-8 py-4 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-xl font-bold text-lg transition-all shadow-lg shadow-red-500/30 hover:shadow-red-500/50 hover:scale-105 flex items-center justify-center gap-2"
               >
-                <span>Add to Discord</span>
+                <span>Add Nexus to Discord</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
               <a
@@ -96,15 +96,15 @@ export default function LandingPage() {
             <div className="grid grid-cols-3 gap-6 pt-8">
               <div className="space-y-2">
                 <p className="text-3xl font-bold text-red-400">{(stats.guilds / 1000).toFixed(1)}K+</p>
-                <p className="text-sm text-slate-400">Servers</p>
+                <p className="text-sm text-slate-400">Servers Using Nexus</p>
               </div>
               <div className="space-y-2">
                 <p className="text-3xl font-bold text-red-400">{(stats.users / 1000000).toFixed(1)}M+</p>
-                <p className="text-sm text-slate-400">Users</p>
+                <p className="text-sm text-slate-400">Active Users</p>
               </div>
               <div className="space-y-2">
                 <p className="text-3xl font-bold text-red-400">{(stats.premium / 1000).toFixed(1)}K+</p>
-                <p className="text-sm text-slate-400">Premium</p>
+                <p className="text-sm text-slate-400">Premium Servers</p>
               </div>
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function LandingPage() {
       <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-black mb-4">Powerful Features</h2>
+            <h2 className="text-4xl lg:text-5xl font-black mb-4">Nexus Features</h2>
             <p className="text-xl text-slate-300">Everything you need to manage, protect, and grow your Discord server</p>
           </div>
 
@@ -186,7 +186,7 @@ export default function LandingPage() {
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-black mb-4">Loved by Server Owners</h2>
+            <h2 className="text-4xl lg:text-5xl font-black mb-4">Loved by Nexus Users</h2>
             <p className="text-xl text-slate-300">Join thousands of satisfied communities</p>
           </div>
 
@@ -232,12 +232,12 @@ export default function LandingPage() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-red-950/50 to-slate-950/50 border-t border-b border-white/10">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h2 className="text-4xl lg:text-5xl font-black">Ready to Revolutionize Your Server?</h2>
-          <p className="text-xl text-slate-300">Join thousands of satisfied server owners who trust Supreme-BOT2 to deliver an exceptional Discord experience.</p>
+          <p className="text-xl text-slate-300">Join thousands of satisfied server owners who trust Nexus to deliver an exceptional Discord experience.</p>
           <button
             onClick={handleAddToDiscord}
             className="px-10 py-4 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-xl font-bold text-lg transition-all shadow-lg shadow-red-500/30 hover:shadow-red-500/50 hover:scale-105 inline-flex items-center gap-2"
           >
-            <span>Add Supreme-BOT2 Now</span>
+            <span>Add Nexus Now</span>
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
@@ -280,7 +280,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="border-t border-white/10 pt-8 text-center text-slate-500 text-sm">
-            <p>&copy; 2026 Supreme-BOT2. All rights reserved. Built with ⚡ by Manus AI.</p>
+            <p>&copy; 2026 Nexus. All rights reserved. Built with ⚡ by Manus AI.</p>
           </div>
         </div>
       </footer>

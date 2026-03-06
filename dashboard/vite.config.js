@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '', // Use empty string for relative paths in the build
+  base: '/', // Use absolute paths to ensure assets load correctly on all routes
   publicDir: 'public', // Explicitly set public directory
   server: {
     proxy: {
