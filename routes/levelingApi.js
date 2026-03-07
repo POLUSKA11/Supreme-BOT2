@@ -10,6 +10,7 @@ const express = require('express');
 const router = express.Router();
 const levelSystem = require('../utils/levelSystem');
 const { query } = require('../utils/db');
+const { generateRankCard } = require('../utils/rankCardGenerator');
 
 // ─── Auth Middleware (reuse session from dashboardApi) ────────
 const requireAuth = (req, res, next) => {
@@ -208,6 +209,96 @@ router.delete('/:guildId/user/:userId', requireAuth, async (req, res) => {
         await query('DELETE FROM levels WHERE guild_id = ? AND user_id = ?', [guildId, userId]);
         res.json({ success: true, message: 'User XP reset' });
     } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// ─── Rank Card Customization Endpoints ────────────────────────
+
+/**
+ * GET /api/leveling/:guildId/card-settings/:userId
+ * Fetch rank card customization settings for a user.
+ */
+router.get('/:guildId/card-settings/:userId', requireAuth, async (req, res) => {
+    try {
+        const { guildId, userId } = req.params;
+        const raw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
+        const settings = raw ? JSON.parse(raw) : {};
+        res.json({ success: true, data: settings });
+    } catch (err) {
+        console.error('[LEVELING API] Error fetching card settings:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * POST /api/leveling/:guildId/card-settings/:userId
+ * Save rank card customization settings for a user.
+ */
+router.post('/:guildId/card-settings/:userId', requireAuth, async (req, res) => {
+    try {
+        const { guildId, userId } = req.params;
+        // Only allow users to edit their own settings unless they are an admin
+        if (req.session.userId !== userId && req.session.userId !== '982731220913913856') {
+            return res.status(403).json({ error: 'Forbidden: You can only edit your own settings' });
+        }
+
+        const settings = req.body;
+        await levelSystem.setConfig(guildId, `card_settings_${userId}`, JSON.stringify(settings));
+        res.json({ success: true, message: 'Rank card settings saved' });
+    } catch (err) {
+        console.error('[LEVELING API] Error saving card settings:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * GET /api/leveling/:guildId/card-preview/:userId
+ * Generate a preview of the rank card with current or pending settings.
+ */
+router.get('/:guildId/card-preview/:userId', requireAuth, async (req, res) => {
+    try {
+        const { guildId, userId } = req.params;
+        const client = req.app.locals.client;
+        const guild = client?.guilds.cache.get(guildId);
+        if (!guild) return res.status(404).json({ error: 'Guild not found' });
+
+        const member = await guild.members.fetch(userId).catch(() => null);
+        if (!member) return res.status(404).json({ error: 'Member not found' });
+
+        const userData = await levelSystem.getUserData(guildId, userId);
+        const { level, currentXp, xpNeeded } = levelSystem.getLevelFromXp(userData.xp);
+        
+        // Get rank position
+        const leaderboard = await levelSystem.getLeaderboard(guildId, 100);
+        const rankPos = leaderboard.findIndex(u => u.user_id === userId) + 1;
+
+        // Get settings from query params (for live preview) or DB
+        let cardSettings = {};
+        if (req.query.settings) {
+            try {
+                cardSettings = JSON.parse(req.query.settings);
+            } catch (e) {}
+        } else {
+            const raw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
+            cardSettings = raw ? JSON.parse(raw) : {};
+        }
+
+        const cardBuf = await generateRankCard({
+            username: member.user.username,
+            avatarUrl: member.user.displayAvatarURL({ extension: 'png', size: 256 }),
+            level,
+            rank: rankPos,
+            currentXp,
+            xpNeeded,
+            totalXp: userData.xp,
+            cardSettings,
+        });
+
+        res.set('Content-Type', 'image/png');
+        res.send(cardBuf);
+    } catch (err) {
+        console.error('[LEVELING API] Error generating card preview:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
