@@ -199,7 +199,7 @@ function App() {
                         <Route path="/staff-verification/:guildId" element={<StaffVerification />} />
                         <Route path="/welcome-setup/:guildId" element={<WelcomeSetup />} />
                         <Route path="/anti-raid" element={<AntiRaid selectedGuild={selectedGuild} />} />
-                        <Route path="/leveling" element={<Leveling selectedGuild={selectedGuild} />} />
+                        <Route path="/leveling" element={<Leveling selectedGuild={selectedGuild} user={user} />} />
                         <Route path="/premium" element={<Premium selectedGuild={selectedGuild} />} />
                         <Route path="/ticket-setup" element={<TicketSetup selectedGuild={selectedGuild} />} />
                         <Route path="/admin" element={<AdminPanel user={user} />} />
