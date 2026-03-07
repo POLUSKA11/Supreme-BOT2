@@ -13,16 +13,30 @@ const { generateRankCard } = require('../utils/rankCardGenerator');
 
 // ─── Load card settings for a user ───────────────────────────
 async function getCardSettings(guildId, userId) {
+    // Helper to parse and normalize settings
+    function parseSettings(raw) {
+        try {
+            const s = JSON.parse(raw);
+            // Normalize backgroundImage: treat empty string as null
+            if (s.backgroundImage === '') s.backgroundImage = null;
+            return s;
+        } catch (e) {
+            return null;
+        }
+    }
+
     // 1. Try to get user-specific settings
     const userRaw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
     if (userRaw) {
-        try { return JSON.parse(userRaw); } catch (e) {}
+        const parsed = parseSettings(userRaw);
+        if (parsed) return parsed;
     }
 
     // 2. Fallback to server-wide default settings
     const defaultRaw = await levelSystem.getConfig(guildId, 'card_settings_default', null);
     if (defaultRaw) {
-        try { return JSON.parse(defaultRaw); } catch (e) {}
+        const parsed = parseSettings(defaultRaw);
+        if (parsed) return parsed;
     }
 
     return {};

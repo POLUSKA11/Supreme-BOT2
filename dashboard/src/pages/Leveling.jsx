@@ -13,7 +13,7 @@ export default function Leveling({ selectedGuild, user }) {
   const [defaultCardSettings, setDefaultCardSettings] = useState({
     mainColor: '#00FFFF',
     backgroundColor: '#23272A',
-    backgroundImage: '',
+    backgroundImage: null,
     overlayOpacity: 0.6,
     font: 'Montserrat'
   });
@@ -22,6 +22,8 @@ export default function Leveling({ selectedGuild, user }) {
   const [previewUrl, setPreviewUrl] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
   const [modalTab, setModalTab] = useState('customize'); // 'customize' or 'visibility'
+  const [saveMessage, setSaveMessage] = useState({ type: '', text: '' });
+  const [configSaveMessage, setConfigSaveMessage] = useState({ type: '', text: '' });
 
   const guildId = selectedGuild?.id;
   const userId = user?.id || 'default';
@@ -57,8 +59,13 @@ export default function Leveling({ selectedGuild, user }) {
     try {
       const res = await fetch(`/api/leveling/${guildId}/card-settings/default`, { credentials: 'include' });
       const data = await res.json();
-      if (data.success && data.data) {
-        setDefaultCardSettings(prev => ({ ...prev, ...data.data }));
+      if (data.success && data.data && Object.keys(data.data).length > 0) {
+        // Normalize backgroundImage: treat empty string as null
+        const normalized = {
+          ...data.data,
+          backgroundImage: data.data.backgroundImage || null,
+        };
+        setDefaultCardSettings(prev => ({ ...prev, ...normalized }));
       }
     } catch (err) {
       console.error('Failed to fetch default card settings:', err);
@@ -82,17 +89,30 @@ export default function Leveling({ selectedGuild, user }) {
     }
   }, [defaultCardSettings, guildId, userId]);
 
+  const showTempMessage = (setter, type, text) => {
+    setter({ type, text });
+    setTimeout(() => setter({ type: '', text: '' }), 4000);
+  };
+
   const handleSaveConfig = async () => {
     setSaving(true);
+    setConfigSaveMessage({ type: '', text: '' });
     try {
-      await fetch(`/api/leveling/${guildId}/config`, {
+      const response = await fetch(`/api/leveling/${guildId}/config`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(config),
         credentials: 'include'
       });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        showTempMessage(setConfigSaveMessage, 'success', 'Settings saved successfully!');
+      } else {
+        showTempMessage(setConfigSaveMessage, 'error', data.error || 'Failed to save settings.');
+      }
     } catch (err) {
       console.error('Failed to save config:', err);
+      showTempMessage(setConfigSaveMessage, 'error', 'An error occurred while saving.');
     } finally {
       setSaving(false);
     }
@@ -100,16 +120,32 @@ export default function Leveling({ selectedGuild, user }) {
 
   const handleSaveDefaultCard = async () => {
     setSaving(true);
+    setSaveMessage({ type: '', text: '' });
     try {
-      await fetch(`/api/leveling/${guildId}/card-settings/default`, {
+      // Normalize: convert empty string backgroundImage to null before saving
+      const settingsToSave = {
+        ...defaultCardSettings,
+        backgroundImage: defaultCardSettings.backgroundImage || null,
+      };
+
+      const response = await fetch(`/api/leveling/${guildId}/card-settings/default`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(defaultCardSettings),
+        body: JSON.stringify(settingsToSave),
         credentials: 'include'
       });
-      setShowEditModal(false);
+      const data = await response.json();
+      if (response.ok && data.success) {
+        // Update local state with normalized settings
+        setDefaultCardSettings(settingsToSave);
+        showTempMessage(setSaveMessage, 'success', 'Rank card saved! Changes will appear on Discord level-ups.');
+        setTimeout(() => setShowEditModal(false), 1500);
+      } else {
+        showTempMessage(setSaveMessage, 'error', data.error || 'Failed to save rank card settings.');
+      }
     } catch (err) {
       console.error('Failed to save card settings:', err);
+      showTempMessage(setSaveMessage, 'error', 'An error occurred while saving.');
     } finally {
       setSaving(false);
     }
@@ -222,6 +258,17 @@ export default function Leveling({ selectedGuild, user }) {
           </div>
         </div>
 
+        {/* Config Save Feedback */}
+        {configSaveMessage.text && (
+          <div className={`px-4 py-3 rounded-xl text-sm font-semibold ${
+            configSaveMessage.type === 'success'
+              ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+              : 'bg-red-500/20 text-red-400 border border-red-500/30'
+          }`}>
+            {configSaveMessage.type === 'success' ? '✅ ' : '❌ '}{configSaveMessage.text}
+          </div>
+        )}
+
         <button 
           onClick={handleSaveConfig}
           disabled={saving}
@@ -271,10 +318,12 @@ export default function Leveling({ selectedGuild, user }) {
               {modalTab === 'customize' ? (
                 <>
                   {/* Live Preview */}
-                  <div className="space-y-3">
-                    <div className="relative w-full max-w-[536px] rounded-xl overflow-hidden bg-slate-900 shadow-2xl border border-white/10 min-h-[160px] flex items-center justify-center">
+                  <div className="relative w-full rounded-2xl overflow-hidden bg-slate-800 shadow-xl border border-white/10 min-h-[120px] flex items-center justify-center">
+                    {previewUrl ? (
                       <img src={previewUrl} alt="Rank Card Preview" className="w-full h-auto object-contain" onError={(e) => e.target.src = 'https://via.placeholder.com/934x282/1a1a1a/ffffff?text=Rank+Card+Preview'} />
-                    </div>
+                    ) : (
+                      <div className="text-slate-500 text-sm">Loading preview...</div>
+                    )}
                   </div>
 
                   {/* Background Controls */}
@@ -336,7 +385,7 @@ export default function Leveling({ selectedGuild, user }) {
                       {backgroundPresets.map((bg) => (
                         <button
                           key={bg.id}
-                          onClick={() => setDefaultCardSettings({ ...defaultCardSettings, backgroundImage: bg.url || '' })}
+                          onClick={() => setDefaultCardSettings({ ...defaultCardSettings, backgroundImage: bg.url || null })}
                           className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                             (defaultCardSettings.backgroundImage === bg.url || (bg.id === 'empty' && !defaultCardSettings.backgroundImage))
                               ? 'border-blue-500 scale-105'
@@ -358,6 +407,17 @@ export default function Leveling({ selectedGuild, user }) {
               ) : (
                 <div className="space-y-4">
                   <p className="text-slate-400 text-sm">Visibility settings coming soon...</p>
+                </div>
+              )}
+
+              {/* Save Feedback Message */}
+              {saveMessage.text && (
+                <div className={`px-4 py-3 rounded-xl text-sm font-semibold ${
+                  saveMessage.type === 'success'
+                    ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                    : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                }`}>
+                  {saveMessage.type === 'success' ? '✅ ' : '❌ '}{saveMessage.text}
                 </div>
               )}
 

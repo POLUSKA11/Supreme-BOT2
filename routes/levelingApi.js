@@ -267,6 +267,8 @@ router.get('/:guildId/card-settings/:userId', requireAuth, async (req, res) => {
         const { guildId, userId } = req.params;
         const raw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
         const settings = raw ? JSON.parse(raw) : {};
+        // Normalize backgroundImage: treat empty string as null
+        if (settings.backgroundImage === '') settings.backgroundImage = null;
         res.json({ success: true, data: settings });
     } catch (err) {
         console.error('[LEVELING API] Error fetching card settings:', err);
@@ -287,19 +289,35 @@ router.post('/:guildId/card-settings/:userId', requireAuth, async (req, res) => 
         if (userId === 'default') {
             const client = req.app.locals.client;
             const guild = client?.guilds.cache.get(guildId);
-            if (!guild) return res.status(404).json({ error: 'Server not found' });
+            if (!guild) return res.status(404).json({ error: 'Server not found. Make sure the bot is in your server.' });
             
             const member = await guild.members.fetch(req.session.user.id).catch(() => null);
-            if (!member || (!member.permissions.has(PermissionFlagsBits.Administrator) && !member.permissions.has(PermissionFlagsBits.ManageGuild))) {
-                return res.status(403).json({ error: 'Forbidden: Only admins can edit default settings' });
+            if (!member) {
+                return res.status(403).json({ error: 'You are not a member of this server.' });
+            }
+            if (!member.permissions.has(PermissionFlagsBits.Administrator) && !member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+                return res.status(403).json({ error: 'Forbidden: Only admins can edit default settings.' });
             }
         } else if (req.session.user.id !== userId) {
             // Only allow users to edit their own settings
-            return res.status(403).json({ error: 'Forbidden: You can only edit your own settings' });
+            return res.status(403).json({ error: 'Forbidden: You can only edit your own settings.' });
         }
 
         const settings = req.body;
+
+        // Normalize backgroundImage: treat empty string as null
+        if (settings.backgroundImage === '') settings.backgroundImage = null;
+
+        // Validate required fields
+        if (settings.mainColor && !/^#[0-9A-Fa-f]{6}$/.test(settings.mainColor)) {
+            return res.status(400).json({ error: 'Invalid mainColor. Use format: #RRGGBB' });
+        }
+        if (settings.backgroundColor && !/^#[0-9A-Fa-f]{6}$/.test(settings.backgroundColor)) {
+            return res.status(400).json({ error: 'Invalid backgroundColor. Use format: #RRGGBB' });
+        }
+
         await levelSystem.setConfig(guildId, `card_settings_${userId}`, JSON.stringify(settings));
+        console.log(`[LEVELING API] Saved card settings for guild=${guildId} userId=${userId}:`, settings);
         res.json({ success: true, message: 'Rank card settings saved' });
     } catch (err) {
         console.error('[LEVELING API] Error saving card settings:', err);
@@ -352,10 +370,17 @@ router.get('/:guildId/card-preview/:userId', requireAuth, async (req, res) => {
         if (req.query.settings) {
             try {
                 cardSettings = JSON.parse(req.query.settings);
+                // Normalize backgroundImage
+                if (cardSettings.backgroundImage === '') cardSettings.backgroundImage = null;
             } catch (e) {}
         } else {
             const raw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
-            cardSettings = raw ? JSON.parse(raw) : {};
+            if (raw) {
+                try {
+                    cardSettings = JSON.parse(raw);
+                    if (cardSettings.backgroundImage === '') cardSettings.backgroundImage = null;
+                } catch (e) {}
+            }
         }
 
         const cardBuf = await generateRankCard({

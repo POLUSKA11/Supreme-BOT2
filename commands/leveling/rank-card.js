@@ -26,11 +26,18 @@ function isValidUrl(url) {
 async function getCardSettings(guildId, userId) {
     const raw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
     if (!raw) return {};
-    try { return JSON.parse(raw); } catch { return {}; }
+    try {
+        const s = JSON.parse(raw);
+        // Normalize backgroundImage: treat empty string as null
+        if (s.backgroundImage === '') s.backgroundImage = null;
+        return s;
+    } catch { return {}; }
 }
 
 async function saveCardSettings(guildId, userId, settings) {
-    await levelSystem.setConfig(guildId, `card_settings_${userId}`, JSON.stringify(settings));
+    // Normalize backgroundImage before saving
+    const normalized = { ...settings, backgroundImage: settings.backgroundImage || null };
+    await levelSystem.setConfig(guildId, `card_settings_${userId}`, JSON.stringify(normalized));
 }
 
 // ─── Color choices for the command ───────────────────────────
