@@ -11,13 +11,45 @@ const router = express.Router();
 const levelSystem = require('../utils/levelSystem');
 const { query } = require('../utils/db');
 const { generateRankCard } = require('../utils/rankCardGenerator');
+const { PermissionFlagsBits } = require('discord.js');
 
-// ─── Auth Middleware (reuse session from dashboardApi) ────────
+// ─── Auth Middleware (aligned with dashboardApi.js) ──────────
 const requireAuth = (req, res, next) => {
-    if (!req.session || !req.session.userId) {
+    // dashboardApi.js uses req.session.user
+    if (!req.session || !req.session.user) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
     next();
+};
+
+// ─── Guild Access Middleware (aligned with dashboardApi.js) ──
+const requireGuildAccess = async (req, res, next) => {
+    const { guildId } = req.params;
+    const client = req.app.locals.client;
+    const guild = client?.guilds.cache.get(guildId);
+    
+    if (!guild) {
+        return res.status(404).json({ error: 'Server not found' });
+    }
+    
+    const userId = req.session.user.id;
+    try {
+        const member = await guild.members.fetch(userId).catch(() => null);
+        if (!member) {
+            return res.status(403).json({ error: 'You are not a member of this server' });
+        }
+        
+        // Check if user has Administrator or Manage Server permissions
+        if (!member.permissions.has(PermissionFlagsBits.Administrator) && 
+            !member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+            return res.status(403).json({ error: 'You do not have permission to manage this server' });
+        }
+        
+        next();
+    } catch (error) {
+        console.error('[LEVELING API] Guild access check error:', error);
+        res.status(500).json({ error: 'Failed to verify permissions' });
+    }
 };
 
 // ─── GET /api/leveling/:guildId/leaderboard ───────────────────
@@ -92,7 +124,7 @@ router.get('/:guildId/user/:userId', requireAuth, async (req, res) => {
 });
 
 // ─── GET /api/leveling/:guildId/roles ─────────────────────────
-router.get('/:guildId/roles', requireAuth, async (req, res) => {
+router.get('/:guildId/roles', requireAuth, requireGuildAccess, async (req, res) => {
     try {
         const { guildId } = req.params;
         const roles = await levelSystem.getLevelRoles(guildId);
@@ -103,7 +135,7 @@ router.get('/:guildId/roles', requireAuth, async (req, res) => {
 });
 
 // ─── POST /api/leveling/:guildId/roles ────────────────────────
-router.post('/:guildId/roles', requireAuth, async (req, res) => {
+router.post('/:guildId/roles', requireAuth, requireGuildAccess, async (req, res) => {
     try {
         const { guildId } = req.params;
         const { level, roleId } = req.body;
@@ -120,7 +152,7 @@ router.post('/:guildId/roles', requireAuth, async (req, res) => {
 });
 
 // ─── DELETE /api/leveling/:guildId/roles/:level ───────────────
-router.delete('/:guildId/roles/:level', requireAuth, async (req, res) => {
+router.delete('/:guildId/roles/:level', requireAuth, requireGuildAccess, async (req, res) => {
     try {
         const { guildId, level } = req.params;
         await levelSystem.removeLevelRole(guildId, parseInt(level));
@@ -131,7 +163,7 @@ router.delete('/:guildId/roles/:level', requireAuth, async (req, res) => {
 });
 
 // ─── GET /api/leveling/:guildId/config ────────────────────────
-router.get('/:guildId/config', requireAuth, async (req, res) => {
+router.get('/:guildId/config', requireAuth, requireGuildAccess, async (req, res) => {
     try {
         const { guildId } = req.params;
         const enabled = await levelSystem.getConfig(guildId, 'enabled', '1');
@@ -156,7 +188,7 @@ router.get('/:guildId/config', requireAuth, async (req, res) => {
 });
 
 // ─── PATCH /api/leveling/:guildId/config ──────────────────────
-router.patch('/:guildId/config', requireAuth, async (req, res) => {
+router.patch('/:guildId/config', requireAuth, requireGuildAccess, async (req, res) => {
     try {
         const { guildId } = req.params;
         const { enabled, announceChannel, ignoredChannels, xpRate, noExtraXpForPremium } = req.body;
@@ -186,7 +218,7 @@ router.patch('/:guildId/config', requireAuth, async (req, res) => {
 });
 
 // ─── POST /api/leveling/:guildId/user/:userId/add-xp ─────────
-router.post('/:guildId/user/:userId/add-xp', requireAuth, async (req, res) => {
+router.post('/:guildId/user/:userId/add-xp', requireAuth, requireGuildAccess, async (req, res) => {
     try {
         const { guildId, userId } = req.params;
         const { amount } = req.body;
@@ -213,7 +245,7 @@ router.post('/:guildId/user/:userId/add-xp', requireAuth, async (req, res) => {
 });
 
 // ─── DELETE /api/leveling/:guildId/user/:userId ───────────────
-router.delete('/:guildId/user/:userId', requireAuth, async (req, res) => {
+router.delete('/:guildId/user/:userId', requireAuth, requireGuildAccess, async (req, res) => {
     try {
         const { guildId, userId } = req.params;
         await query('DELETE FROM levels WHERE guild_id = ? AND user_id = ?', [guildId, userId]);
@@ -250,14 +282,19 @@ router.get('/:guildId/card-settings/:userId', requireAuth, async (req, res) => {
 router.post('/:guildId/card-settings/:userId', requireAuth, async (req, res) => {
     try {
         const { guildId, userId } = req.params;
-        // Only allow users to edit their own settings unless they are an admin
-        // For 'default' settings, only allow admins
+        
+        // If userId is 'default', only allow admins
         if (userId === 'default') {
-            // Check if user is admin (simplified check for now)
-            if (req.session.userId !== '982731220913913856') {
+            const client = req.app.locals.client;
+            const guild = client?.guilds.cache.get(guildId);
+            if (!guild) return res.status(404).json({ error: 'Server not found' });
+            
+            const member = await guild.members.fetch(req.session.user.id).catch(() => null);
+            if (!member || (!member.permissions.has(PermissionFlagsBits.Administrator) && !member.permissions.has(PermissionFlagsBits.ManageGuild))) {
                 return res.status(403).json({ error: 'Forbidden: Only admins can edit default settings' });
             }
-        } else if (req.session.userId !== userId && req.session.userId !== '982731220913913856') {
+        } else if (req.session.user.id !== userId) {
+            // Only allow users to edit their own settings
             return res.status(403).json({ error: 'Forbidden: You can only edit your own settings' });
         }
 
@@ -289,6 +326,8 @@ router.get('/:guildId/card-preview/:userId', requireAuth, async (req, res) => {
         let xpNeeded = 1337;
         let totalXp = 429;
 
+        // Use the requested userId for the preview data
+        // If 'default', it uses the placeholder data above
         if (userId !== 'default') {
             const member = await guild.members.fetch(userId).catch(() => null);
             if (member) {
