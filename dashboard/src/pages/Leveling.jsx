@@ -21,8 +21,27 @@ export default function Leveling({ selectedGuild }) {
   const [saving, setSaving] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
+  const [modalTab, setModalTab] = useState('customize'); // 'customize' or 'visibility'
 
   const guildId = selectedGuild?.id;
+
+  // Predefined color palette
+  const colorPalette = [
+    '#00FFFF', '#FFFFFF', '#7B8A8E', '#FF6B6B', '#FFA500', '#FFD700', '#00FF00', '#00FFFF', '#0099FF', '#6666FF', '#FF00FF'
+  ];
+
+  // Predefined backgrounds (placeholder URLs - in real app these would be actual image URLs)
+  const backgroundPresets = [
+    { id: 'empty', label: 'Empty background', color: '#23272A' },
+    { id: 'dark1', label: 'Dark 1', url: 'https://via.placeholder.com/150/1a1a1a/1a1a1a' },
+    { id: 'dark2', label: 'Dark 2', url: 'https://via.placeholder.com/150/2a2a2a/2a2a2a' },
+    { id: 'forest', label: 'Forest', url: 'https://via.placeholder.com/150/0a3a0a/0a3a0a' },
+    { id: 'ocean', label: 'Ocean', url: 'https://via.placeholder.com/150/0a1a3a/0a1a3a' },
+    { id: 'sunset', label: 'Sunset', url: 'https://via.placeholder.com/150/3a2a0a/3a2a0a' },
+    { id: 'night', label: 'Night', url: 'https://via.placeholder.com/150/1a0a2a/1a0a2a' },
+    { id: 'desert', label: 'Desert', url: 'https://via.placeholder.com/150/3a2a1a/3a2a1a' },
+    { id: 'mountain', label: 'Mountain', url: 'https://via.placeholder.com/150/1a2a1a/1a2a1a' },
+  ];
 
   const fetchConfig = useCallback(async () => {
     if (!guildId) return;
@@ -212,118 +231,145 @@ export default function Leveling({ selectedGuild }) {
       {/* Edit Modal */}
       {showEditModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-slate-900 border border-white/10 rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/5">
-              <h2 className="text-xl font-bold text-white">Edit Server Rank Card</h2>
+          <div className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-white/5 flex items-center justify-between bg-gradient-to-r from-slate-800 to-slate-900">
+              <h2 className="text-xl font-bold text-white">Edit Rank Card</h2>
               <button onClick={() => setShowEditModal(false)} className="p-2 hover:bg-white/10 rounded-xl text-slate-400 hover:text-white transition-all">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
 
+            {/* Tabs */}
+            <div className="flex border-b border-white/5 px-6">
+              <button
+                onClick={() => setModalTab('customize')}
+                className={`px-6 py-4 font-bold text-sm transition-all ${
+                  modalTab === 'customize'
+                    ? 'text-white border-b-2 border-blue-500'
+                    : 'text-slate-500 hover:text-slate-400'
+                }`}
+              >
+                Customize
+              </button>
+              <button
+                onClick={() => setModalTab('visibility')}
+                className={`px-6 py-4 font-bold text-sm transition-all ${
+                  modalTab === 'visibility'
+                    ? 'text-white border-b-2 border-blue-500'
+                    : 'text-slate-500 hover:text-slate-400'
+                }`}
+              >
+                Visibility
+              </button>
+            </div>
+
             <div className="p-6 space-y-6">
-              {/* Live Preview */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Live Preview</h3>
-                <div className="relative w-full max-w-[536px] rounded-2xl overflow-hidden bg-slate-900 shadow-2xl border border-white/10">
-                  <img src={previewUrl} alt="Rank Card Preview" className="w-full h-auto object-contain" />
-                </div>
-              </div>
-
-              {/* Color Settings */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-400 uppercase tracking-wider">Main Accent Color</label>
-                  <div className="flex gap-3 items-center">
-                    <input 
-                      type="color" 
-                      value={defaultCardSettings.mainColor} 
-                      onChange={(e) => setDefaultCardSettings({ ...defaultCardSettings, mainColor: e.target.value })}
-                      className="w-12 h-12 rounded-xl bg-transparent border-none cursor-pointer"
-                    />
-                    <input 
-                      type="text" 
-                      value={defaultCardSettings.mainColor} 
-                      onChange={(e) => setDefaultCardSettings({ ...defaultCardSettings, mainColor: e.target.value })}
-                      className="flex-1 bg-slate-800/50 border border-white/10 rounded-xl px-4 py-2 text-white font-mono text-sm"
-                    />
+              {modalTab === 'customize' ? (
+                <>
+                  {/* Live Preview */}
+                  <div className="space-y-3">
+                    <div className="relative w-full max-w-[536px] rounded-xl overflow-hidden bg-slate-900 shadow-2xl border border-white/10">
+                      <img src={previewUrl} alt="Rank Card Preview" className="w-full h-auto object-contain" />
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-400 uppercase tracking-wider">Background Color</label>
-                  <div className="flex gap-3 items-center">
-                    <input 
-                      type="color" 
-                      value={defaultCardSettings.backgroundColor} 
-                      onChange={(e) => setDefaultCardSettings({ ...defaultCardSettings, backgroundColor: e.target.value })}
-                      className="w-12 h-12 rounded-xl bg-transparent border-none cursor-pointer"
-                    />
-                    <input 
-                      type="text" 
-                      value={defaultCardSettings.backgroundColor} 
-                      onChange={(e) => setDefaultCardSettings({ ...defaultCardSettings, backgroundColor: e.target.value })}
-                      className="flex-1 bg-slate-800/50 border border-white/10 rounded-xl px-4 py-2 text-white font-mono text-sm"
-                    />
+                  {/* Background Controls */}
+                  <div className="space-y-3">
+                    <div className="flex gap-3">
+                      <button className="flex-1 px-4 py-3 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 font-bold rounded-lg transition-all border border-amber-500/30 flex items-center justify-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                        Unlock all backgrounds
+                      </button>
+                      <button className="flex-1 px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg transition-all">
+                        Upload custom background
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Colors Section */}
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <label className="text-sm font-bold text-slate-400">Colors</label>
+                      <label className="text-sm font-bold text-slate-400">Overlay opacity</label>
+                    </div>
+                    <div className="flex justify-between items-start gap-4">
+                      <div className="flex gap-2 flex-wrap flex-1">
+                        {colorPalette.map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => setDefaultCardSettings({ ...defaultCardSettings, mainColor: color })}
+                            className={`w-8 h-8 rounded-full border-2 transition-all ${
+                              defaultCardSettings.mainColor === color
+                                ? 'border-white scale-110'
+                                : 'border-transparent hover:scale-105'
+                            }`}
+                            style={{ backgroundColor: color }}
+                            title={color}
+                          />
+                        ))}
+                      </div>
+                      <div className="flex-1">
+                        <input 
+                          type="range" 
+                          min="0" 
+                          max="1" 
+                          step="0.1"
+                          value={defaultCardSettings.overlayOpacity} 
+                          onChange={(e) => setDefaultCardSettings({ ...defaultCardSettings, overlayOpacity: parseFloat(e.target.value) })}
+                          className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Custom Background Section */}
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold text-slate-400 flex items-center gap-2">
+                      Custom Background
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </label>
+                    <div className="grid grid-cols-3 gap-3">
+                      {backgroundPresets.map((bg) => (
+                        <button
+                          key={bg.id}
+                          onClick={() => setDefaultCardSettings({ ...defaultCardSettings, backgroundImage: bg.url || '' })}
+                          className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                            (defaultCardSettings.backgroundImage === bg.url || (bg.id === 'empty' && !defaultCardSettings.backgroundImage))
+                              ? 'border-blue-500 scale-105'
+                              : 'border-white/10 hover:border-white/20'
+                          }`}
+                          style={bg.color ? { backgroundColor: bg.color } : { backgroundImage: `url(${bg.url})`, backgroundSize: 'cover' }}
+                          title={bg.label}
+                        >
+                          {bg.id === 'empty' && (
+                            <div className="w-full h-full flex items-center justify-center text-xs text-slate-500 font-bold">
+                              Empty
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-4">
+                  <p className="text-slate-400 text-sm">Visibility settings coming soon...</p>
                 </div>
-              </div>
-
-              {/* Background Image */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-400 uppercase tracking-wider">Background Image URL</label>
-                <input 
-                  type="text" 
-                  value={defaultCardSettings.backgroundImage || ''} 
-                  onChange={(e) => setDefaultCardSettings({ ...defaultCardSettings, backgroundImage: e.target.value })}
-                  placeholder="https://example.com/image.png"
-                  className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500/50 outline-none transition-all"
-                />
-              </div>
-
-              {/* Overlay Opacity */}
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <label className="text-sm font-bold text-slate-400 uppercase tracking-wider">Overlay Opacity</label>
-                  <span className="text-white font-bold">{Math.round(defaultCardSettings.overlayOpacity * 100)}%</span>
-                </div>
-                <input 
-                  type="range" 
-                  min="0" 
-                  max="1" 
-                  step="0.1"
-                  value={defaultCardSettings.overlayOpacity} 
-                  onChange={(e) => setDefaultCardSettings({ ...defaultCardSettings, overlayOpacity: parseFloat(e.target.value) })}
-                  className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-red-500"
-                />
-              </div>
-
-              {/* Font Selection */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-400 uppercase tracking-wider">Font Style</label>
-                <select 
-                  value={defaultCardSettings.font}
-                  onChange={(e) => setDefaultCardSettings({ ...defaultCardSettings, font: e.target.value })}
-                  className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500/50 outline-none transition-all"
-                >
-                  <option value="Montserrat">Montserrat (Default)</option>
-                  <option value="sans-serif">Sans-Serif</option>
-                  <option value="serif">Serif</option>
-                  <option value="monospace">Monospace</option>
-                </select>
-              </div>
+              )}
 
               {/* Buttons */}
               <div className="flex gap-3 pt-4">
                 <button 
                   onClick={handleSaveDefaultCard}
                   disabled={saving}
-                  className="flex-1 px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-2xl transition-all shadow-lg shadow-red-500/20 disabled:opacity-50"
+                  className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50"
                 >
-                  {saving ? 'Saving...' : 'Save Changes'}
+                  {saving ? 'Saving...' : 'Save'}
                 </button>
                 <button 
                   onClick={() => setShowEditModal(false)}
-                  className="flex-1 px-6 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl transition-all border border-white/10"
+                  className="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg transition-all"
                 >
                   Cancel
                 </button>
