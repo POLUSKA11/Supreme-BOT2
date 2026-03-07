@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function Leveling({ selectedGuild }) {
+export default function Leveling({ selectedGuild, user }) {
   const { t } = useTranslation();
   const [config, setConfig] = useState({
     enabled: true,
@@ -24,23 +24,21 @@ export default function Leveling({ selectedGuild }) {
   const [modalTab, setModalTab] = useState('customize'); // 'customize' or 'visibility'
 
   const guildId = selectedGuild?.id;
+  const userId = user?.id || 'default';
 
   // Predefined color palette
   const colorPalette = [
     '#00FFFF', '#FFFFFF', '#7B8A8E', '#FF6B6B', '#FFA500', '#FFD700', '#00FF00', '#00FFFF', '#0099FF', '#6666FF', '#FF00FF'
   ];
 
-  // Predefined backgrounds (placeholder URLs - in real app these would be actual image URLs)
+  // Predefined backgrounds
   const backgroundPresets = [
     { id: 'empty', label: 'Empty background', color: '#23272A' },
-    { id: 'dark1', label: 'Dark 1', url: 'https://via.placeholder.com/150/1a1a1a/1a1a1a' },
-    { id: 'dark2', label: 'Dark 2', url: 'https://via.placeholder.com/150/2a2a2a/2a2a2a' },
-    { id: 'forest', label: 'Forest', url: 'https://via.placeholder.com/150/0a3a0a/0a3a0a' },
-    { id: 'ocean', label: 'Ocean', url: 'https://via.placeholder.com/150/0a1a3a/0a1a3a' },
-    { id: 'sunset', label: 'Sunset', url: 'https://via.placeholder.com/150/3a2a0a/3a2a0a' },
-    { id: 'night', label: 'Night', url: 'https://via.placeholder.com/150/1a0a2a/1a0a2a' },
-    { id: 'desert', label: 'Desert', url: 'https://via.placeholder.com/150/3a2a1a/3a2a1a' },
-    { id: 'mountain', label: 'Mountain', url: 'https://via.placeholder.com/150/1a2a1a/1a2a1a' },
+    { id: 'dark1', label: 'Dark 1', url: 'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=800&q=80' },
+    { id: 'forest', label: 'Forest', url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80' },
+    { id: 'ocean', label: 'Ocean', url: 'https://images.unsplash.com/photo-1439405326854-014607f694d7?w=800&q=80' },
+    { id: 'sunset', label: 'Sunset', url: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=800&q=80' },
+    { id: 'night', label: 'Night', url: 'https://images.unsplash.com/photo-1506318137071-a8e063b4b4bf?w=800&q=80' },
   ];
 
   const fetchConfig = useCallback(async () => {
@@ -79,9 +77,10 @@ export default function Leveling({ selectedGuild }) {
   useEffect(() => {
     if (guildId) {
       const settingsStr = encodeURIComponent(JSON.stringify(defaultCardSettings));
-      setPreviewUrl(`/api/leveling/${guildId}/card-preview/default?settings=${settingsStr}&t=${Date.now()}`);
+      // Use the actual logged-in user's ID for the preview to show their rank/avatar
+      setPreviewUrl(`/api/leveling/${guildId}/card-preview/${userId}?settings=${settingsStr}&t=${Date.now()}`);
     }
-  }, [defaultCardSettings, guildId]);
+  }, [defaultCardSettings, guildId, userId]);
 
   const handleSaveConfig = async () => {
     setSaving(true);
@@ -153,8 +152,12 @@ export default function Leveling({ selectedGuild }) {
         </div>
 
         {/* Card Preview */}
-        <div className="relative w-full max-w-[536px] rounded-2xl overflow-hidden bg-slate-900 shadow-2xl border border-white/10">
-          <img src={previewUrl} alt="Rank Card Preview" className="w-full h-auto object-contain" />
+        <div className="relative w-full max-w-[536px] rounded-2xl overflow-hidden bg-slate-900 shadow-2xl border border-white/10 min-h-[160px] flex items-center justify-center">
+          {previewUrl ? (
+            <img src={previewUrl} alt="Rank Card Preview" className="w-full h-auto object-contain" onError={(e) => e.target.src = 'https://via.placeholder.com/934x282/1a1a1a/ffffff?text=Rank+Card+Preview'} />
+          ) : (
+            <div className="text-slate-500">Loading preview...</div>
+          )}
         </div>
 
         {/* Edit Button */}
@@ -214,7 +217,7 @@ export default function Leveling({ selectedGuild }) {
               className="w-4 h-4 rounded cursor-pointer"
             />
             <label htmlFor="noExtraXp" className="text-sm text-slate-300 cursor-pointer">
-              Do not give extra XP to MEE6 Pro subscribers
+              Do not give extra XP to Nexus Pro subscribers
             </label>
           </div>
         </div>
@@ -269,8 +272,8 @@ export default function Leveling({ selectedGuild }) {
                 <>
                   {/* Live Preview */}
                   <div className="space-y-3">
-                    <div className="relative w-full max-w-[536px] rounded-xl overflow-hidden bg-slate-900 shadow-2xl border border-white/10">
-                      <img src={previewUrl} alt="Rank Card Preview" className="w-full h-auto object-contain" />
+                    <div className="relative w-full max-w-[536px] rounded-xl overflow-hidden bg-slate-900 shadow-2xl border border-white/10 min-h-[160px] flex items-center justify-center">
+                      <img src={previewUrl} alt="Rank Card Preview" className="w-full h-auto object-contain" onError={(e) => e.target.src = 'https://via.placeholder.com/934x282/1a1a1a/ffffff?text=Rank+Card+Preview'} />
                     </div>
                   </div>
 

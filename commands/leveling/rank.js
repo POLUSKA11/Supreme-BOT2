@@ -113,7 +113,7 @@ module.exports = {
 
         embed
             .setFooter({
-                text:    'Nexus Leveling System • Use /rank-card to customize your card',
+                text:    'Nexus Leveling System • Customize your card on the web dashboard',
                 iconURL: interaction.client.user.displayAvatarURL(),
             })
             .setTimestamp();

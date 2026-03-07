@@ -164,7 +164,7 @@ module.exports = {
 
             embed
                 .setFooter({
-                    text: `Nexus Leveling System • Total XP: ${result.newXp.toLocaleString()} • Use /rank-card to customize`,
+                    text: `Nexus Leveling System • Total XP: ${result.newXp.toLocaleString()} • Customize on the web dashboard`,
                     iconURL: message.client.user.displayAvatarURL(),
                 })
                 .setTimestamp();
