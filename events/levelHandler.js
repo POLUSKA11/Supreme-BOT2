@@ -3,11 +3,13 @@
  *  NEXUS BOT 2 — Level Handler Event
  *  Hooks into every message to award XP, announce level-ups,
  *  and assign reward roles automatically.
+ *  Now includes a beautiful rank card image on level-up!
  * ============================================================
  */
 
 const { Events, EmbedBuilder, AttachmentBuilder } = require('discord.js');
-const levelSystem = require('../utils/levelSystem');
+const levelSystem        = require('../utils/levelSystem');
+const { generateRankCard } = require('../utils/rankCardGenerator');
 
 // XP type display labels
 const XP_TYPE_LABELS = {
@@ -36,6 +38,13 @@ function getLevelColor(level) {
     return LEVEL_COLORS[idx];
 }
 
+// ─── Load card settings for a user ───────────────────────────
+async function getCardSettings(guildId, userId) {
+    const raw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
+    if (!raw) return {};
+    try { return JSON.parse(raw); } catch { return {}; }
+}
+
 module.exports = {
     name: Events.MessageCreate,
     async execute(message) {
@@ -53,27 +62,16 @@ module.exports = {
             if (!member) return;
 
             // ── 1. Assign Level Roles ─────────────────────────────
-            // Fetch level roles once and reuse throughout this handler
             const levelRoles = await levelSystem.getLevelRoles(message.guild.id);
 
             try {
                 const rolesToAdd = levelRoles.filter(r => r.level <= newLevel);
-
                 for (const { role_id } of rolesToAdd) {
                     const role = message.guild.roles.cache.get(role_id);
                     if (role && !member.roles.cache.has(role_id)) {
                         await member.roles.add(role, `Level ${newLevel} reward`).catch(() => null);
                     }
                 }
-
-                // Remove roles for levels above current (optional: keep all earned roles)
-                // Uncomment below if you want "replace" behavior instead of "stack" behavior:
-                // const rolesToRemove = levelRoles.filter(r => r.level > newLevel);
-                // for (const { role_id } of rolesToRemove) {
-                //     if (member.roles.cache.has(role_id)) {
-                //         await member.roles.remove(role_id, 'Level role update').catch(() => null);
-                //     }
-                // }
             } catch (roleErr) {
                 console.error('[LEVEL] Role assignment error:', roleErr.message);
             }
@@ -84,45 +82,68 @@ module.exports = {
                 ? (message.guild.channels.cache.get(announceChanId) || message.channel)
                 : message.channel;
 
-            // ── 3. Build Level-Up Embed ────────────────────────────
+            // ── 3. Gather data for the rank card ──────────────────
             const { level: _, currentXp, xpNeeded } = levelSystem.getLevelFromXp(result.newXp);
-            const progressBar = buildProgressBar(currentXp, xpNeeded);
-            const color = getLevelColor(newLevel);
+            const leaderboard = await levelSystem.getLeaderboard(message.guild.id, 100);
+            const rankPos = leaderboard.findIndex(u => u.user_id === message.author.id) + 1;
+            const color   = getLevelColor(newLevel);
 
-            // Reuse the levelRoles already fetched above
-            const nextReward = levelRoles.find(r => r.level > newLevel);
+            // ── 4. Load user's card customization settings ────────
+            const cardSettings = await getCardSettings(message.guild.id, message.author.id);
+
+            // If user has a mainColor set, use it; otherwise use level milestone color
+            if (!cardSettings.mainColor) {
+                cardSettings.mainColor = color;
+            }
+
+            // ── 5. Generate the rank card image ───────────────────
+            let cardAttachment = null;
+            try {
+                const cardBuf = await generateRankCard({
+                    username:    message.author.username,
+                    avatarUrl:   message.author.displayAvatarURL({ extension: 'png', size: 256 }),
+                    level:       newLevel,
+                    rank:        rankPos,
+                    currentXp,
+                    xpNeeded,
+                    totalXp:     result.newXp,
+                    cardSettings,
+                });
+                cardAttachment = new AttachmentBuilder(cardBuf, { name: 'level-up-card.png' });
+            } catch (cardErr) {
+                console.error('[LEVEL CARD] Card generation failed:', cardErr.message);
+                // Fall through — we'll still send the embed without the card
+            }
+
+            // ── 6. Build Level-Up Embed ────────────────────────────
+            const nextReward    = levelRoles.find(r => r.level > newLevel);
             const currentReward = levelRoles.filter(r => r.level <= newLevel).pop();
 
             const embed = new EmbedBuilder()
-                .setColor(color)
-                .setAuthor({
-                    name: `${message.author.username} leveled up!`,
-                    iconURL: message.author.displayAvatarURL({ dynamic: true }),
-                })
-                .setTitle(`🎉 Level ${newLevel} Unlocked!`)
+                .setColor(cardSettings.mainColor || color)
+                .setTitle(`🎉 Level Up! ${message.author.username} reached Level ${newLevel}!`)
                 .setDescription(
-                    `<@${message.author.id}> just reached **Level ${newLevel}**! Keep it up! 🚀\n\n` +
-                    `${progressBar}`
+                    `<@${message.author.id}> just leveled up! Keep chatting to reach Level **${newLevel + 1}**! 🚀`
                 )
                 .addFields(
-                    {
-                        name: '📊 Progress',
-                        value: `\`${currentXp} / ${xpNeeded} XP\` to Level ${newLevel + 1}`,
-                        inline: true,
-                    },
                     {
                         name: `${XP_TYPE_LABELS[xpType] || '💬 Message'} XP Gained`,
                         value: `**+${xpGained} XP**`,
                         inline: true,
+                    },
+                    {
+                        name: '📊 Progress to Next Level',
+                        value: `\`${currentXp.toLocaleString()} / ${xpNeeded.toLocaleString()} XP\``,
+                        inline: true,
                     }
                 );
 
-            // Show role reward if one was just earned
+            // Show role reward if one was just earned at this exact level
             if (currentReward && levelRoles.find(r => r.level === newLevel)) {
                 const rewardRole = message.guild.roles.cache.get(currentReward.role_id);
                 if (rewardRole) {
                     embed.addFields({
-                        name: '🏆 Role Reward Unlocked',
+                        name: '🏆 Role Reward Unlocked!',
                         value: `You earned the <@&${rewardRole.id}> role!`,
                         inline: false,
                     });
@@ -141,12 +162,23 @@ module.exports = {
                 }
             }
 
-            embed.setFooter({
-                text: `Nexus Leveling System • Total XP: ${result.newXp.toLocaleString()}`,
-                iconURL: message.client.user.displayAvatarURL(),
-            }).setTimestamp();
+            embed
+                .setFooter({
+                    text: `Nexus Leveling System • Total XP: ${result.newXp.toLocaleString()} • Use /rank-card to customize`,
+                    iconURL: message.client.user.displayAvatarURL(),
+                })
+                .setTimestamp();
 
-            await announceChannel.send({ embeds: [embed] });
+            // Attach card image as embed image if generated successfully
+            if (cardAttachment) {
+                embed.setImage('attachment://level-up-card.png');
+            }
+
+            // ── 7. Send announcement ──────────────────────────────
+            const sendOptions = { embeds: [embed] };
+            if (cardAttachment) sendOptions.files = [cardAttachment];
+
+            await announceChannel.send(sendOptions);
 
         } catch (err) {
             console.error('[LEVEL HANDLER] Error:', err.message);
@@ -154,7 +186,7 @@ module.exports = {
     }
 };
 
-// ─── Progress Bar Builder ─────────────────────────────────────
+// ─── Progress Bar Builder (kept for legacy use) ───────────────
 function buildProgressBar(current, needed, length = 20) {
     const filled = Math.round((current / needed) * length);
     const empty = length - filled;
