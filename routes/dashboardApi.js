@@ -834,35 +834,63 @@ router.post('/users/:id/moderate', requireAuth, requireGuildAccess, async (req, 
 
         const { action, reason } = req.body;
         const targetId = req.params.id;
+        
+        // Fetch the target member
         const member = await guild.members.fetch(targetId).catch(() => null);
+        if (!member) return res.status(404).json({ error: 'Member not found in this server' });
 
-        if (!member) return res.status(404).json({ error: 'Member not found' });
+        // Get the bot's member object to check hierarchy
+        const botMember = guild.members.me;
+        const moderatorId = req.session.user.id;
+        const moderator = await guild.members.fetch(moderatorId).catch(() => null);
+
+        // Basic hierarchy check: Moderator must be higher than target
+        if (moderator && member.roles.highest.position >= moderator.roles.highest.position && guild.ownerId !== moderatorId) {
+            return res.status(403).json({ error: 'You cannot moderate someone with a higher or equal role' });
+        }
 
         switch (action) {
             case 'warn':
                 // Store warning in storage
                 const warnings = storage.get(guild.id, `warnings_${targetId}`) || [];
-                warnings.push({ reason, by: req.session.user.id, at: Date.now() });
+                warnings.push({ reason, by: moderatorId, at: Date.now() });
                 await storage.set(guild.id, `warnings_${targetId}`, warnings);
-                try { await member.send(`⚠️ You have been warned in **${guild.name}**: ${reason}`); } catch (e) {}
+                try { 
+                    await member.send(`⚠️ You have been warned in **${guild.name}**\n**Reason:** ${reason}`); 
+                } catch (e) {
+                    console.warn(`Could not DM user ${targetId} warning`);
+                }
                 break;
+
             case 'mute':
+                if (!member.moderatable) {
+                    return res.status(403).json({ error: 'I do not have permission to mute this member (Role Hierarchy)' });
+                }
                 await member.timeout(60 * 60 * 1000, reason); // 1 hour timeout
                 break;
+
             case 'kick':
+                if (!member.kickable) {
+                    return res.status(403).json({ error: 'I do not have permission to kick this member (Role Hierarchy)' });
+                }
                 await member.kick(reason);
                 break;
+
             case 'ban':
+                if (!member.bannable) {
+                    return res.status(403).json({ error: 'I do not have permission to ban this member (Role Hierarchy)' });
+                }
                 await member.ban({ reason });
                 break;
+
             default:
                 return res.status(400).json({ error: 'Invalid action' });
         }
 
-        res.json({ success: true });
+        res.json({ success: true, message: `Successfully executed ${action}` });
     } catch (error) {
-        console.error('Moderate error:', error);
-        res.status(500).json({ error: 'Failed to moderate user' });
+        console.error('[MODERATE] Error:', error);
+        res.status(500).json({ error: error.message || 'Failed to moderate user' });
     }
 });
 
