@@ -12,6 +12,7 @@ const http = require('http');
 
 // ─── Register Fonts ───────────────────────────────────────────
 const FONTS_DIR = path.join(__dirname, '../assets/fonts');
+// Register fonts with specific names for reliable access
 GlobalFonts.registerFromPath(path.join(FONTS_DIR, 'Montserrat.ttf'), 'Montserrat');
 GlobalFonts.registerFromPath(path.join(FONTS_DIR, 'Montserrat-Bold.ttf'), 'Montserrat-Bold');
 
@@ -22,7 +23,7 @@ const CARD_HEIGHT = 282;
 // ─── Default Card Settings ────────────────────────────────────
 const DEFAULTS = {
     mainColor:       '#00FFFF',   // Progress bar & accent color
-    backgroundColor: '#23272A',   // Solid background fallback
+    backgroundColor: '#000000',   // Darker background matching reference
     overlayOpacity:  0.6,         // Background image overlay darkness (0-1)
     font:            'Montserrat', // Font family
     backgroundImage: null,        // URL or null
@@ -88,11 +89,15 @@ async function drawAvatar(ctx, avatarUrl, x, y, size, ringColor) {
     const cx = x + radius;
     const cy = y + radius;
 
-    // Outer ring
+    // Subtle outer glow
+    ctx.save();
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = 'rgba(0,0,0,0.4)';
     ctx.beginPath();
-    ctx.arc(cx, cy, radius + 4, 0, Math.PI * 2);
-    ctx.fillStyle = ringColor;
+    ctx.arc(cx, cy, radius + 2, 0, Math.PI * 2);
+    ctx.fillStyle = '#111111';
     ctx.fill();
+    ctx.restore();
 
     // Clip circle for avatar
     ctx.save();
@@ -106,8 +111,7 @@ async function drawAvatar(ctx, avatarUrl, x, y, size, ringColor) {
         const img = await loadImage(buf);
         ctx.drawImage(img, x, y, size, size);
     } catch {
-        // Fallback: grey circle
-        ctx.fillStyle = '#555555';
+        ctx.fillStyle = '#333333';
         ctx.fill();
     }
 
@@ -126,40 +130,26 @@ function drawProgressBar(ctx, x, y, width, height, progress, mainColor) {
     ctx.fill();
 
     // Filled portion
-    const fillWidth = Math.max(radius * 2, width * Math.min(1, Math.max(0, progress)));
-    roundRect(ctx, x, y, fillWidth, height, radius);
-
-    // Gradient fill
-    const grad = ctx.createLinearGradient(x, y, x + fillWidth, y);
-    grad.addColorStop(0, mainColor);
-    grad.addColorStop(1, lightenColor(mainColor, 40));
-    ctx.fillStyle = grad;
-    ctx.fill();
+    if (progress > 0) {
+        const fillWidth = Math.max(radius * 2, width * Math.min(1, progress));
+        roundRect(ctx, x, y, fillWidth, height, radius);
+        ctx.fillStyle = mainColor;
+        ctx.fill();
+    }
 }
 
 /**
- * Lighten a hex color by a given amount.
+ * Formats XP numbers (e.g., 1780 -> 1.78K)
  */
-function lightenColor(hex, amount) {
-    const num = parseInt(hex.replace('#', ''), 16);
-    const r = Math.min(255, (num >> 16) + amount);
-    const g = Math.min(255, ((num >> 8) & 0xff) + amount);
-    const b = Math.min(255, (num & 0xff) + amount);
-    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+function formatXP(num) {
+    if (num >= 1000) {
+        return (num / 1000).toFixed(2) + 'K';
+    }
+    return num.toString();
 }
 
 /**
  * Main card generation function.
- * @param {object} options
- * @param {string} options.username        - Discord username
- * @param {string} options.avatarUrl       - Avatar URL (CDN)
- * @param {number} options.level           - Current level
- * @param {number} options.rank            - Leaderboard rank position
- * @param {number} options.currentXp       - XP within current level
- * @param {number} options.xpNeeded        - XP needed for next level
- * @param {number} options.totalXp         - Total XP accumulated
- * @param {object} options.cardSettings    - Customization settings from DB
- * @returns {Promise<Buffer>} PNG image buffer
  */
 async function generateRankCard(options) {
     const {
@@ -174,13 +164,17 @@ async function generateRankCard(options) {
     } = options;
 
     const settings = { ...DEFAULTS, ...cardSettings };
-    const fontFamily = AVAILABLE_FONTS.includes(settings.font) ? settings.font : DEFAULTS.font;
+    const isMontserrat = settings.font === 'Montserrat';
+    
+    // Explicitly use weights for Montserrat
+    const boldFont = isMontserrat ? 'bold 1px "Montserrat-Bold"' : `bold 1px "${settings.font}"`;
+    const regularFont = isMontserrat ? '1px "Montserrat"' : `1px "${settings.font}"`;
 
     const canvas = createCanvas(CARD_WIDTH, CARD_HEIGHT);
     const ctx    = canvas.getContext('2d');
 
     // ── 1. Background ─────────────────────────────────────────
-    roundRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 24);
+    roundRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 15);
     ctx.fillStyle = settings.backgroundColor;
     ctx.fill();
 
@@ -191,9 +185,8 @@ async function generateRankCard(options) {
             const bgImg = await loadImage(bgBuf);
 
             ctx.save();
-            roundRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 24);
+            roundRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 15);
             ctx.clip();
-            // Cover-fit the image
             const scale = Math.max(CARD_WIDTH / bgImg.width, CARD_HEIGHT / bgImg.height);
             const bw = bgImg.width  * scale;
             const bh = bgImg.height * scale;
@@ -203,86 +196,77 @@ async function generateRankCard(options) {
             ctx.restore();
 
             // Overlay
-            roundRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 24);
+            roundRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 15);
             ctx.fillStyle = `rgba(0,0,0,${settings.overlayOpacity})`;
             ctx.fill();
-        } catch {
-            // Background image failed, keep solid color
-        }
+        } catch {}
     }
 
     // ── 2. Avatar ─────────────────────────────────────────────
-    const AVATAR_SIZE = 160;
-    const AVATAR_X    = 40;
+    const AVATAR_SIZE = 165;
+    const AVATAR_X    = 50;
     const AVATAR_Y    = (CARD_HEIGHT - AVATAR_SIZE) / 2;
-
     await drawAvatar(ctx, avatarUrl, AVATAR_X, AVATAR_Y, AVATAR_SIZE, settings.mainColor);
 
     // ── 3. Username ───────────────────────────────────────────
-    const TEXT_X = AVATAR_X + AVATAR_SIZE + 30;
-
-    ctx.font      = (fontFamily === 'Montserrat') ? '32px "Montserrat-Bold"' : `bold 32px "${fontFamily}"`;
+    const TEXT_X = AVATAR_X + AVATAR_SIZE + 45;
+    ctx.textAlign = 'left';
+    ctx.font      = boldFont.replace('1px', '42px');
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText(username, TEXT_X, 90);
+    ctx.fillText(username, TEXT_X, 150);
 
     // ── 4. Rank & Level badges ────────────────────────────────
-    // Rank badge (top-right area)
-    const BADGE_Y = 36;
+    const BADGE_Y = 85;
 
-    // "Rank" label
-    ctx.font      = `22px "${fontFamily}"`;
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    // "LEVEL" label & number
     ctx.textAlign = 'right';
-    ctx.fillText('Rank', CARD_WIDTH - 220, BADGE_Y);
-
-    // Rank number
-    ctx.font      = (fontFamily === 'Montserrat') ? '38px "Montserrat-Bold"' : `bold 38px "${fontFamily}"`;
+    ctx.font      = boldFont.replace('1px', '48px');
     ctx.fillStyle = settings.mainColor;
-    ctx.fillText(`#${rank > 0 ? rank : '?'}`, CARD_WIDTH - 140, BADGE_Y + 4);
+    ctx.fillText(`${level}`, CARD_WIDTH - 50, BADGE_Y);
+    
+    const levelWidth = ctx.measureText(`${level}`).width;
+    ctx.font      = regularFont.replace('1px', '22px');
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillText('LEVEL', CARD_WIDTH - 50 - levelWidth - 12, BADGE_Y - 3);
 
-    // "Level" label
-    ctx.font      = `22px "${fontFamily}"`;
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
-    ctx.fillText('Level', CARD_WIDTH - 80, BADGE_Y);
-
-    // Level number
-    ctx.font      = (fontFamily === 'Montserrat') ? '38px "Montserrat-Bold"' : `bold 38px "${fontFamily}"`;
+    // "RANK" label & number
+    const rankText = `#${rank > 0 ? rank : '1'}`;
+    const levelLabelWidth = ctx.measureText('LEVEL').width;
+    const RANK_X_OFFSET = 50 + levelWidth + 12 + levelLabelWidth + 35;
+    
+    ctx.font      = boldFont.replace('1px', '64px');
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText(`${level}`, CARD_WIDTH - 20, BADGE_Y + 4);
-
-    ctx.textAlign = 'left';
+    ctx.fillText(rankText, CARD_WIDTH - RANK_X_OFFSET, BADGE_Y + 5);
+    
+    const rankWidth = ctx.measureText(rankText).width;
+    ctx.font      = regularFont.replace('1px', '22px');
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillText('RANK', CARD_WIDTH - RANK_X_OFFSET - rankWidth - 10, BADGE_Y - 3);
 
     // ── 5. XP Text ────────────────────────────────────────────
-    const xpText = `${currentXp.toLocaleString()} / ${xpNeeded.toLocaleString()} XP`;
-    ctx.font      = `18px "${fontFamily}"`;
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    const xpCurrentFormatted = formatXP(currentXp);
+    const xpNeededFormatted  = formatXP(xpNeeded);
+    
     ctx.textAlign = 'right';
-    ctx.fillText(xpText, CARD_WIDTH - 20, 130);
-    ctx.textAlign = 'left';
+    ctx.font      = regularFont.replace('1px', '24px');
+    ctx.fillStyle = '#FFFFFF';
+    
+    const totalXPText = ` / ${xpNeededFormatted} XP`;
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillText(totalXPText, CARD_WIDTH - 50, 150);
+    
+    const totalXPWidth = ctx.measureText(totalXPText).width;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText(`${xpCurrentFormatted}`, CARD_WIDTH - 50 - totalXPWidth, 150);
 
     // ── 6. Progress Bar ───────────────────────────────────────
     const BAR_X      = TEXT_X;
-    const BAR_Y      = 148;
-    const BAR_WIDTH  = CARD_WIDTH - TEXT_X - 20;
-    const BAR_HEIGHT = 28;
+    const BAR_Y      = 180;
+    const BAR_WIDTH  = CARD_WIDTH - TEXT_X - 50;
+    const BAR_HEIGHT = 40;
     const progress   = xpNeeded > 0 ? currentXp / xpNeeded : 0;
 
     drawProgressBar(ctx, BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT, progress, settings.mainColor);
-
-    // ── 7. Total XP footer ────────────────────────────────────
-    ctx.font      = `16px "${fontFamily}"`;
-    ctx.fillStyle = 'rgba(255,255,255,0.45)';
-    ctx.fillText(`Total XP: ${totalXp.toLocaleString()}`, TEXT_X, CARD_HEIGHT - 24);
-
-    // ── 8. Subtle bottom border accent ───────────────────────
-    ctx.beginPath();
-    ctx.moveTo(24, CARD_HEIGHT - 6);
-    ctx.lineTo(CARD_WIDTH - 24, CARD_HEIGHT - 6);
-    ctx.strokeStyle = settings.mainColor;
-    ctx.lineWidth   = 3;
-    ctx.globalAlpha = 0.4;
-    ctx.stroke();
-    ctx.globalAlpha = 1;
 
     return canvas.toBuffer('image/png');
 }
