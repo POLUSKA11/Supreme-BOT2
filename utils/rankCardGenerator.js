@@ -2,7 +2,7 @@
  * ============================================================
  *  NEXUS BOT 2 — Rank Card Generator
  *  Generates a beautiful visual rank card image similar to MEE6.
- *  Supports full customization: background, colors, font, overlay.
+ *  Supports high-DPI rendering for maximum font clarity.
  * ============================================================
  */
 const { createCanvas, loadImage, GlobalFonts } = require('@napi-rs/canvas');
@@ -12,13 +12,13 @@ const http = require('http');
 
 // ─── Register Fonts ───────────────────────────────────────────
 const FONTS_DIR = path.join(__dirname, '../assets/fonts');
-// Register fonts with specific names for reliable access
 GlobalFonts.registerFromPath(path.join(FONTS_DIR, 'Montserrat.ttf'), 'Montserrat');
 GlobalFonts.registerFromPath(path.join(FONTS_DIR, 'Montserrat-Bold.ttf'), 'Montserrat-Bold');
 
 // ─── Card Dimensions ─────────────────────────────────────────
-const CARD_WIDTH  = 934;
-const CARD_HEIGHT = 282;
+const BASE_WIDTH  = 934;
+const BASE_HEIGHT = 282;
+const SCALE       = 2; // 2x Scale for High-DPI crispness
 
 // ─── Default Card Settings ────────────────────────────────────
 const DEFAULTS = {
@@ -82,9 +82,9 @@ function roundRect(ctx, x, y, width, height, radius) {
 }
 
 /**
- * Draw a circular avatar with a colored ring.
+ * Draw a circular avatar.
  */
-async function drawAvatar(ctx, avatarUrl, x, y, size, ringColor) {
+async function drawAvatar(ctx, avatarUrl, x, y, size) {
     const radius = size / 2;
     const cx = x + radius;
     const cy = y + radius;
@@ -166,15 +166,22 @@ async function generateRankCard(options) {
     const settings = { ...DEFAULTS, ...cardSettings };
     const isMontserrat = settings.font === 'Montserrat';
     
-    // Explicitly use weights for Montserrat
-    const boldFont = isMontserrat ? 'bold 1px "Montserrat-Bold"' : `bold 1px "${settings.font}"`;
-    const regularFont = isMontserrat ? '1px "Montserrat"' : `1px "${settings.font}"`;
+    // Explicitly use Montserrat fonts
+    const boldFont = isMontserrat ? '"Montserrat-Bold"' : `bold "${settings.font}"`;
+    const regularFont = isMontserrat ? '"Montserrat"' : `"${settings.font}"`;
 
-    const canvas = createCanvas(CARD_WIDTH, CARD_HEIGHT);
+    // Create a high-resolution canvas
+    const canvas = createCanvas(BASE_WIDTH * SCALE, BASE_HEIGHT * SCALE);
     const ctx    = canvas.getContext('2d');
 
+    // Scale all subsequent drawing operations
+    ctx.scale(SCALE, SCALE);
+    
+    // CRITICAL: Force path-based text drawing for maximum sharpness
+    ctx.textDrawingMode = 'path';
+
     // ── 1. Background ─────────────────────────────────────────
-    roundRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 15);
+    roundRect(ctx, 0, 0, BASE_WIDTH, BASE_HEIGHT, 15);
     ctx.fillStyle = settings.backgroundColor;
     ctx.fill();
 
@@ -185,18 +192,18 @@ async function generateRankCard(options) {
             const bgImg = await loadImage(bgBuf);
 
             ctx.save();
-            roundRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 15);
+            roundRect(ctx, 0, 0, BASE_WIDTH, BASE_HEIGHT, 15);
             ctx.clip();
-            const scale = Math.max(CARD_WIDTH / bgImg.width, CARD_HEIGHT / bgImg.height);
+            const scale = Math.max(BASE_WIDTH / bgImg.width, BASE_HEIGHT / bgImg.height);
             const bw = bgImg.width  * scale;
             const bh = bgImg.height * scale;
-            const bx = (CARD_WIDTH  - bw) / 2;
-            const by = (CARD_HEIGHT - bh) / 2;
+            const bx = (BASE_WIDTH  - bw) / 2;
+            const by = (BASE_HEIGHT - bh) / 2;
             ctx.drawImage(bgImg, bx, by, bw, bh);
             ctx.restore();
 
             // Overlay
-            roundRect(ctx, 0, 0, CARD_WIDTH, CARD_HEIGHT, 15);
+            roundRect(ctx, 0, 0, BASE_WIDTH, BASE_HEIGHT, 15);
             ctx.fillStyle = `rgba(0,0,0,${settings.overlayOpacity})`;
             ctx.fill();
         } catch {}
@@ -205,13 +212,13 @@ async function generateRankCard(options) {
     // ── 2. Avatar ─────────────────────────────────────────────
     const AVATAR_SIZE = 165;
     const AVATAR_X    = 50;
-    const AVATAR_Y    = (CARD_HEIGHT - AVATAR_SIZE) / 2;
-    await drawAvatar(ctx, avatarUrl, AVATAR_X, AVATAR_Y, AVATAR_SIZE, settings.mainColor);
+    const AVATAR_Y    = (BASE_HEIGHT - AVATAR_SIZE) / 2;
+    await drawAvatar(ctx, avatarUrl, AVATAR_X, AVATAR_Y, AVATAR_SIZE);
 
     // ── 3. Username ───────────────────────────────────────────
     const TEXT_X = AVATAR_X + AVATAR_SIZE + 45;
     ctx.textAlign = 'left';
-    ctx.font      = boldFont.replace('1px', '42px');
+    ctx.font      = `48px ${boldFont}`;
     ctx.fillStyle = '#FFFFFF';
     ctx.fillText(username, TEXT_X, 150);
 
@@ -220,49 +227,49 @@ async function generateRankCard(options) {
 
     // "LEVEL" label & number
     ctx.textAlign = 'right';
-    ctx.font      = boldFont.replace('1px', '48px');
+    ctx.font      = `42px ${boldFont}`;
     ctx.fillStyle = settings.mainColor;
-    ctx.fillText(`${level}`, CARD_WIDTH - 50, BADGE_Y);
+    ctx.fillText(`${level}`, BASE_WIDTH - 50, BADGE_Y);
     
     const levelWidth = ctx.measureText(`${level}`).width;
-    ctx.font      = regularFont.replace('1px', '22px');
+    ctx.font      = `22px ${regularFont}`;
     ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillText('LEVEL', CARD_WIDTH - 50 - levelWidth - 12, BADGE_Y - 3);
+    ctx.fillText('LEVEL', BASE_WIDTH - 50 - levelWidth - 12, BADGE_Y - 3);
 
     // "RANK" label & number
     const rankText = `#${rank > 0 ? rank : '1'}`;
     const levelLabelWidth = ctx.measureText('LEVEL').width;
     const RANK_X_OFFSET = 50 + levelWidth + 12 + levelLabelWidth + 35;
     
-    ctx.font      = boldFont.replace('1px', '64px');
+    ctx.font      = `64px ${boldFont}`;
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText(rankText, CARD_WIDTH - RANK_X_OFFSET, BADGE_Y + 5);
+    ctx.fillText(rankText, BASE_WIDTH - RANK_X_OFFSET, BADGE_Y + 5);
     
     const rankWidth = ctx.measureText(rankText).width;
-    ctx.font      = regularFont.replace('1px', '22px');
+    ctx.font      = `22px ${regularFont}`;
     ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillText('RANK', CARD_WIDTH - RANK_X_OFFSET - rankWidth - 10, BADGE_Y - 3);
+    ctx.fillText('RANK', BASE_WIDTH - RANK_X_OFFSET - rankWidth - 10, BADGE_Y - 3);
 
     // ── 5. XP Text ────────────────────────────────────────────
     const xpCurrentFormatted = formatXP(currentXp);
     const xpNeededFormatted  = formatXP(xpNeeded);
     
     ctx.textAlign = 'right';
-    ctx.font      = regularFont.replace('1px', '24px');
+    ctx.font      = `24px ${regularFont}`;
     ctx.fillStyle = '#FFFFFF';
     
     const totalXPText = ` / ${xpNeededFormatted} XP`;
     ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.fillText(totalXPText, CARD_WIDTH - 50, 150);
+    ctx.fillText(totalXPText, BASE_WIDTH - 50, 150);
     
     const totalXPWidth = ctx.measureText(totalXPText).width;
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText(`${xpCurrentFormatted}`, CARD_WIDTH - 50 - totalXPWidth, 150);
+    ctx.fillText(`${xpCurrentFormatted}`, BASE_WIDTH - 50 - totalXPWidth, 150);
 
     // ── 6. Progress Bar ───────────────────────────────────────
     const BAR_X      = TEXT_X;
     const BAR_Y      = 180;
-    const BAR_WIDTH  = CARD_WIDTH - TEXT_X - 50;
+    const BAR_WIDTH  = BASE_WIDTH - TEXT_X - 50;
     const BAR_HEIGHT = 40;
     const progress   = xpNeeded > 0 ? currentXp / xpNeeded : 0;
 
