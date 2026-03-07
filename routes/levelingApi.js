@@ -137,6 +137,8 @@ router.get('/:guildId/config', requireAuth, async (req, res) => {
         const enabled = await levelSystem.getConfig(guildId, 'enabled', '1');
         const announceChannel = await levelSystem.getConfig(guildId, 'announce_channel', null);
         const ignoredChannels = await levelSystem.getConfig(guildId, 'ignored_channels', '');
+        const xpRate = await levelSystem.getConfig(guildId, 'xp_rate', '1.0');
+        const noExtraXpForPremium = await levelSystem.getConfig(guildId, 'no_extra_xp_premium', '0');
 
         res.json({
             success: true,
@@ -144,6 +146,8 @@ router.get('/:guildId/config', requireAuth, async (req, res) => {
                 enabled: enabled === '1',
                 announceChannel,
                 ignoredChannels: ignoredChannels ? ignoredChannels.split(',').filter(Boolean) : [],
+                xpRate: parseFloat(xpRate),
+                noExtraXpForPremium: noExtraXpForPremium === '1'
             }
         });
     } catch (err) {
@@ -155,7 +159,7 @@ router.get('/:guildId/config', requireAuth, async (req, res) => {
 router.patch('/:guildId/config', requireAuth, async (req, res) => {
     try {
         const { guildId } = req.params;
-        const { enabled, announceChannel, ignoredChannels } = req.body;
+        const { enabled, announceChannel, ignoredChannels, xpRate, noExtraXpForPremium } = req.body;
 
         if (enabled !== undefined) {
             await levelSystem.setConfig(guildId, 'enabled', enabled ? '1' : '0');
@@ -167,6 +171,12 @@ router.patch('/:guildId/config', requireAuth, async (req, res) => {
             await levelSystem.setConfig(guildId, 'ignored_channels',
                 Array.isArray(ignoredChannels) ? ignoredChannels.join(',') : ignoredChannels
             );
+        }
+        if (xpRate !== undefined) {
+            await levelSystem.setConfig(guildId, 'xp_rate', xpRate.toString());
+        }
+        if (noExtraXpForPremium !== undefined) {
+            await levelSystem.setConfig(guildId, 'no_extra_xp_premium', noExtraXpForPremium ? '1' : '0');
         }
 
         res.json({ success: true, message: 'Config updated' });
@@ -218,6 +228,7 @@ router.delete('/:guildId/user/:userId', requireAuth, async (req, res) => {
 /**
  * GET /api/leveling/:guildId/card-settings/:userId
  * Fetch rank card customization settings for a user.
+ * If userId is 'default', fetches server-wide default settings.
  */
 router.get('/:guildId/card-settings/:userId', requireAuth, async (req, res) => {
     try {
@@ -234,12 +245,19 @@ router.get('/:guildId/card-settings/:userId', requireAuth, async (req, res) => {
 /**
  * POST /api/leveling/:guildId/card-settings/:userId
  * Save rank card customization settings for a user.
+ * If userId is 'default', saves server-wide default settings.
  */
 router.post('/:guildId/card-settings/:userId', requireAuth, async (req, res) => {
     try {
         const { guildId, userId } = req.params;
         // Only allow users to edit their own settings unless they are an admin
-        if (req.session.userId !== userId && req.session.userId !== '982731220913913856') {
+        // For 'default' settings, only allow admins
+        if (userId === 'default') {
+            // Check if user is admin (simplified check for now)
+            if (req.session.userId !== '982731220913913856') {
+                return res.status(403).json({ error: 'Forbidden: Only admins can edit default settings' });
+            }
+        } else if (req.session.userId !== userId && req.session.userId !== '982731220913913856') {
             return res.status(403).json({ error: 'Forbidden: You can only edit your own settings' });
         }
 
@@ -263,15 +281,32 @@ router.get('/:guildId/card-preview/:userId', requireAuth, async (req, res) => {
         const guild = client?.guilds.cache.get(guildId);
         if (!guild) return res.status(404).json({ error: 'Guild not found' });
 
-        const member = await guild.members.fetch(userId).catch(() => null);
-        if (!member) return res.status(404).json({ error: 'Member not found' });
+        let username = 'User';
+        let avatarUrl = 'https://cdn.discordapp.com/embed/avatars/0.png';
+        let level = 12;
+        let rankPos = 44;
+        let currentXp = 429;
+        let xpNeeded = 1337;
+        let totalXp = 429;
 
-        const userData = await levelSystem.getUserData(guildId, userId);
-        const { level, currentXp, xpNeeded } = levelSystem.getLevelFromXp(userData.xp);
-        
-        // Get rank position
-        const leaderboard = await levelSystem.getLeaderboard(guildId, 100);
-        const rankPos = leaderboard.findIndex(u => u.user_id === userId) + 1;
+        if (userId !== 'default') {
+            const member = await guild.members.fetch(userId).catch(() => null);
+            if (member) {
+                username = member.user.username;
+                avatarUrl = member.user.displayAvatarURL({ extension: 'png', size: 256 });
+            }
+
+            const userData = await levelSystem.getUserData(guildId, userId);
+            const levelData = levelSystem.getLevelFromXp(userData.xp);
+            level = levelData.level;
+            currentXp = levelData.currentXp;
+            xpNeeded = levelData.xpNeeded;
+            totalXp = userData.xp;
+            
+            const leaderboard = await levelSystem.getLeaderboard(guildId, 100);
+            rankPos = leaderboard.findIndex(u => u.user_id === userId) + 1;
+            if (rankPos === 0) rankPos = 1;
+        }
 
         // Get settings from query params (for live preview) or DB
         let cardSettings = {};
@@ -285,13 +320,13 @@ router.get('/:guildId/card-preview/:userId', requireAuth, async (req, res) => {
         }
 
         const cardBuf = await generateRankCard({
-            username: member.user.username,
-            avatarUrl: member.user.displayAvatarURL({ extension: 'png', size: 256 }),
+            username,
+            avatarUrl,
             level,
             rank: rankPos,
             currentXp,
             xpNeeded,
-            totalXp: userData.xp,
+            totalXp,
             cardSettings,
         });
 
