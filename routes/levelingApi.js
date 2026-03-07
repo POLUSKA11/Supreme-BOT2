@@ -374,13 +374,26 @@ router.get('/:guildId/card-preview/:userId', requireAuth, async (req, res) => {
                 if (cardSettings.backgroundImage === '') cardSettings.backgroundImage = null;
             } catch (e) {}
         } else {
-            const raw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
-            if (raw) {
+            // 1. Load server-wide default settings
+            const defaultRaw = await levelSystem.getConfig(guildId, 'card_settings_default', null);
+            if (defaultRaw) {
                 try {
-                    cardSettings = JSON.parse(raw);
-                    if (cardSettings.backgroundImage === '') cardSettings.backgroundImage = null;
+                    const parsed = JSON.parse(defaultRaw);
+                    if (parsed) cardSettings = { ...parsed };
                 } catch (e) {}
             }
+
+            // 2. Overlay user-specific settings if they exist
+            const userRaw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
+            if (userRaw) {
+                try {
+                    const parsed = JSON.parse(userRaw);
+                    if (parsed) cardSettings = { ...cardSettings, ...parsed };
+                } catch (e) {}
+            }
+            
+            // Normalize
+            if (cardSettings.backgroundImage === '') cardSettings.backgroundImage = null;
         }
 
         const cardBuf = await generateRankCard({

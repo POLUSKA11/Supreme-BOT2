@@ -25,25 +25,23 @@ async function getCardSettings(guildId, userId) {
     }
 
     try {
-        const userRaw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
-        if (userRaw) {
-            const parsed = parseSettings(userRaw);
-            if (parsed && Object.keys(parsed).length > 0) {
-                console.log('[LEVEL] Loaded user card settings:', parsed);
-                return parsed;
-            }
-        }
-
+        // 1. Load server-wide default settings
+        let settings = {};
         const defaultRaw = await levelSystem.getConfig(guildId, 'card_settings_default', null);
         if (defaultRaw) {
             const parsed = parseSettings(defaultRaw);
-            if (parsed && Object.keys(parsed).length > 0) {
-                console.log('[LEVEL] Loaded default card settings:', parsed);
-                return parsed;
-            }
+            if (parsed) settings = { ...parsed };
         }
 
-        console.log('[LEVEL] No custom card settings found for guild=' + guildId);
+        // 2. Overlay user-specific settings if they exist
+        const userRaw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
+        if (userRaw) {
+            const parsed = parseSettings(userRaw);
+            if (parsed) settings = { ...settings, ...parsed };
+        }
+
+        console.log(`[LEVEL] Final merged settings for user ${userId}:`, settings);
+        return settings;
     } catch (err) {
         console.error('[LEVEL] Error loading card settings:', err);
     }
