@@ -13,6 +13,7 @@ const http = require('http');
 // ─── Register Fonts ───────────────────────────────────────────
 const FONTS_DIR = path.join(__dirname, '../assets/fonts');
 GlobalFonts.registerFromPath(path.join(FONTS_DIR, 'Montserrat.ttf'), 'Montserrat');
+GlobalFonts.registerFromPath(path.join(FONTS_DIR, 'Montserrat-Bold.ttf'), 'Montserrat-Bold');
 
 // ─── Card Dimensions ─────────────────────────────────────────
 const CARD_WIDTH  = 934;
@@ -220,7 +221,7 @@ async function generateRankCard(options) {
     // ── 3. Username ───────────────────────────────────────────
     const TEXT_X = AVATAR_X + AVATAR_SIZE + 30;
 
-    ctx.font      = `bold 32px "${fontFamily}"`;
+    ctx.font      = (fontFamily === 'Montserrat') ? '32px "Montserrat-Bold"' : `bold 32px "${fontFamily}"`;
     ctx.fillStyle = '#FFFFFF';
     ctx.fillText(username, TEXT_X, 90);
 
@@ -235,7 +236,7 @@ async function generateRankCard(options) {
     ctx.fillText('Rank', CARD_WIDTH - 220, BADGE_Y);
 
     // Rank number
-    ctx.font      = `bold 38px "${fontFamily}"`;
+    ctx.font      = (fontFamily === 'Montserrat') ? '38px "Montserrat-Bold"' : `bold 38px "${fontFamily}"`;
     ctx.fillStyle = settings.mainColor;
     ctx.fillText(`#${rank > 0 ? rank : '?'}`, CARD_WIDTH - 140, BADGE_Y + 4);
 
@@ -245,7 +246,7 @@ async function generateRankCard(options) {
     ctx.fillText('Level', CARD_WIDTH - 80, BADGE_Y);
 
     // Level number
-    ctx.font      = `bold 38px "${fontFamily}"`;
+    ctx.font      = (fontFamily === 'Montserrat') ? '38px "Montserrat-Bold"' : `bold 38px "${fontFamily}"`;
     ctx.fillStyle = '#FFFFFF';
     ctx.fillText(`${level}`, CARD_WIDTH - 20, BADGE_Y + 4);
 
