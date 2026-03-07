@@ -258,8 +258,10 @@ async function initializePlayer(client) {
     // Load YouTube extractor (youtubei — no API key needed)
     // The [YOUTUBEJS][Text] warnings are cosmetic and do not affect playback.
     await player.extractors.register(YoutubeiExtractor, {
-        // Suppress noisy run-matching warnings from youtubei
-        overrideBridgeMode: 'ytdlp',
+        streamOptions: {
+            useClient: 'ANDROID', // Use Android client for better stability
+            highWaterMark: 1 << 25,
+        }
     });
 
     // Load all default extractors (Spotify, SoundCloud, Apple Music, Vimeo, etc.)
