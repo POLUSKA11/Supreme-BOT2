@@ -28,16 +28,16 @@ async function getCardSettings(guildId, userId) {
     if (!raw) return {};
     try {
         const s = JSON.parse(raw);
-        // Normalize backgroundImage: treat empty string as null
         if (s.backgroundImage === '') s.backgroundImage = null;
         return s;
     } catch { return {}; }
 }
 
 async function saveCardSettings(guildId, userId, settings) {
-    // Normalize backgroundImage before saving
     const normalized = { ...settings, backgroundImage: settings.backgroundImage || null };
+    console.log('[RANK-CARD] Saving card settings for guild=' + guildId + ' userId=' + userId + ':', normalized);
     await levelSystem.setConfig(guildId, `card_settings_${userId}`, JSON.stringify(normalized));
+    console.log('[RANK-CARD] Card settings saved successfully');
 }
 
 // ─── Color choices for the command ───────────────────────────
@@ -238,7 +238,6 @@ module.exports = {
             const settings = await getCardSettings(guildId, userId);
 
             if (!url) {
-                // Remove background image
                 settings.backgroundImage = null;
                 await saveCardSettings(guildId, userId, settings);
                 return interaction.editReply({
@@ -263,7 +262,7 @@ module.exports = {
         // ── overlay ──────────────────────────────────────────
         if (sub === 'overlay') {
             const opacityLevel = interaction.options.getInteger('opacity');
-            const opacity = opacityLevel / 10; // Convert 0-10 to 0.0-1.0
+            const opacity = opacityLevel / 10;
 
             const settings = await getCardSettings(guildId, userId);
             settings.overlayOpacity = opacity;

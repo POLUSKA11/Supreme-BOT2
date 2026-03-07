@@ -13,24 +13,36 @@ async function getCardSettings(guildId, userId) {
     function parseSettings(raw) {
         try {
             const s = JSON.parse(raw);
-            // Normalize backgroundImage: treat empty string as null
             if (s.backgroundImage === '') s.backgroundImage = null;
             return s;
-        } catch (e) { return null; }
+        } catch (e) { 
+            console.error('[RANK] Failed to parse settings:', raw, e);
+            return null; 
+        }
     }
 
-    // 1. Try to get user-specific settings
-    const userRaw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
-    if (userRaw) {
-        const parsed = parseSettings(userRaw);
-        if (parsed) return parsed;
-    }
+    try {
+        const userRaw = await levelSystem.getConfig(guildId, `card_settings_${userId}`, null);
+        if (userRaw) {
+            const parsed = parseSettings(userRaw);
+            if (parsed && Object.keys(parsed).length > 0) {
+                console.log('[RANK] Loaded user card settings:', parsed);
+                return parsed;
+            }
+        }
 
-    // 2. Fallback to server-wide default settings
-    const defaultRaw = await levelSystem.getConfig(guildId, 'card_settings_default', null);
-    if (defaultRaw) {
-        const parsed = parseSettings(defaultRaw);
-        if (parsed) return parsed;
+        const defaultRaw = await levelSystem.getConfig(guildId, 'card_settings_default', null);
+        if (defaultRaw) {
+            const parsed = parseSettings(defaultRaw);
+            if (parsed && Object.keys(parsed).length > 0) {
+                console.log('[RANK] Loaded default card settings:', parsed);
+                return parsed;
+            }
+        }
+
+        console.log('[RANK] No custom settings found, using defaults');
+    } catch (err) {
+        console.error('[RANK] Error loading card settings:', err);
     }
 
     return {};
