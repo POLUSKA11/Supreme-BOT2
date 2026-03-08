@@ -407,9 +407,12 @@ router.post('/paypal/webhook', express.raw({ type: 'application/json' }), async 
 async function getCryptoPrice(symbol) {
     try {
         // Using Binance API for more reliable price fetching
+        if (symbol === 'USDT_TRC20' || symbol === 'USDT_ERC20') {
+            return 1.0; // USDT is a stablecoin, always $1
+        }
+
         const binanceSymbol = {
             BTC: 'BTCUSDT', ETH: 'ETHUSDT', LTC: 'LTCUSDT',
-            USDT_TRC20: 'USDTUSDT', USDT_ERC20: 'USDTUSDT',
             BNB: 'BNBUSDT', SOL: 'SOLUSDT',
         }[symbol];
         if (!binanceSymbol) return null;
