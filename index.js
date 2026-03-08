@@ -117,6 +117,16 @@ try {
                 )
             `);
             await query(`
+                CREATE TABLE IF NOT EXISTS premium_subscriptions (
+                    guild_id VARCHAR(255) PRIMARY KEY,
+                    user_id VARCHAR(255),
+                    plan VARCHAR(50),
+                    expires_at DATETIME,
+                    order_id VARCHAR(255),
+                    activated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            await query(`
                 CREATE TABLE IF NOT EXISTS ai_conversations (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     user_id VARCHAR(20) NOT NULL,
@@ -617,9 +627,13 @@ app.use('/api/welcome', welcomeApi);
 const levelingApi = require('./routes/levelingApi');
 app.use('/api/leveling', levelingApi);
 
-// Admin Panel API routes (restricted to Discord user 982731220913913856)
-const adminApi = require('./routes/adminApi');
-app.use('/api/admin', adminApi);
+	// Admin Panel API routes (restricted to Discord user 982731220913913856)
+	const adminApi = require('./routes/adminApi');
+	app.use('/api/admin', adminApi);
+	
+	// Payment API routes
+	const paymentApi = require('./routes/paymentApi');
+	app.use('/api/payments', paymentApi);
 
 
 

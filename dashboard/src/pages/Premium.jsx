@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const PLANS = [
@@ -78,269 +78,6 @@ const PayPalLogo = () => (
   </svg>
 );
 
-const BinanceLogo = () => (
-  <svg viewBox="0 0 126 30" className="h-5">
-    <path fill="#F0B90B" d="M8.528 15.001l4.472-4.472 4.474 4.472-4.474 4.474-4.472-4.474zm4.472-10.529L20.529 12l2.529-2.529L13 1.943 5.472 9.471 8 12l5-7.528zM2.529 15.001L0 12.472v5.058l2.529 2.529 2.528-2.529-2.528-2.529zm10.471 10.528L5.472 18l-2.529 2.529L13 28.057l7.529-7.528L18 18l-5 7.529zM23.472 15l2.528-2.529v5.058L23.472 20 20.943 17.47 23.472 15z"/>
-    <path fill="#F0B90B" d="M16.236 15L13 11.764 10.588 14.176l-.278.278-.546.546L13 18.236 16.236 15z"/>
-    <text x="32" y="22" fill="#F0B90B" fontFamily="Arial, sans-serif" fontSize="16" fontWeight="bold">Binance</text>
-  </svg>
-);
-
-const StripeLogo = () => (
-  <svg viewBox="0 0 60 25" className="h-5">
-    <path fill="#635BFF" d="M5 10.3c0-.7.6-1 1.5-1 1.3 0 3 .4 4.3 1.1V6.7c-1.5-.6-2.9-.8-4.3-.8C3.2 5.9.5 7.9.5 11.1c0 4.9 6.8 4.1 6.8 6.3 0 .8-.7 1.1-1.7 1.1-1.5 0-3.4-.6-4.9-1.4v3.8c1.7.7 3.3 1 4.9 1 3.4 0 5.7-1.7 5.7-4.9 0-5.3-6.8-4.3-6.8-6.4l.5-.3zM16.6 3.3l-4.4.9v3.5l4.4-.9V3.3zm0 4.3h-4.4v14.1h4.4V7.6zm5.3 1.3l-.3-1.3h-4v14.1h4.4v-9.6c1-1.3 2.8-1.1 3.3-.9V7.6c-.6-.2-2.5-.6-3.4 1.3zm8.7-1.3h-3.3l-.1 11.2c0 2.1 1.5 3.6 3.6 3.6 1.1 0 2-.2 2.4-.5v-3.4c-.4.2-2.5.7-2.5-1.1V11h2.5V7.6h-2.5l-.1-3.1zm10.1 3.5c-1.5 0-2.4.7-2.9 1.2l-.2-1h-4v18.7l4.4-.9v-4.5c.6.4 1.4 1 2.8 1 2.8 0 5.4-2.3 5.4-7.2-.1-4.6-2.7-7.3-5.5-7.3zm-1 10.8c-.9 0-1.5-.3-1.9-.8v-6.3c.4-.5 1-.8 1.9-.8 1.5 0 2.5 1.6 2.5 4 0 2.3-1 3.9-2.5 3.9zm14.4-10.8c-2.6 0-4.7 1.1-4.7 3.3 0 2.2 2 2.9 3.6 3.2 1.2.3 1.6.5 1.6.9 0 .5-.5.7-1.3.7-1.2 0-2.7-.5-3.8-1.2v3.5c1.3.6 2.6.8 3.8.8 2.7 0 4.8-1.1 4.8-3.4 0-2.3-2.1-3-3.7-3.4-1.1-.3-1.5-.4-1.5-.8 0-.4.4-.6 1.1-.6 1 0 2.3.3 3.3.9V8c-1.1-.5-2.3-.7-3.2-.7v-.2z"/>
-  </svg>
-);
-
-// Fancy Payment Info Modal Component
-function PaymentInfoModal({ show, onClose, type, data, plan }) {
-  const [copied, setCopied] = useState('');
-  const [animateIn, setAnimateIn] = useState(false);
-
-  useEffect(() => {
-    if (show) {
-      setTimeout(() => setAnimateIn(true), 10);
-    } else {
-      setAnimateIn(false);
-    }
-  }, [show]);
-
-  if (!show) return null;
-
-  const copyToClipboard = (text, label) => {
-    navigator.clipboard.writeText(text);
-    setCopied(label);
-    setTimeout(() => setCopied(''), 2000);
-  };
-
-  const CopyButton = ({ text, label }) => (
-    <button
-      onClick={() => copyToClipboard(text, label)}
-      className="ml-2 p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all group"
-      title="Copy"
-    >
-      {copied === label ? (
-        <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
-      ) : (
-        <svg className="w-4 h-4 text-slate-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-      )}
-    </button>
-  );
-
-  return (
-    <div className={`fixed inset-0 z-[60] flex items-center justify-center p-4 transition-all duration-500 ${animateIn ? 'bg-black/70 backdrop-blur-md' : 'bg-black/0 backdrop-blur-none'}`} onClick={onClose}>
-      <div
-        className={`relative max-w-lg w-full transition-all duration-500 ${animateIn ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Glowing border effect */}
-        <div className={`absolute -inset-[1px] rounded-3xl bg-gradient-to-br ${
-          type === 'paypal' ? 'from-[#003087] via-[#0070ba] to-[#003087]' :
-          type === 'binance' ? 'from-[#F0B90B] via-[#d4a50a] to-[#F0B90B]' :
-          'from-[#635BFF] via-[#7c75ff] to-[#635BFF]'
-        } opacity-50 blur-sm animate-pulse`} />
-
-        <div className="relative bg-slate-900/95 backdrop-blur-2xl rounded-3xl border border-white/10 overflow-hidden">
-          {/* Decorative top gradient */}
-          <div className={`h-1.5 bg-gradient-to-r ${
-            type === 'paypal' ? 'from-[#003087] via-[#0070ba] to-[#00457C]' :
-            type === 'binance' ? 'from-[#F0B90B] via-[#FCD535] to-[#F0B90B]' :
-            'from-[#635BFF] via-[#7c75ff] to-[#635BFF]'
-          }`} />
-
-          {/* Floating particles */}
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className={`absolute w-64 h-64 rounded-full blur-[100px] opacity-10 ${
-              type === 'paypal' ? 'bg-[#0070ba]' : type === 'binance' ? 'bg-[#F0B90B]' : 'bg-[#635BFF]'
-            } -top-32 -right-32 animate-pulse`} />
-            <div className={`absolute w-48 h-48 rounded-full blur-[80px] opacity-10 ${
-              type === 'paypal' ? 'bg-[#003087]' : type === 'binance' ? 'bg-[#d4a50a]' : 'bg-[#7c75ff]'
-            } -bottom-24 -left-24 animate-pulse`} style={{ animationDelay: '1s' }} />
-          </div>
-
-          <div className="relative p-8">
-            {/* Close button */}
-            <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all">
-              <svg className="w-5 h-5 text-slate-400 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
-
-            {/* Header with logo */}
-            <div className="text-center mb-8">
-              <div className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-4 ${
-                type === 'paypal' ? 'bg-[#003087]/20 border border-[#003087]/30' :
-                type === 'binance' ? 'bg-[#F0B90B]/10 border border-[#F0B90B]/20' :
-                'bg-[#635BFF]/10 border border-[#635BFF]/20'
-              }`}>
-                {type === 'paypal' && <PayPalLogo />}
-                {type === 'binance' && <BinanceLogo />}
-                {type === 'stripe' && <StripeLogo />}
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-1">
-                {type === 'paypal' ? 'PayPal Payment' : type === 'binance' ? 'Crypto Payment' : 'Stripe Payment'}
-              </h2>
-              <p className="text-slate-400 text-sm">Complete your payment to activate premium</p>
-            </div>
-
-            {/* Order Summary */}
-            <div className="bg-white/5 rounded-2xl border border-white/10 p-5 mb-6">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-slate-400 text-sm">Plan</span>
-                <span className="text-white font-bold">{data?.description || `Nexus Bot ${plan?.name} Plan`}</span>
-              </div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-slate-400 text-sm">Duration</span>
-                <span className="text-white font-medium">30 Days</span>
-              </div>
-              <div className="h-px bg-white/10 my-3" />
-              <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-sm">Total</span>
-                <span className={`text-2xl font-bold ${
-                  type === 'paypal' ? 'text-[#0070ba]' : type === 'binance' ? 'text-[#F0B90B]' : 'text-[#635BFF]'
-                }`}>${data?.amount || plan?.price} {data?.currency || 'USD'}</span>
-              </div>
-            </div>
-
-            {/* Payment Instructions */}
-            {type === 'paypal' && (
-              <div className="space-y-4">
-                <div className="bg-[#003087]/10 rounded-2xl border border-[#003087]/20 p-5">
-                  <h3 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
-                    <svg className="w-5 h-5 text-[#0070ba]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    Payment Instructions
-                  </h3>
-                  <ol className="space-y-3 text-sm text-slate-300">
-                    <li className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#0070ba]/20 text-[#0070ba] flex items-center justify-center text-xs font-bold">1</span>
-                      <span>Send <strong className="text-white">${data?.amount || plan?.price} USD</strong> to our PayPal</span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#0070ba]/20 text-[#0070ba] flex items-center justify-center text-xs font-bold">2</span>
-                      <span>Include your <strong className="text-white">Discord username</strong> in the payment note</span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#0070ba]/20 text-[#0070ba] flex items-center justify-center text-xs font-bold">3</span>
-                      <span>Open a ticket with your <strong className="text-white">transaction ID</strong> to activate premium</span>
-                    </li>
-                  </ol>
-                </div>
-
-                {data?.orderId && (
-                  <div className="bg-white/5 rounded-xl p-4 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-slate-500 mb-1">Order Reference</p>
-                      <p className="text-white font-mono text-sm">{data.orderId}</p>
-                    </div>
-                    <CopyButton text={data.orderId} label="orderId" />
-                  </div>
-                )}
-              </div>
-            )}
-
-            {type === 'binance' && (
-              <div className="space-y-4">
-                {/* Wallet Address */}
-                <div className="bg-[#F0B90B]/5 rounded-2xl border border-[#F0B90B]/15 p-5">
-                  <h3 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
-                    <svg className="w-5 h-5 text-[#F0B90B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                    Wallet Address
-                  </h3>
-                  <div className="bg-black/30 rounded-xl p-4 flex items-center gap-3">
-                    <code className="text-[#F0B90B] text-sm font-mono flex-1 break-all">{data?.walletAddress || 'Not configured'}</code>
-                    {data?.walletAddress && <CopyButton text={data.walletAddress} label="wallet" />}
-                  </div>
-                </div>
-
-                {/* Payment Details */}
-                <div className="bg-[#F0B90B]/5 rounded-2xl border border-[#F0B90B]/15 p-5">
-                  <h3 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
-                    <svg className="w-5 h-5 text-[#F0B90B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                    Payment Details
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400 text-sm">Network</span>
-                      <span className="text-white font-medium">{data?.network || 'BEP20 (BSC)'}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400 text-sm">Supported Coins</span>
-                      <div className="flex gap-1.5">
-                        {(data?.supportedCoins || ['USDT', 'BTC', 'ETH', 'BNB']).map(coin => (
-                          <span key={coin} className="px-2 py-0.5 bg-[#F0B90B]/10 text-[#F0B90B] text-xs font-bold rounded-lg">{coin}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Instructions */}
-                <div className="bg-white/5 rounded-2xl border border-white/10 p-5">
-                  <ol className="space-y-3 text-sm text-slate-300">
-                    <li className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#F0B90B]/20 text-[#F0B90B] flex items-center justify-center text-xs font-bold">1</span>
-                      <span>Send <strong className="text-white">${data?.amount || plan?.price} USD</strong> equivalent in crypto to the wallet above</span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#F0B90B]/20 text-[#F0B90B] flex items-center justify-center text-xs font-bold">2</span>
-                      <span>Use the correct <strong className="text-white">network</strong> to avoid losing funds</span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#F0B90B]/20 text-[#F0B90B] flex items-center justify-center text-xs font-bold">3</span>
-                      <span>Open a ticket with your <strong className="text-white">transaction hash</strong> to activate premium</span>
-                    </li>
-                  </ol>
-                </div>
-
-                {data?.orderId && (
-                  <div className="bg-white/5 rounded-xl p-4 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-slate-500 mb-1">Order Reference</p>
-                      <p className="text-white font-mono text-sm">{data.orderId}</p>
-                    </div>
-                    <CopyButton text={data.orderId} label="orderId" />
-                  </div>
-                )}
-              </div>
-            )}
-
-            {type === 'error' && (
-              <div className="bg-red-500/10 rounded-2xl border border-red-500/20 p-5 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                </div>
-                <h3 className="text-red-400 font-bold text-lg mb-2">Payment Failed</h3>
-                <p className="text-slate-400 text-sm">{data?.message || 'Something went wrong. Please try again or contact support.'}</p>
-              </div>
-            )}
-
-            {/* Warning */}
-            {type !== 'error' && (
-              <div className="mt-6 flex items-start gap-3 p-4 bg-amber-500/5 rounded-xl border border-amber-500/10">
-                <svg className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
-                <p className="text-amber-200/70 text-xs leading-relaxed">
-                  Send the <strong className="text-amber-300">exact amount</strong> and open a support ticket with your transaction proof. Premium will be activated within <strong className="text-amber-300">24 hours</strong>.
-                </p>
-              </div>
-            )}
-
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              className={`w-full mt-6 py-4 rounded-2xl font-bold text-sm transition-all duration-300 bg-gradient-to-r ${
-                type === 'paypal' ? 'from-[#003087] to-[#0070ba] hover:from-[#002570] hover:to-[#005da0]' :
-                type === 'binance' ? 'from-[#F0B90B] to-[#d4a50a] hover:from-[#d4a50a] hover:to-[#b8920a] text-black' :
-                type === 'error' ? 'from-red-600 to-red-700 hover:from-red-500 hover:to-red-600' :
-                'from-[#635BFF] to-[#7c75ff] hover:from-[#5651e5] hover:to-[#6b65e5]'
-              } text-white shadow-lg hover:shadow-xl hover:scale-[1.01]`}
-            >
-              {type === 'error' ? 'Try Again' : 'Got It'}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function Premium({ selectedGuild }) {
   const { t } = useTranslation();
   const [currentPlan, setCurrentPlan] = useState('free');
@@ -348,17 +85,11 @@ export default function Premium({ selectedGuild }) {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [premiumStatus, setPremiumStatus] = useState(null);
+  const [paypalLoaded, setPaypalLoaded] = useState(false);
 
-  // Payment info modal state
-  const [paymentInfo, setPaymentInfo] = useState({ show: false, type: '', data: null, plan: null });
-
-  useEffect(() => {
-    fetchPremiumStatus();
-  }, []);
-
-  const fetchPremiumStatus = async () => {
+  const fetchPremiumStatus = useCallback(async () => {
     try {
-      const res = await fetch('/api/dashboard/premium/status', { credentials: 'include' });
+      const res = await fetch('/api/payments/status', { credentials: 'include' });
       if (res.ok) {
         const data = await res.json();
         setPremiumStatus(data);
@@ -367,60 +98,72 @@ export default function Premium({ selectedGuild }) {
     } catch (e) {
       console.error('Failed to fetch premium status:', e);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchPremiumStatus();
+  }, [fetchPremiumStatus]);
+
+  // Load PayPal SDK
+  useEffect(() => {
+    if (showPaymentModal && !paypalLoaded) {
+      const script = document.createElement('script');
+      // Replace with your actual Client ID or use a placeholder
+      const clientId = 'YOUR_PAYPAL_CLIENT_ID'; 
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD`;
+      script.async = true;
+      script.onload = () => setPaypalLoaded(true);
+      document.body.appendChild(script);
+    }
+  }, [showPaymentModal, paypalLoaded]);
+
+  // Render PayPal buttons when modal is open and SDK is loaded
+  useEffect(() => {
+    if (showPaymentModal && paypalLoaded && selectedPlan) {
+      const container = document.getElementById('paypal-button-container');
+      if (container && container.innerHTML === '') {
+        window.paypal.Buttons({
+          createOrder: async () => {
+            const res = await fetch('/api/payments/paypal/create-order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ plan: selectedPlan.id }),
+              credentials: 'include'
+            });
+            const data = await res.json();
+            return data.id;
+          },
+          onApprove: async (data) => {
+            setProcessing(true);
+            const res = await fetch('/api/payments/paypal/capture-order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ orderID: data.orderID }),
+              credentials: 'include'
+            });
+            const result = await res.json();
+            if (result.success) {
+              setShowPaymentModal(false);
+              fetchPremiumStatus();
+              alert('Premium activated successfully! Enjoy your new features.');
+            } else {
+              alert('Payment failed: ' + result.error);
+            }
+            setProcessing(false);
+          },
+          onError: (err) => {
+            console.error('PayPal Error:', err);
+            alert('An error occurred with PayPal. Please try again.');
+          }
+        }).render('#paypal-button-container');
+      }
+    }
+  }, [showPaymentModal, paypalLoaded, selectedPlan, fetchPremiumStatus]);
 
   const handleSelectPlan = (plan) => {
     if (plan.id === 'free' || plan.id === currentPlan) return;
     setSelectedPlan(plan);
     setShowPaymentModal(true);
-  };
-
-  const handlePayment = async (method) => {
-    setProcessing(true);
-    try {
-      let endpoint;
-      switch (method) {
-        case 'paypal':
-          endpoint = '/api/dashboard/premium/paypal/create-order';
-          break;
-        case 'stripe':
-          endpoint = '/api/dashboard/premium/stripe/create-session';
-          break;
-        case 'binance':
-          endpoint = '/api/dashboard/premium/crypto/create-order';
-          break;
-        default:
-          return;
-      }
-
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ plan: selectedPlan.id })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        if (method === 'stripe' && data.url) {
-          window.location.href = data.url;
-        } else {
-          // Show fancy payment info modal
-          setShowPaymentModal(false);
-          setPaymentInfo({ show: true, type: method, data, plan: selectedPlan });
-        }
-      } else {
-        const errData = await res.json();
-        setShowPaymentModal(false);
-        setPaymentInfo({ show: true, type: 'error', data: { message: errData.error || 'Payment failed. Please try again.' }, plan: selectedPlan });
-      }
-    } catch (e) {
-      console.error('Payment error:', e);
-      setShowPaymentModal(false);
-      setPaymentInfo({ show: true, type: 'error', data: { message: 'Connection error. Please check your internet and try again.' }, plan: selectedPlan });
-    } finally {
-      setProcessing(false);
-    }
   };
 
   return (
@@ -446,7 +189,7 @@ export default function Premium({ selectedGuild }) {
             <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)] animate-pulse" />
             <span className="text-white font-medium">Current Plan: <span className="text-red-400 font-bold capitalize">{currentPlan}</span></span>
             {premiumStatus?.expiresAt && (
-              <span className="text-slate-400 text-sm">Renews {new Date(premiumStatus.expiresAt).toLocaleDateString()}</span>
+              <span className="text-slate-400 text-sm ml-2">Expires {new Date(premiumStatus.expiresAt).toLocaleDateString()}</span>
             )}
           </div>
         </div>
@@ -516,71 +259,14 @@ export default function Premium({ selectedGuild }) {
         ))}
       </div>
 
-      {/* Payment Methods Section */}
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-white mb-3">Accepted Payment Methods</h2>
-        <p className="text-slate-400">Secure payments powered by industry-leading providers</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16">
-        <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6 text-center hover:border-[#0070ba]/30 transition-all duration-300 group">
-          <div className="w-16 h-16 mx-auto mb-4 bg-[#003087]/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-            <PayPalLogo />
-          </div>
-          <h3 className="text-white font-bold mb-1">PayPal</h3>
-          <p className="text-slate-400 text-sm">Credit/Debit Cards & PayPal Balance</p>
-        </div>
-
-        <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6 text-center hover:border-[#F0B90B]/30 transition-all duration-300 group">
-          <div className="w-16 h-16 mx-auto mb-4 bg-[#F0B90B]/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-            <BinanceLogo />
-          </div>
-          <h3 className="text-white font-bold mb-1">Binance Pay</h3>
-          <p className="text-slate-400 text-sm">BTC, ETH, USDT, BNB & more</p>
-        </div>
-
-        <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6 text-center hover:border-[#635BFF]/30 transition-all duration-300 group">
-          <div className="w-16 h-16 mx-auto mb-4 bg-[#635BFF]/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-            <StripeLogo />
-          </div>
-          <h3 className="text-white font-bold mb-1">Stripe</h3>
-          <p className="text-slate-400 text-sm">Apple Pay, Google Pay & Cards</p>
-        </div>
-      </div>
-
-      {/* FAQ */}
-      <div className="max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold text-white text-center mb-8">Frequently Asked Questions</h2>
-        <div className="space-y-4">
-          {[
-            { q: 'Can I cancel anytime?', a: 'Yes! You can cancel your subscription at any time. Your premium features will remain active until the end of your billing period.' },
-            { q: 'Do I get a refund if I cancel?', a: 'We offer a 7-day money-back guarantee. If you\'re not satisfied within the first 7 days, contact us for a full refund.' },
-            { q: 'Can I switch plans?', a: 'Absolutely! You can upgrade or downgrade your plan at any time. The price difference will be prorated.' },
-            { q: 'Is my payment secure?', a: 'Yes, all payments are processed through PayPal, Stripe, or Binance Pay - industry-leading payment providers with bank-level encryption.' },
-          ].map((faq, i) => (
-            <details key={i} className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 group">
-              <summary className="p-5 cursor-pointer text-white font-medium flex items-center justify-between hover:text-red-400 transition-colors">
-                {faq.q}
-                <svg className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-5 pb-5 text-slate-400 text-sm">{faq.a}</div>
-            </details>
-          ))}
-        </div>
-      </div>
-
-      {/* Payment Method Selection Modal */}
+      {/* PayPal Checkout Modal */}
       {showPaymentModal && selectedPlan && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowPaymentModal(false)}>
           <div className="relative max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-            {/* Glowing border */}
-            <div className={`absolute -inset-[1px] rounded-3xl bg-gradient-to-br ${selectedPlan.color} opacity-40 blur-sm`} />
-
             <div className="relative bg-slate-900/95 backdrop-blur-2xl rounded-3xl border border-white/10 overflow-hidden">
               <div className={`h-1.5 bg-gradient-to-r ${selectedPlan.color}`} />
 
               <div className="p-8">
-                {/* Close button */}
                 <button onClick={() => setShowPaymentModal(false)} className="absolute top-6 right-6 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all">
                   <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
@@ -589,70 +275,22 @@ export default function Premium({ selectedGuild }) {
                   <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-white bg-gradient-to-r ${selectedPlan.color} mb-4`}>
                     {selectedPlan.name.toUpperCase()}
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">Choose Payment Method</h2>
+                  <h2 className="text-2xl font-bold text-white mb-2">Complete Payment</h2>
                   <p className="text-slate-400">
                     <span className="text-white font-bold text-3xl">${selectedPlan.price}</span>
                     <span className="text-slate-400">{selectedPlan.period}</span>
                   </p>
                 </div>
 
-                <div className="space-y-3 mb-6">
-                  <button
-                    onClick={() => handlePayment('paypal')}
-                    disabled={processing}
-                    className="w-full flex items-center gap-4 p-4 bg-[#003087]/10 hover:bg-[#003087]/20 border border-[#003087]/30 hover:border-[#003087]/50 rounded-2xl transition-all duration-300 group disabled:opacity-50"
-                  >
-                    <div className="w-12 h-12 bg-[#003087]/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <PayPalLogo />
+                <div className="bg-white/5 rounded-2xl p-6 mb-6 border border-white/10">
+                  {!paypalLoaded ? (
+                    <div className="flex flex-col items-center justify-center py-8">
+                      <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                      <p className="text-slate-400 text-sm">Loading PayPal...</p>
                     </div>
-                    <div className="text-left flex-1">
-                      <p className="text-white font-bold">PayPal</p>
-                      <p className="text-slate-400 text-xs">Credit/Debit Cards & PayPal Balance</p>
-                    </div>
-                    {processing ? (
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <svg className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
-                    )}
-                  </button>
-
-                  <button
-                    onClick={() => handlePayment('binance')}
-                    disabled={processing}
-                    className="w-full flex items-center gap-4 p-4 bg-[#F0B90B]/5 hover:bg-[#F0B90B]/10 border border-[#F0B90B]/20 hover:border-[#F0B90B]/40 rounded-2xl transition-all duration-300 group disabled:opacity-50"
-                  >
-                    <div className="w-12 h-12 bg-[#F0B90B]/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <BinanceLogo />
-                    </div>
-                    <div className="text-left flex-1">
-                      <p className="text-white font-bold">Binance Pay</p>
-                      <p className="text-slate-400 text-xs">BTC, ETH, USDT, BNB & 100+ coins</p>
-                    </div>
-                    {processing ? (
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <svg className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
-                    )}
-                  </button>
-
-                  <button
-                    onClick={() => handlePayment('stripe')}
-                    disabled={processing}
-                    className="w-full flex items-center gap-4 p-4 bg-[#635BFF]/5 hover:bg-[#635BFF]/10 border border-[#635BFF]/20 hover:border-[#635BFF]/40 rounded-2xl transition-all duration-300 group disabled:opacity-50"
-                  >
-                    <div className="w-12 h-12 bg-[#635BFF]/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <StripeLogo />
-                    </div>
-                    <div className="text-left flex-1">
-                      <p className="text-white font-bold">Stripe</p>
-                      <p className="text-slate-400 text-xs">Apple Pay, Google Pay & Credit Cards</p>
-                    </div>
-                    {processing ? (
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <svg className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
-                    )}
-                  </button>
+                  ) : (
+                    <div id="paypal-button-container"></div>
+                  )}
                 </div>
 
                 <div className="flex items-center justify-center gap-2 text-xs text-slate-500 mb-4">
@@ -672,14 +310,16 @@ export default function Premium({ selectedGuild }) {
         </div>
       )}
 
-      {/* Payment Info Modal (replaces all alerts) */}
-      <PaymentInfoModal
-        show={paymentInfo.show}
-        onClose={() => setPaymentInfo({ show: false, type: '', data: null, plan: null })}
-        type={paymentInfo.type}
-        data={paymentInfo.data}
-        plan={paymentInfo.plan}
-      />
+      {/* Processing Overlay */}
+      {processing && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-white/10 p-8 rounded-3xl flex flex-col items-center">
+            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-white font-bold">Processing Payment...</p>
+            <p className="text-slate-400 text-sm mt-2">Please do not close this window.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
