@@ -260,11 +260,10 @@ async function initializePlayer(client) {
     }
 
     // Load YouTube extractor (youtubei — no API key needed)
-    // The [YOUTUBEJS][Text] warnings are cosmetic and do not affect playback.
-    // Load YouTube extractor (youtubei — no API key needed)
+    // We use the TV_EMBEDDED client as it is currently the most stable for signature extraction
     await player.extractors.register(YoutubeiExtractor, {
         streamOptions: {
-            useClient: 'ANDROID', 
+            useClient: 'TV_EMBEDDED', 
             highWaterMark: 1 << 25,
         }
     });
