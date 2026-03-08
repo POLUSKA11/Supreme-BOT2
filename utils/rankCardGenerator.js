@@ -13,20 +13,22 @@ const http = require('http');
 
 // ─── Register Fonts ───────────────────────────────────────────
 const FONTS_DIR = path.join(__dirname, '../assets/fonts');
+
+// Register Montserrat Regular (weight 400)
 GlobalFonts.registerFromPath(path.join(FONTS_DIR, 'Montserrat.ttf'), 'Montserrat');
-GlobalFonts.registerFromPath(path.join(FONTS_DIR, 'Montserrat-Bold.ttf'), 'Montserrat-Bold');
+// Register Montserrat Bold (weight 700) under its own family name
+GlobalFonts.registerFromPath(path.join(FONTS_DIR, 'Montserrat-Bold.ttf'), 'MontserratBold');
 
 // ─── Card Dimensions ─────────────────────────────────────────
 const BASE_WIDTH  = 934;
 const BASE_HEIGHT = 282;
 // Render at 3x internally, then downsample to BASE size for crisp output.
-// This is the correct high-DPI technique: render large, export small.
 const SCALE = 3;
 
 // ─── Default Card Settings ────────────────────────────────────
 const DEFAULTS = {
     mainColor:       '#00FFFF',   // Progress bar & accent color
-    backgroundColor: '#000000',   // Darker background matching reference
+    backgroundColor: '#2C2F33',   // Dark Discord-like background
     overlayOpacity:  0.6,         // Background image overlay darkness (0-1)
     font:            'Montserrat', // Font family
     backgroundImage: null,        // URL or null
@@ -151,15 +153,18 @@ function drawProgressBar(ctx, x, y, width, height, progress, mainColor) {
 }
 
 /**
- * Draw text with a subtle stroke outline for better contrast and clarity.
+ * Draw text with a solid dark shadow for strong contrast and readability.
+ * Uses a thicker stroke outline to make text pop on any background.
  */
-function drawTextWithStroke(ctx, text, x, y, strokeColor = 'rgba(0,0,0,0.5)', strokeWidth = 2) {
+function drawTextWithStroke(ctx, text, x, y, strokeColor = 'rgba(0,0,0,0.85)', strokeWidth = 4) {
+    ctx.save();
     ctx.strokeStyle = strokeColor;
     ctx.lineWidth = strokeWidth;
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
     ctx.strokeText(text, x, y);
     ctx.fillText(text, x, y);
+    ctx.restore();
 }
 
 /**
@@ -170,6 +175,25 @@ function formatXP(num) {
         return (num / 1000).toFixed(2) + 'K';
     }
     return num.toString();
+}
+
+/**
+ * Resolve the bold font string based on the chosen font family.
+ * For Montserrat we use the separately registered MontserratBold family
+ * so the canvas engine loads the true bold TTF file.
+ */
+function resolveFonts(fontSetting) {
+    if (fontSetting === 'Montserrat' || !fontSetting) {
+        return {
+            bold:    'MontserratBold',   // true bold TTF (weight 700)
+            regular: 'MontserratBold',   // also use bold for labels — keeps everything thick & readable
+        };
+    }
+    // Fallback for system fonts: use CSS bold keyword
+    return {
+        bold:    `bold "${fontSetting}"`,
+        regular: `bold "${fontSetting}"`,
+    };
 }
 
 /**
@@ -190,12 +214,7 @@ async function generateRankCard(options) {
     } = options;
 
     const settings = { ...DEFAULTS, ...cardSettings };
-    const isMontserrat = settings.font === 'Montserrat';
-    
-    // Always use Bold for maximum clarity and contrast
-    const boldFont    = isMontserrat ? '"Montserrat-Bold"' : `bold "${settings.font}"`;
-    // Use Bold for labels too (not regular) for consistent boldness
-    const regularFont = isMontserrat ? '"Montserrat-Bold"' : `bold "${settings.font}"`;
+    const { bold: boldFont, regular: regularFont } = resolveFonts(settings.font);
 
     // ── High-DPI render canvas (SCALE x internal resolution) ──
     const hiCanvas = createCanvas(BASE_WIDTH * SCALE, BASE_HEIGHT * SCALE);
@@ -245,52 +264,56 @@ async function generateRankCard(options) {
     // ── 3. Username ───────────────────────────────────────────
     const TEXT_X = AVATAR_X + AVATAR_SIZE + 45;
     ctx.textAlign = 'left';
-    ctx.font      = `52px ${boldFont}`;
+    ctx.font      = `52px "${boldFont}"`;
     ctx.fillStyle = '#FFFFFF';
-    drawTextWithStroke(ctx, username, TEXT_X, 150, 'rgba(0,0,0,0.7)', 3.5);
+    drawTextWithStroke(ctx, username, TEXT_X, 150, 'rgba(0,0,0,0.9)', 5);
 
     // ── 4. Rank & Level badges ────────────────────────────────
     const BADGE_Y = 85;
 
-    // "LEVEL" label & number
+    // Level number (large, accent color)
     ctx.textAlign = 'right';
-    ctx.font      = `48px ${boldFont}`;
+    ctx.font      = `52px "${boldFont}"`;
     ctx.fillStyle = settings.mainColor;
-    drawTextWithStroke(ctx, `${level}`, BASE_WIDTH - 50, BADGE_Y, 'rgba(0,0,0,0.6)', 3);
-    
-    const levelWidth = ctx.measureText(`${level}`).width;
-    ctx.font      = `24px ${regularFont}`;
-    ctx.fillStyle = '#FFFFFF';
-    drawTextWithStroke(ctx, 'LEVEL', BASE_WIDTH - 50 - levelWidth - 12, BADGE_Y - 3, 'rgba(0,0,0,0.5)', 2);
+    drawTextWithStroke(ctx, `${level}`, BASE_WIDTH - 50, BADGE_Y, 'rgba(0,0,0,0.9)', 4);
 
-    // "RANK" label & number
+    const levelWidth = ctx.measureText(`${level}`).width;
+
+    // "LEVEL" label
+    ctx.font      = `26px "${regularFont}"`;
+    ctx.fillStyle = '#FFFFFF';
+    drawTextWithStroke(ctx, 'LEVEL', BASE_WIDTH - 50 - levelWidth - 14, BADGE_Y - 2, 'rgba(0,0,0,0.9)', 3);
+
+    // Rank number (larger, white)
     const rankText = `#${rank > 0 ? rank : '1'}`;
     const levelLabelWidth = ctx.measureText('LEVEL').width;
-    const RANK_X_OFFSET = 50 + levelWidth + 12 + levelLabelWidth + 35;
-    
-    ctx.font      = `72px ${boldFont}`;
-    ctx.fillStyle = '#FFFFFF';
-    drawTextWithStroke(ctx, rankText, BASE_WIDTH - RANK_X_OFFSET, BADGE_Y + 5, 'rgba(0,0,0,0.6)', 3.5);
-    
+    const RANK_X_OFFSET = 50 + levelWidth + 14 + levelLabelWidth + 35;
+
+    ctx.font      = `72px "${boldFont}"`;
+    ctx.fillStyle = settings.mainColor;
+    drawTextWithStroke(ctx, rankText, BASE_WIDTH - RANK_X_OFFSET, BADGE_Y + 8, 'rgba(0,0,0,0.9)', 5);
+
     const rankWidth = ctx.measureText(rankText).width;
-    ctx.font      = `24px ${regularFont}`;
+
+    // "RANK" label
+    ctx.font      = `26px "${regularFont}"`;
     ctx.fillStyle = '#FFFFFF';
-    drawTextWithStroke(ctx, 'RANK', BASE_WIDTH - RANK_X_OFFSET - rankWidth - 10, BADGE_Y - 3, 'rgba(0,0,0,0.5)', 2);
+    drawTextWithStroke(ctx, 'RANK', BASE_WIDTH - RANK_X_OFFSET - rankWidth - 12, BADGE_Y - 2, 'rgba(0,0,0,0.9)', 3);
 
     // ── 5. XP Text ────────────────────────────────────────────
     const xpCurrentFormatted = formatXP(currentXp);
     const xpNeededFormatted  = formatXP(xpNeeded);
-    
+
     ctx.textAlign = 'right';
-    ctx.font      = `26px ${regularFont}`;
-    
+    ctx.font      = `28px "${regularFont}"`;
+
     const totalXPText = ` / ${xpNeededFormatted} XP`;
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    drawTextWithStroke(ctx, totalXPText, BASE_WIDTH - 50, 150, 'rgba(0,0,0,0.4)', 2);
-    
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    drawTextWithStroke(ctx, totalXPText, BASE_WIDTH - 50, 150, 'rgba(0,0,0,0.8)', 3);
+
     const totalXPWidth = ctx.measureText(totalXPText).width;
     ctx.fillStyle = '#FFFFFF';
-    drawTextWithStroke(ctx, `${xpCurrentFormatted}`, BASE_WIDTH - 50 - totalXPWidth, 150, 'rgba(0,0,0,0.5)', 2);
+    drawTextWithStroke(ctx, `${xpCurrentFormatted}`, BASE_WIDTH - 50 - totalXPWidth, 150, 'rgba(0,0,0,0.8)', 3);
 
     // ── 6. Progress Bar ───────────────────────────────────────
     const BAR_X      = TEXT_X;
@@ -303,9 +326,9 @@ async function generateRankCard(options) {
 
     // ── 7. Total XP label (bottom-left) ──────────────────────
     ctx.textAlign = 'left';
-    ctx.font      = `22px ${regularFont}`;
-    ctx.fillStyle = 'rgba(255,255,255,0.85)';
-    drawTextWithStroke(ctx, `Total XP: ${totalXp ? totalXp.toLocaleString() : '0'}`, TEXT_X, BASE_HEIGHT - 18, 'rgba(0,0,0,0.4)', 2);
+    ctx.font      = `24px "${regularFont}"`;
+    ctx.fillStyle = '#FFFFFF';
+    drawTextWithStroke(ctx, `Total XP: ${totalXp ? totalXp.toLocaleString() : '0'}`, TEXT_X, BASE_HEIGHT - 18, 'rgba(0,0,0,0.8)', 3);
 
     // ── 8. Bottom accent line ─────────────────────────────────
     ctx.beginPath();
@@ -316,9 +339,6 @@ async function generateRankCard(options) {
     ctx.stroke();
 
     // ── 9. Downsample to BASE resolution for sharp output ─────
-    // Draw the high-DPI canvas onto a final BASE-sized canvas.
-    // This is the key step: the browser/Discord receives a correctly-sized
-    // image with all the sharpness benefits of the 3x internal render.
     const outCanvas = createCanvas(BASE_WIDTH, BASE_HEIGHT);
     const outCtx    = outCanvas.getContext('2d');
     outCtx.imageSmoothingEnabled = true;
