@@ -2,7 +2,8 @@
  * ============================================================
  *  NEXUS BOT 2 — Rank Card Generator
  *  Generates a beautiful visual rank card image similar to MEE6.
- *  Supports high-DPI rendering for maximum font clarity.
+ *  Uses high-DPI super-sampling (3x) then downsamples to base
+ *  resolution for maximum font sharpness and clarity.
  * ============================================================
  */
 const { createCanvas, loadImage, GlobalFonts } = require('@napi-rs/canvas');
@@ -18,7 +19,9 @@ GlobalFonts.registerFromPath(path.join(FONTS_DIR, 'Montserrat-Bold.ttf'), 'Monts
 // ─── Card Dimensions ─────────────────────────────────────────
 const BASE_WIDTH  = 934;
 const BASE_HEIGHT = 282;
-const SCALE       = 2; // 2x Scale for High-DPI crispness
+// Render at 3x internally, then downsample to BASE size for crisp output.
+// This is the correct high-DPI technique: render large, export small.
+const SCALE = 3;
 
 // ─── Default Card Settings ────────────────────────────────────
 const DEFAULTS = {
@@ -82,17 +85,26 @@ function roundRect(ctx, x, y, width, height, radius) {
 }
 
 /**
- * Draw a circular avatar.
+ * Draw a circular avatar with a colored accent ring.
  */
-async function drawAvatar(ctx, avatarUrl, x, y, size) {
+async function drawAvatar(ctx, avatarUrl, x, y, size, accentColor = '#00FFFF') {
     const radius = size / 2;
     const cx = x + radius;
     const cy = y + radius;
 
-    // Subtle outer glow
+    // Outer glow shadow
     ctx.save();
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = 'rgba(0,0,0,0.4)';
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = accentColor;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius + 5, 0, Math.PI * 2);
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.restore();
+
+    // Dark backing circle
+    ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, radius + 2, 0, Math.PI * 2);
     ctx.fillStyle = '#111111';
@@ -150,6 +162,8 @@ function formatXP(num) {
 
 /**
  * Main card generation function.
+ * Renders at SCALE x resolution internally, then downsamples to BASE
+ * dimensions for crisp, sharp text in the final PNG output.
  */
 async function generateRankCard(options) {
     const {
@@ -167,18 +181,18 @@ async function generateRankCard(options) {
     const isMontserrat = settings.font === 'Montserrat';
     
     // Explicitly use Montserrat fonts
-    const boldFont = isMontserrat ? '"Montserrat-Bold"' : `bold "${settings.font}"`;
-    const regularFont = isMontserrat ? '"Montserrat"' : `"${settings.font}"`;
+    const boldFont    = isMontserrat ? '"Montserrat-Bold"' : `bold "${settings.font}"`;
+    const regularFont = isMontserrat ? '"Montserrat"'      : `"${settings.font}"`;
 
-    // Create a high-resolution canvas
-    const canvas = createCanvas(BASE_WIDTH * SCALE, BASE_HEIGHT * SCALE);
-    const ctx    = canvas.getContext('2d');
+    // ── High-DPI render canvas (SCALE x internal resolution) ──
+    const hiCanvas = createCanvas(BASE_WIDTH * SCALE, BASE_HEIGHT * SCALE);
+    const ctx      = hiCanvas.getContext('2d');
 
-    // Scale all subsequent drawing operations
+    // Scale all drawing operations so we can use BASE coordinates throughout
     ctx.scale(SCALE, SCALE);
-    
-    // CRITICAL: Force path-based text drawing for maximum sharpness
-    ctx.textDrawingMode = 'path';
+
+    // Enable geometric precision text rendering (supported by @napi-rs/canvas)
+    ctx.textRendering = 'geometricPrecision';
 
     // ── 1. Background ─────────────────────────────────────────
     roundRect(ctx, 0, 0, BASE_WIDTH, BASE_HEIGHT, 15);
@@ -213,7 +227,7 @@ async function generateRankCard(options) {
     const AVATAR_SIZE = 165;
     const AVATAR_X    = 50;
     const AVATAR_Y    = (BASE_HEIGHT - AVATAR_SIZE) / 2;
-    await drawAvatar(ctx, avatarUrl, AVATAR_X, AVATAR_Y, AVATAR_SIZE);
+    await drawAvatar(ctx, avatarUrl, AVATAR_X, AVATAR_Y, AVATAR_SIZE, settings.mainColor);
 
     // ── 3. Username ───────────────────────────────────────────
     const TEXT_X = AVATAR_X + AVATAR_SIZE + 45;
@@ -256,7 +270,6 @@ async function generateRankCard(options) {
     
     ctx.textAlign = 'right';
     ctx.font      = `24px ${regularFont}`;
-    ctx.fillStyle = '#FFFFFF';
     
     const totalXPText = ` / ${xpNeededFormatted} XP`;
     ctx.fillStyle = 'rgba(255,255,255,0.4)';
@@ -275,7 +288,31 @@ async function generateRankCard(options) {
 
     drawProgressBar(ctx, BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT, progress, settings.mainColor);
 
-    return canvas.toBuffer('image/png');
+    // ── 7. Total XP label (bottom-left) ──────────────────────
+    ctx.textAlign = 'left';
+    ctx.font      = `20px ${regularFont}`;
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.fillText(`Total XP: ${totalXp ? totalXp.toLocaleString() : '0'}`, TEXT_X, BASE_HEIGHT - 18);
+
+    // ── 8. Bottom accent line ─────────────────────────────────
+    ctx.beginPath();
+    ctx.moveTo(15, BASE_HEIGHT - 3);
+    ctx.lineTo(BASE_WIDTH - 15, BASE_HEIGHT - 3);
+    ctx.strokeStyle = settings.mainColor;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // ── 9. Downsample to BASE resolution for sharp output ─────
+    // Draw the high-DPI canvas onto a final BASE-sized canvas.
+    // This is the key step: the browser/Discord receives a correctly-sized
+    // image with all the sharpness benefits of the 3x internal render.
+    const outCanvas = createCanvas(BASE_WIDTH, BASE_HEIGHT);
+    const outCtx    = outCanvas.getContext('2d');
+    outCtx.imageSmoothingEnabled = true;
+    outCtx.imageSmoothingQuality = 'high';
+    outCtx.drawImage(hiCanvas, 0, 0, BASE_WIDTH * SCALE, BASE_HEIGHT * SCALE, 0, 0, BASE_WIDTH, BASE_HEIGHT);
+
+    return outCanvas.toBuffer('image/png');
 }
 
 module.exports = {
