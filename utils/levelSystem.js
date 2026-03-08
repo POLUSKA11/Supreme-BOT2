@@ -210,7 +210,14 @@ async function processMessage(message) {
 
     // Detect type and award XP
     const xpType = detectXpType(message);
-    const xpGained = randomXp(xpType);
+    let xpGained = randomXp(xpType);
+
+    // Apply XP rate multiplier from guild config
+    const xpRateStr = await getConfig(guild.id, 'xp_rate', '1.0');
+    const xpRate = parseFloat(xpRateStr) || 1.0;
+    if (xpRate !== 1.0) {
+        xpGained = Math.max(1, Math.round(xpGained * xpRate));
+    }
 
     // Fetch current data
     const userData = await getUserData(guild.id, author.id);

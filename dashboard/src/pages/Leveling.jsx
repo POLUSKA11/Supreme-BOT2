@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export default function Leveling({ selectedGuild, user }) {
@@ -24,17 +24,36 @@ export default function Leveling({ selectedGuild, user }) {
   const [modalTab, setModalTab] = useState('customize'); // 'customize' or 'visibility'
   const [saveMessage, setSaveMessage] = useState({ type: '', text: '' });
   const [configSaveMessage, setConfigSaveMessage] = useState({ type: '', text: '' });
+  const [channels, setChannels] = useState([]);
+  const [isPremium, setIsPremium] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
+  const [uploadingBg, setUploadingBg] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const [unlockingBgs, setUnlockingBgs] = useState(false);
+  const [allBackgroundsUnlocked, setAllBackgroundsUnlocked] = useState(false);
+  const fileInputRef = useRef(null);
 
   const guildId = selectedGuild?.id;
   const userId = user?.id || 'default';
 
-  // Predefined color palette
+  // XP Rate options — sorted in ascending numerical order
+  const xpRateOptions = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3];
+
+  // Predefined color palette — no duplicates (removed second #00FFFF)
   const colorPalette = [
-    '#00FFFF', '#FFFFFF', '#7B8A8E', '#FF6B6B', '#FFA500', '#FFD700', '#00FF00', '#00FFFF', '#0099FF', '#6666FF', '#FF00FF'
+    '#00FFFF', '#FFFFFF', '#7B8A8E', '#FF6B6B', '#FFA500', '#FFD700', '#00FF00', '#0099FF', '#6666FF', '#FF00FF'
   ];
 
-  // Predefined backgrounds
-  const backgroundPresets = [
+  // Locked background presets (require premium/owner to unlock)
+  const lockedBackgroundPresets = [
+    { id: 'dark2', label: 'Dark Storm', url: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=800&q=80' },
+    { id: 'galaxy', label: 'Galaxy', url: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&q=80' },
+    { id: 'neon', label: 'Neon City', url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800&q=80' },
+    { id: 'aurora', label: 'Aurora', url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80' },
+  ];
+
+  // Free background presets (available to all)
+  const freeBackgroundPresets = [
     { id: 'empty', label: 'Empty background', color: '#23272A' },
     { id: 'dark1', label: 'Dark 1', url: 'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=800&q=80' },
     { id: 'forest', label: 'Forest', url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80' },
@@ -42,6 +61,11 @@ export default function Leveling({ selectedGuild, user }) {
     { id: 'sunset', label: 'Sunset', url: 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=800&q=80' },
     { id: 'night', label: 'Night', url: 'https://images.unsplash.com/photo-1506318137071-a8e063b4b4bf?w=800&q=80' },
   ];
+
+  // All backgrounds shown when unlocked
+  const allBackgroundPresets = [...freeBackgroundPresets, ...lockedBackgroundPresets];
+
+  const canAccessPremiumFeatures = isPremium || isOwner;
 
   const fetchConfig = useCallback(async () => {
     if (!guildId) return;
@@ -60,31 +84,67 @@ export default function Leveling({ selectedGuild, user }) {
       const res = await fetch(`/api/leveling/${guildId}/card-settings/default`, { credentials: 'include' });
       const data = await res.json();
       if (data.success && data.data && Object.keys(data.data).length > 0) {
-        // Normalize backgroundImage: treat empty string as null
         const normalized = {
           ...data.data,
           backgroundImage: data.data.backgroundImage || null,
+          allBackgroundsUnlocked: data.data.allBackgroundsUnlocked || false,
         };
         setDefaultCardSettings(prev => ({ ...prev, ...normalized }));
+        if (normalized.allBackgroundsUnlocked) setAllBackgroundsUnlocked(true);
       }
     } catch (err) {
       console.error('Failed to fetch default card settings:', err);
     }
   }, [guildId]);
 
+  const fetchChannels = useCallback(async () => {
+    if (!guildId) return;
+    try {
+      const res = await fetch('/api/dashboard/channels', { credentials: 'include' });
+      const data = await res.json();
+      if (Array.isArray(data)) setChannels(data.filter(c => c.type === 0)); // text channels only
+    } catch (err) {
+      console.error('Failed to fetch channels:', err);
+    }
+  }, [guildId]);
+
+  const fetchPremiumStatus = useCallback(async () => {
+    if (!guildId) return;
+    try {
+      // Use the dedicated premium-check endpoint that checks both premium and owner status
+      const res = await fetch(`/api/leveling/${guildId}/premium-check`, { credentials: 'include' });
+      const data = await res.json();
+      if (data.success) {
+        setIsPremium(data.isPremium || false);
+        setIsOwner(data.isOwner || false);
+      }
+    } catch (err) {
+      console.error('Failed to fetch premium/owner status:', err);
+    }
+  }, [guildId]);
+
+  const checkOwnerStatus = useCallback(async () => {
+    // Owner status is now handled by fetchPremiumStatus via the premium-check endpoint
+  }, []);
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchConfig(), fetchDefaultCardSettings()]);
+      await Promise.all([
+        fetchConfig(),
+        fetchDefaultCardSettings(),
+        fetchChannels(),
+        fetchPremiumStatus(),
+        checkOwnerStatus(),
+      ]);
       setLoading(false);
     };
     loadData();
-  }, [fetchConfig, fetchDefaultCardSettings]);
+  }, [fetchConfig, fetchDefaultCardSettings, fetchChannels, fetchPremiumStatus, checkOwnerStatus]);
 
   useEffect(() => {
     if (guildId) {
       const settingsStr = encodeURIComponent(JSON.stringify(defaultCardSettings));
-      // Use the actual logged-in user's ID for the preview to show their rank/avatar
       setPreviewUrl(`/api/leveling/${guildId}/card-preview/${userId}?settings=${settingsStr}&t=${Date.now()}`);
     }
   }, [defaultCardSettings, guildId, userId]);
@@ -122,10 +182,10 @@ export default function Leveling({ selectedGuild, user }) {
     setSaving(true);
     setSaveMessage({ type: '', text: '' });
     try {
-      // Normalize: convert empty string backgroundImage to null before saving
       const settingsToSave = {
         ...defaultCardSettings,
         backgroundImage: defaultCardSettings.backgroundImage || null,
+        allBackgroundsUnlocked,
       };
 
       const response = await fetch(`/api/leveling/${guildId}/card-settings/default`, {
@@ -136,7 +196,6 @@ export default function Leveling({ selectedGuild, user }) {
       });
       const data = await response.json();
       if (response.ok && data.success) {
-        // Update local state with normalized settings
         setDefaultCardSettings(settingsToSave);
         showTempMessage(setSaveMessage, 'success', 'Rank card saved! Changes will appear on Discord level-ups.');
         setTimeout(() => setShowEditModal(false), 1500);
@@ -151,6 +210,69 @@ export default function Leveling({ selectedGuild, user }) {
     }
   };
 
+  const handleUnlockAllBackgrounds = async () => {
+    if (!canAccessPremiumFeatures) {
+      showTempMessage(setSaveMessage, 'error', 'You need Premium or be the server owner to unlock all backgrounds.');
+      return;
+    }
+    setUnlockingBgs(true);
+    setAllBackgroundsUnlocked(true);
+    showTempMessage(setSaveMessage, 'success', 'All backgrounds unlocked! Save to apply.');
+    setUnlockingBgs(false);
+  };
+
+  const handleUploadBackground = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!canAccessPremiumFeatures) {
+      setUploadError('You need Premium or be the server owner to upload a custom background.');
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setUploadError('Invalid file type. Please upload a JPG, PNG, GIF, or WebP image.');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setUploadError('File too large. Maximum size is 5MB.');
+      return;
+    }
+
+    setUploadingBg(true);
+    setUploadError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('background', file);
+
+      const response = await fetch(`/api/leveling/${guildId}/upload-background`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setDefaultCardSettings(prev => ({ ...prev, backgroundImage: data.url }));
+        showTempMessage(setSaveMessage, 'success', 'Background uploaded! Click Save to apply.');
+      } else {
+        setUploadError(data.error || 'Failed to upload background.');
+      }
+    } catch (err) {
+      console.error('Upload error:', err);
+      setUploadError('An error occurred while uploading.');
+    } finally {
+      setUploadingBg(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -159,16 +281,9 @@ export default function Leveling({ selectedGuild, user }) {
     );
   }
 
-  const xpRateLabels = {
-    0.25: 'x0.25',
-    0.5: 'x0.5',
-    0.75: 'x0.75',
-    1: 'x1',
-    1.5: 'x1.5',
-    2: 'x2',
-    2.5: 'x2.5',
-    3: 'x3'
-  };
+  const backgroundsToShow = (canAccessPremiumFeatures && allBackgroundsUnlocked)
+    ? allBackgroundPresets
+    : freeBackgroundPresets;
 
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500">
@@ -198,7 +313,7 @@ export default function Leveling({ selectedGuild, user }) {
 
         {/* Edit Button */}
         <button 
-          onClick={() => setShowEditModal(true)}
+          onClick={() => { setShowEditModal(true); setModalTab('customize'); }}
           className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/20"
         >
           Edit server rank card
@@ -217,18 +332,19 @@ export default function Leveling({ selectedGuild, user }) {
 
         <div className="space-y-4">
           <div className="flex justify-between items-center">
+            {/* XP Rate buttons — sorted in ascending order */}
             <div className="flex gap-2 flex-wrap">
-              {Object.entries(xpRateLabels).map(([rate, label]) => (
+              {xpRateOptions.map((rate) => (
                 <button
                   key={rate}
-                  onClick={() => setConfig({ ...config, xpRate: parseFloat(rate) })}
+                  onClick={() => setConfig({ ...config, xpRate: rate })}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    config.xpRate === parseFloat(rate)
+                    config.xpRate === rate
                       ? 'bg-blue-600 text-white'
                       : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
                   }`}
                 >
-                  {label}
+                  x{rate}
                 </button>
               ))}
             </div>
@@ -329,14 +445,84 @@ export default function Leveling({ selectedGuild, user }) {
                   {/* Background Controls */}
                   <div className="space-y-3">
                     <div className="flex gap-3">
-                      <button className="flex-1 px-4 py-3 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 font-bold rounded-lg transition-all border border-amber-500/30 flex items-center justify-center gap-2">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                        Unlock all backgrounds
+                      {/* Unlock All Backgrounds */}
+                      <button
+                        onClick={handleUnlockAllBackgrounds}
+                        disabled={unlockingBgs || (allBackgroundsUnlocked && canAccessPremiumFeatures)}
+                        className={`flex-1 px-4 py-3 font-bold rounded-lg transition-all border flex items-center justify-center gap-2 ${
+                          canAccessPremiumFeatures
+                            ? allBackgroundsUnlocked
+                              ? 'bg-green-600/20 text-green-400 border-green-500/30 cursor-default'
+                              : 'bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 border-amber-500/30'
+                            : 'bg-amber-600/10 text-amber-500/60 border-amber-500/20 cursor-not-allowed'
+                        }`}
+                        title={!canAccessPremiumFeatures ? 'Requires Premium or Server Owner' : ''}
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          {canAccessPremiumFeatures && allBackgroundsUnlocked
+                            ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                          }
+                        </svg>
+                        {allBackgroundsUnlocked && canAccessPremiumFeatures ? '✓ All Backgrounds Unlocked' : 'Unlock all backgrounds'}
+                        {!canAccessPremiumFeatures && <span className="text-xs ml-1">(Premium/Owner)</span>}
                       </button>
-                      <button className="flex-1 px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg transition-all">
-                        Upload custom background
+
+                      {/* Upload Custom Background */}
+                      <button
+                        onClick={() => {
+                          if (!canAccessPremiumFeatures) {
+                            setUploadError('You need Premium or be the server owner to upload a custom background.');
+                            return;
+                          }
+                          setUploadError('');
+                          fileInputRef.current?.click();
+                        }}
+                        disabled={uploadingBg}
+                        className={`flex-1 px-4 py-3 font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${
+                          canAccessPremiumFeatures
+                            ? 'bg-slate-700 hover:bg-slate-600 text-white'
+                            : 'bg-slate-700/50 text-slate-500 cursor-not-allowed'
+                        }`}
+                        title={!canAccessPremiumFeatures ? 'Requires Premium or Server Owner' : ''}
+                      >
+                        {uploadingBg ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            Uploading...
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            </svg>
+                            Upload custom background
+                            {!canAccessPremiumFeatures && <span className="text-xs ml-1">(Premium/Owner)</span>}
+                          </>
+                        )}
                       </button>
+
+                      {/* Hidden file input */}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                        onChange={handleUploadBackground}
+                        className="hidden"
+                      />
                     </div>
+
+                    {/* Upload error/info */}
+                    {uploadError && (
+                      <div className="px-3 py-2 rounded-lg bg-red-500/20 text-red-400 text-xs border border-red-500/30">
+                        ❌ {uploadError}
+                      </div>
+                    )}
+                    {!canAccessPremiumFeatures && (
+                      <div className="px-3 py-2 rounded-lg bg-amber-500/10 text-amber-400/80 text-xs border border-amber-500/20">
+                        👑 Upload custom background and unlock all backgrounds require <strong>Premium</strong> or being the <strong>Server Owner</strong>.
+                      </div>
+                    )}
                   </div>
 
                   {/* Colors Section */}
@@ -371,18 +557,21 @@ export default function Leveling({ selectedGuild, user }) {
                           onChange={(e) => setDefaultCardSettings({ ...defaultCardSettings, overlayOpacity: parseFloat(e.target.value) })}
                           className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
                         />
+                        <p className="text-xs text-slate-500 mt-1 text-right">{Math.round(defaultCardSettings.overlayOpacity * 100)}%</p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Custom Background Section */}
+                  {/* Background Presets Section */}
                   <div className="space-y-3">
                     <label className="text-sm font-bold text-slate-400 flex items-center gap-2">
-                      Custom Background
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      Background Presets
+                      {!canAccessPremiumFeatures && (
+                        <span className="text-xs text-amber-400 font-normal">(Unlock more with Premium/Owner)</span>
+                      )}
                     </label>
                     <div className="grid grid-cols-3 gap-3">
-                      {backgroundPresets.map((bg) => (
+                      {backgroundsToShow.map((bg) => (
                         <button
                           key={bg.id}
                           onClick={() => setDefaultCardSettings({ ...defaultCardSettings, backgroundImage: bg.url || null })}
@@ -401,12 +590,125 @@ export default function Leveling({ selectedGuild, user }) {
                           )}
                         </button>
                       ))}
+
+                      {/* Show locked backgrounds as grayed out if not unlocked */}
+                      {!allBackgroundsUnlocked && lockedBackgroundPresets.map((bg) => (
+                        <button
+                          key={bg.id}
+                          onClick={handleUnlockAllBackgrounds}
+                          className="aspect-square rounded-lg overflow-hidden border-2 border-amber-500/30 transition-all relative hover:border-amber-500/60"
+                          style={{ backgroundImage: `url(${bg.url})`, backgroundSize: 'cover' }}
+                          title={`${bg.label} — Unlock with Premium/Owner`}
+                        >
+                          <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-1">
+                            <svg className="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            <span className="text-amber-400 text-xs font-bold">{bg.label}</span>
+                          </div>
+                        </button>
+                      ))}
+
+                      {/* Custom uploaded background preview */}
+                      {defaultCardSettings.backgroundImage &&
+                        !backgroundsToShow.some(bg => bg.url === defaultCardSettings.backgroundImage) && (
+                        <div
+                          className="aspect-square rounded-lg overflow-hidden border-2 border-blue-500 scale-105 relative"
+                          style={{ backgroundImage: `url(${defaultCardSettings.backgroundImage})`, backgroundSize: 'cover' }}
+                          title="Custom uploaded background"
+                        >
+                          <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-center text-xs text-white py-1 font-bold">
+                            Custom
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </>
               ) : (
-                <div className="space-y-4">
-                  <p className="text-slate-400 text-sm">Visibility settings coming soon...</p>
+                /* ── Visibility Tab ── */
+                <div className="space-y-6">
+                  <p className="text-slate-400 text-sm">Configure leveling system visibility settings for your server.</p>
+
+                  {/* Enable/Disable Leveling */}
+                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div>
+                      <p className="text-white font-semibold">Enable Leveling System</p>
+                      <p className="text-slate-400 text-xs mt-1">Toggle XP gain and level-up announcements on or off.</p>
+                    </div>
+                    <button
+                      onClick={() => setConfig(prev => ({ ...prev, enabled: !prev.enabled }))}
+                      className={`relative w-12 h-6 rounded-full transition-all duration-300 ${
+                        config.enabled ? 'bg-blue-600' : 'bg-slate-600'
+                      }`}
+                    >
+                      <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all duration-300 ${
+                        config.enabled ? 'left-7' : 'left-1'
+                      }`} />
+                    </button>
+                  </div>
+
+                  {/* Announce Channel */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-400">Level-up Announcement Channel</label>
+                    <p className="text-xs text-slate-500">Where to send level-up messages. Leave empty to announce in the same channel as the message.</p>
+                    <select
+                      value={config.announceChannel || ''}
+                      onChange={(e) => setConfig(prev => ({ ...prev, announceChannel: e.target.value }))}
+                      className="w-full px-4 py-3 bg-slate-800 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 transition-all"
+                    >
+                      <option value="">Same channel as message</option>
+                      {channels.map(ch => (
+                        <option key={ch.id} value={ch.id}>#{ch.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Ignored Channels */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-400">Ignored Channels</label>
+                    <p className="text-xs text-slate-500">Messages in these channels will not grant XP.</p>
+                    <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
+                      {channels.map(ch => (
+                        <label key={ch.id} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-white/5 cursor-pointer hover:bg-white/10 transition-all">
+                          <input
+                            type="checkbox"
+                            checked={config.ignoredChannels?.includes(ch.id) || false}
+                            onChange={(e) => {
+                              const updated = e.target.checked
+                                ? [...(config.ignoredChannels || []), ch.id]
+                                : (config.ignoredChannels || []).filter(id => id !== ch.id);
+                              setConfig(prev => ({ ...prev, ignoredChannels: updated }));
+                            }}
+                            className="w-4 h-4 rounded cursor-pointer accent-blue-500"
+                          />
+                          <span className="text-slate-300 text-sm">#{ch.name}</span>
+                        </label>
+                      ))}
+                      {channels.length === 0 && (
+                        <p className="text-slate-500 text-sm text-center py-4">No text channels found.</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Save visibility settings button */}
+                  <button
+                    onClick={handleSaveConfig}
+                    disabled={saving}
+                    className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50"
+                  >
+                    {saving ? 'Saving...' : 'Save Visibility Settings'}
+                  </button>
+
+                  {configSaveMessage.text && (
+                    <div className={`px-4 py-3 rounded-xl text-sm font-semibold ${
+                      configSaveMessage.type === 'success'
+                        ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                        : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                    }`}>
+                      {configSaveMessage.type === 'success' ? '✅ ' : '❌ '}{configSaveMessage.text}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -421,22 +723,24 @@ export default function Leveling({ selectedGuild, user }) {
                 </div>
               )}
 
-              {/* Buttons */}
-              <div className="flex gap-3 pt-4">
-                <button 
-                  onClick={handleSaveDefaultCard}
-                  disabled={saving}
-                  className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50"
-                >
-                  {saving ? 'Saving...' : 'Save'}
-                </button>
-                <button 
-                  onClick={() => setShowEditModal(false)}
-                  className="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg transition-all"
-                >
-                  Cancel
-                </button>
-              </div>
+              {/* Buttons (only show in customize tab) */}
+              {modalTab === 'customize' && (
+                <div className="flex gap-3 pt-4">
+                  <button 
+                    onClick={handleSaveDefaultCard}
+                    disabled={saving}
+                    className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50"
+                  >
+                    {saving ? 'Saving...' : 'Save'}
+                  </button>
+                  <button 
+                    onClick={() => setShowEditModal(false)}
+                    className="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

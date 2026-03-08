@@ -12,6 +12,36 @@ const levelSystem = require('../utils/levelSystem');
 const { query } = require('../utils/db');
 const { generateRankCard } = require('../utils/rankCardGenerator');
 const { PermissionFlagsBits } = require('discord.js');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const storage_module = require('../commands/utility/storage.js');
+
+// ─── Multer Setup for Background Uploads ─────────────────────
+const uploadDir = path.join(__dirname, '..', 'data', 'uploads', 'backgrounds');
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+
+const multerStorage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadDir),
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        const safeName = `bg_${req.params.guildId}_${Date.now()}${ext}`;
+        cb(null, safeName);
+    }
+});
+
+const bgUpload = multer({
+    storage: multerStorage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+    fileFilter: (req, file, cb) => {
+        const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        if (allowed.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type. Only JPG, PNG, GIF, and WebP are allowed.'));
+        }
+    }
+});
 
 // ─── Auth Middleware (aligned with dashboardApi.js) ──────────
 const requireAuth = (req, res, next) => {
@@ -413,6 +443,127 @@ router.get('/:guildId/card-preview/:userId', requireAuth, async (req, res) => {
         console.error('[LEVELING API] Error generating card preview:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
+});
+
+// ─── GET /api/leveling/:guildId/premium-check ────────────────
+/**
+ * Check if the current user has premium or is the server owner.
+ * Used by the frontend to conditionally show/enable premium features.
+ */
+router.get('/:guildId/premium-check', requireAuth, async (req, res) => {
+    try {
+        const { guildId } = req.params;
+        const client = req.app.locals.client;
+        const guild = client?.guilds.cache.get(guildId);
+        if (!guild) return res.status(404).json({ error: 'Server not found.' });
+
+        const userId = req.session.user.id;
+
+        // Check if user is server owner
+        const isOwner = guild.ownerId === userId;
+
+        // Check premium status
+        const premiumData = storage_module.get(guildId, 'premium');
+        const isPremium = !!(premiumData && (!premiumData.expiresAt || Date.now() < premiumData.expiresAt));
+
+        res.json({
+            success: true,
+            isPremium,
+            isOwner,
+            canAccessPremiumFeatures: isPremium || isOwner
+        });
+    } catch (err) {
+        console.error('[LEVELING API] Premium check error:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// ─── POST /api/leveling/:guildId/upload-background ─────────────
+/**
+ * Upload a custom background image for the rank card.
+ * Requires: Premium subscription OR server owner.
+ * Validates: file type (image only), file size (max 5MB).
+ */
+router.post('/:guildId/upload-background', requireAuth, requireGuildAccess, (req, res, next) => {
+    bgUpload.single('background')(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ error: 'File too large. Maximum size is 5MB.' });
+            }
+            return res.status(400).json({ error: `Upload error: ${err.message}` });
+        } else if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+        next();
+    });
+}, async (req, res) => {
+    try {
+        const { guildId } = req.params;
+        const client = req.app.locals.client;
+        const guild = client?.guilds.cache.get(guildId);
+        if (!guild) return res.status(404).json({ error: 'Server not found.' });
+
+        const userId = req.session.user.id;
+
+        // Check if user is server owner
+        const isOwner = guild.ownerId === userId;
+
+        // Check premium status
+        const premiumData = storage_module.get(guildId, 'premium');
+        const isPremium = premiumData && (!premiumData.expiresAt || Date.now() < premiumData.expiresAt);
+
+        if (!isOwner && !isPremium) {
+            // Remove the uploaded file if not authorized
+            if (req.file) {
+                fs.unlink(req.file.path, () => {});
+            }
+            return res.status(403).json({
+                error: 'You need a Premium subscription or be the server owner to upload a custom background.'
+            });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded. Please select an image file.' });
+        }
+
+        // Double-check file type by extension
+        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+        const ext = path.extname(req.file.originalname).toLowerCase();
+        if (!allowedExtensions.includes(ext)) {
+            fs.unlink(req.file.path, () => {});
+            return res.status(400).json({ error: 'Invalid file type. Only JPG, PNG, GIF, and WebP images are allowed.' });
+        }
+
+        // Build public URL for the uploaded file
+        const baseUrl = process.env.BASE_URL || 'https://breakable-tiger-nexusbot1-d8a3b39c.koyeb.app';
+        const fileUrl = `${baseUrl}/api/leveling/backgrounds/${req.file.filename}`;
+
+        console.log(`[LEVELING API] Background uploaded for guild=${guildId} by user=${userId}: ${req.file.filename}`);
+
+        res.json({
+            success: true,
+            url: fileUrl,
+            filename: req.file.filename,
+            message: 'Background uploaded successfully!'
+        });
+    } catch (err) {
+        console.error('[LEVELING API] Background upload error:', err);
+        if (req.file) fs.unlink(req.file.path, () => {});
+        res.status(500).json({ error: 'Internal server error during upload.' });
+    }
+});
+
+// ─── GET /api/leveling/backgrounds/:filename ─────────────────
+// Serve uploaded background images
+router.get('/backgrounds/:filename', (req, res) => {
+    const { filename } = req.params;
+    // Sanitize filename to prevent path traversal
+    const safeName = path.basename(filename);
+    const filePath = path.join(uploadDir, safeName);
+    if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ error: 'Background not found.' });
+    }
+    res.sendFile(filePath);
 });
 
 module.exports = router;
