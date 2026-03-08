@@ -151,6 +151,18 @@ function drawProgressBar(ctx, x, y, width, height, progress, mainColor) {
 }
 
 /**
+ * Draw text with a subtle stroke outline for better contrast and clarity.
+ */
+function drawTextWithStroke(ctx, text, x, y, strokeColor = 'rgba(0,0,0,0.5)', strokeWidth = 2) {
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = strokeWidth;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.strokeText(text, x, y);
+    ctx.fillText(text, x, y);
+}
+
+/**
  * Formats XP numbers (e.g., 1780 -> 1.78K)
  */
 function formatXP(num) {
@@ -180,9 +192,10 @@ async function generateRankCard(options) {
     const settings = { ...DEFAULTS, ...cardSettings };
     const isMontserrat = settings.font === 'Montserrat';
     
-    // Explicitly use Montserrat fonts
+    // Always use Bold for maximum clarity and contrast
     const boldFont    = isMontserrat ? '"Montserrat-Bold"' : `bold "${settings.font}"`;
-    const regularFont = isMontserrat ? '"Montserrat"'      : `"${settings.font}"`;
+    // Use Bold for labels too (not regular) for consistent boldness
+    const regularFont = isMontserrat ? '"Montserrat-Bold"' : `bold "${settings.font}"`;
 
     // ── High-DPI render canvas (SCALE x internal resolution) ──
     const hiCanvas = createCanvas(BASE_WIDTH * SCALE, BASE_HEIGHT * SCALE);
@@ -232,52 +245,52 @@ async function generateRankCard(options) {
     // ── 3. Username ───────────────────────────────────────────
     const TEXT_X = AVATAR_X + AVATAR_SIZE + 45;
     ctx.textAlign = 'left';
-    ctx.font      = `48px ${boldFont}`;
+    ctx.font      = `52px ${boldFont}`;
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText(username, TEXT_X, 150);
+    drawTextWithStroke(ctx, username, TEXT_X, 150, 'rgba(0,0,0,0.7)', 3.5);
 
     // ── 4. Rank & Level badges ────────────────────────────────
     const BADGE_Y = 85;
 
     // "LEVEL" label & number
     ctx.textAlign = 'right';
-    ctx.font      = `42px ${boldFont}`;
+    ctx.font      = `48px ${boldFont}`;
     ctx.fillStyle = settings.mainColor;
-    ctx.fillText(`${level}`, BASE_WIDTH - 50, BADGE_Y);
+    drawTextWithStroke(ctx, `${level}`, BASE_WIDTH - 50, BADGE_Y, 'rgba(0,0,0,0.6)', 3);
     
     const levelWidth = ctx.measureText(`${level}`).width;
-    ctx.font      = `22px ${regularFont}`;
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillText('LEVEL', BASE_WIDTH - 50 - levelWidth - 12, BADGE_Y - 3);
+    ctx.font      = `24px ${regularFont}`;
+    ctx.fillStyle = '#FFFFFF';
+    drawTextWithStroke(ctx, 'LEVEL', BASE_WIDTH - 50 - levelWidth - 12, BADGE_Y - 3, 'rgba(0,0,0,0.5)', 2);
 
     // "RANK" label & number
     const rankText = `#${rank > 0 ? rank : '1'}`;
     const levelLabelWidth = ctx.measureText('LEVEL').width;
     const RANK_X_OFFSET = 50 + levelWidth + 12 + levelLabelWidth + 35;
     
-    ctx.font      = `64px ${boldFont}`;
+    ctx.font      = `72px ${boldFont}`;
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText(rankText, BASE_WIDTH - RANK_X_OFFSET, BADGE_Y + 5);
+    drawTextWithStroke(ctx, rankText, BASE_WIDTH - RANK_X_OFFSET, BADGE_Y + 5, 'rgba(0,0,0,0.6)', 3.5);
     
     const rankWidth = ctx.measureText(rankText).width;
-    ctx.font      = `22px ${regularFont}`;
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillText('RANK', BASE_WIDTH - RANK_X_OFFSET - rankWidth - 10, BADGE_Y - 3);
+    ctx.font      = `24px ${regularFont}`;
+    ctx.fillStyle = '#FFFFFF';
+    drawTextWithStroke(ctx, 'RANK', BASE_WIDTH - RANK_X_OFFSET - rankWidth - 10, BADGE_Y - 3, 'rgba(0,0,0,0.5)', 2);
 
     // ── 5. XP Text ────────────────────────────────────────────
     const xpCurrentFormatted = formatXP(currentXp);
     const xpNeededFormatted  = formatXP(xpNeeded);
     
     ctx.textAlign = 'right';
-    ctx.font      = `24px ${regularFont}`;
+    ctx.font      = `26px ${regularFont}`;
     
     const totalXPText = ` / ${xpNeededFormatted} XP`;
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.fillText(totalXPText, BASE_WIDTH - 50, 150);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    drawTextWithStroke(ctx, totalXPText, BASE_WIDTH - 50, 150, 'rgba(0,0,0,0.4)', 2);
     
     const totalXPWidth = ctx.measureText(totalXPText).width;
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText(`${xpCurrentFormatted}`, BASE_WIDTH - 50 - totalXPWidth, 150);
+    drawTextWithStroke(ctx, `${xpCurrentFormatted}`, BASE_WIDTH - 50 - totalXPWidth, 150, 'rgba(0,0,0,0.5)', 2);
 
     // ── 6. Progress Bar ───────────────────────────────────────
     const BAR_X      = TEXT_X;
@@ -290,9 +303,9 @@ async function generateRankCard(options) {
 
     // ── 7. Total XP label (bottom-left) ──────────────────────
     ctx.textAlign = 'left';
-    ctx.font      = `20px ${regularFont}`;
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.fillText(`Total XP: ${totalXp ? totalXp.toLocaleString() : '0'}`, TEXT_X, BASE_HEIGHT - 18);
+    ctx.font      = `22px ${regularFont}`;
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    drawTextWithStroke(ctx, `Total XP: ${totalXp ? totalXp.toLocaleString() : '0'}`, TEXT_X, BASE_HEIGHT - 18, 'rgba(0,0,0,0.4)', 2);
 
     // ── 8. Bottom accent line ─────────────────────────────────
     ctx.beginPath();
