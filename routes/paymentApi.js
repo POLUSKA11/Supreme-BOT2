@@ -39,6 +39,9 @@ const PLANS = {
 };
 
 // ─── Crypto Wallet Configuration ─────────────────────────────
+const MAX_VERIFY_RETRIES = 3;
+const VERIFY_RETRY_DELAY_MS = 5000; // 5 seconds
+
 const CRYPTO_WALLETS = {
     BTC: {
         name: 'Bitcoin', symbol: 'BTC',
@@ -579,7 +582,22 @@ async function verifyCryptoPayment(order) {
 
         switch (coin) {
             case 'BTC': {
-                const resp = await axios.get(`https://blockstream.info/api/address/${wallet_address}/txs`, { timeout: 8000 });
+                let resp;
+                for (let i = 0; i < MAX_VERIFY_RETRIES; i++) {
+                    try {
+                        resp = await axios.get(`https://blockstream.info/api/address/${wallet_address}/txs`, { timeout: 8000 });
+                        break;
+                    } catch (err) {
+                        console.warn(`[CRYPTO VERIFY] BTC: Attempt ${i + 1}/${MAX_VERIFY_RETRIES} failed: ${err.message}`);
+                        if (i < MAX_VERIFY_RETRIES - 1) {
+                            await new Promise(resolve => setTimeout(resolve, VERIFY_RETRY_DELAY_MS * (i + 1)));
+                        } else {
+                            throw err; // Re-throw if max retries reached
+                        }
+                    }
+                }
+                if (!resp) return false; // Should not happen if retries are exhausted
+
                 const orderTime = new Date(order.created_at).getTime() / 1000;
                 for (const tx of (resp.data || [])) {
                     if (tx.status?.block_time && tx.status.block_time < orderTime) continue;
@@ -638,11 +656,26 @@ async function verifyCryptoPayment(order) {
                 return false;
             }
             case 'SOL': {
-                const resp = await axios.post('https://api.mainnet-beta.solana.com', {
-                    jsonrpc: '2.0', id: 1,
-                    method: 'getSignaturesForAddress',
-                    params: [wallet_address, { limit: 10 }],
-                }, { timeout: 8000 });
+                let resp;
+                for (let i = 0; i < MAX_VERIFY_RETRIES; i++) {
+                    try {
+                        resp = await axios.post('https://api.mainnet-beta.solana.com', {
+                            jsonrpc: '2.0', id: 1,
+                            method: 'getSignaturesForAddress',
+                            params: [wallet_address, { limit: 10 }],
+                        }, { timeout: 8000 });
+                        break;
+                    } catch (err) {
+                        console.warn(`[CRYPTO VERIFY] SOL: Attempt ${i + 1}/${MAX_VERIFY_RETRIES} failed: ${err.message}`);
+                        if (i < MAX_VERIFY_RETRIES - 1) {
+                            await new Promise(resolve => setTimeout(resolve, VERIFY_RETRY_DELAY_MS * (i + 1)));
+                        } else {
+                            throw err; // Re-throw if max retries reached
+                        }
+                    }
+                }
+                if (!resp) return false; // Should not happen if retries are exhausted
+
                 const orderTime = new Date(order.created_at).getTime() / 1000;
                 for (const sig of (resp.data?.result || [])) {
                     if (sig.blockTime && sig.blockTime >= orderTime) return true;
