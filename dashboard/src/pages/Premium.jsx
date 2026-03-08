@@ -331,7 +331,7 @@ export default function Premium() {
       <div className="max-w-6xl mx-auto mb-10">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-4 py-1.5 text-amber-400 text-sm font-medium mb-4">
-            <span>👑</span> Premium Plans
+            Premium Plans
           </div>
           <h1 className="text-4xl font-bold text-white mb-3">Upgrade Your Server</h1>
           <p className="text-slate-400 text-lg max-w-xl mx-auto">
@@ -345,7 +345,7 @@ export default function Premium() {
         <div className="max-w-6xl mx-auto mb-8">
           <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-2xl p-6 flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center text-2xl">👑</div>
+              <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center text-2xl"></div>
               <div>
                 <p className="text-white font-bold text-lg capitalize">
                   {premiumStatus.plan} Plan Active
@@ -375,7 +375,7 @@ export default function Premium() {
         <div className="max-w-6xl mx-auto mb-8">
           <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-2xl p-6 flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-2xl">🎁</div>
+              <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-2xl"></div>
               <div>
                 <p className="text-white font-bold text-lg">Free {trialStatus.trialDays}-Day Trial Available!</p>
                 <p className="text-blue-400/80 text-sm">Try all Pro features for free — no payment required</p>
@@ -407,7 +407,7 @@ export default function Premium() {
               </div>
             )}
             <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${plan.color} flex items-center justify-center text-lg mb-4`}>
-              {plan.id === 'free' ? '🆓' : plan.id === 'pro' ? '⚡' : '👑'}
+              {plan.id === 'free' ? '' : plan.id === 'pro' ? '' : ''}
             </div>
             <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
             <div className="flex items-baseline gap-1 mb-4">
@@ -474,7 +474,7 @@ export default function Premium() {
                         : 'bg-white/5 text-slate-400 hover:bg-white/10'
                     }`}
                   >
-                    <span className="mr-2">💳</span> PayPal
+                    PayPal
                   </button>
                 )}
                 {cryptoEnabled && (
@@ -486,7 +486,7 @@ export default function Premium() {
                         : 'bg-white/5 text-slate-400 hover:bg-white/10'
                     }`}
                   >
-                    <span className="mr-2">₿</span> Crypto
+                    Crypto
                   </button>
                 )}
                 {!paypalEnabled && !cryptoEnabled && (
@@ -680,12 +680,12 @@ export default function Premium() {
       <div className="max-w-6xl mx-auto mt-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { icon: '🔒', title: 'Secure Payments', desc: 'PayPal buyer protection and encrypted crypto transactions.' },
-            { icon: '⚡', title: 'Instant Activation', desc: 'Premium is activated automatically within seconds of payment.' },
-            { icon: '🔄', title: 'Auto-Renewal', desc: 'Renew anytime. Your premium status is always up to date.' },
+            { title: 'Secure Payments', desc: 'PayPal buyer protection and encrypted crypto transactions.' },
+            { title: 'Instant Activation', desc: 'Premium is activated automatically within seconds of payment.' },
+            { title: 'Auto-Renewal', desc: 'Renew anytime. Your premium status is always up to date.' },
           ].map((item, i) => (
             <div key={i} className="bg-[#12121a] border border-white/5 rounded-xl p-5 flex items-start gap-4">
-              <div className="text-2xl">{item.icon}</div>
+
               <div>
                 <h4 className="text-white font-semibold mb-1">{item.title}</h4>
                 <p className="text-slate-400 text-sm">{item.desc}</p>

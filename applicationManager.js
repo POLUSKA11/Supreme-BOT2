@@ -68,7 +68,7 @@ module.exports = {
 
     startDMApplication: async (interaction) => {
         const userId = interaction.user.id;
-        console.log(`[APP MANAGER] User ${userId} starting application.`);
+
 
         // Test user bypass - can apply unlimited times
         const TEST_USER_ID = '982731220913913856';

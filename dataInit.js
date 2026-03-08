@@ -8,7 +8,7 @@ function initializeDataDirectory() {
     // Create data directory if it doesn't exist
     if (!fs.existsSync(dataDir)) {
         fs.mkdirSync(dataDir, { recursive: true });
-        console.log('[DATA INIT] Created data directory at ' + dataDir);
+
     }
 
     const dataFiles = {
@@ -32,7 +32,7 @@ function initializeDataDirectory() {
         const filePath = getPath(filename);
         if (!fs.existsSync(filePath)) {
             fs.writeFileSync(filePath, JSON.stringify(defaultContent, null, 2));
-            console.log(`[DATA INIT] Initialized ${filename}`);
+
         }
     }
 }

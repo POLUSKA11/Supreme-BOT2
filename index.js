@@ -43,7 +43,7 @@ if (!TOKEN) {
     console.error('❌ [ERROR] TOKEN or DISCORD_TOKEN environment variable is missing');
     process.exit(1);
 }
-console.log('🔑 [TOKEN] Token loaded, length:', TOKEN.length, 'chars');
+
 if (TOKEN.length < 50) {
     console.error('❌ [ERROR] Token is too short - likely invalid or truncated');
     process.exit(1);
@@ -52,14 +52,14 @@ if (TOKEN.length < 50) {
 /* ===============================
    INITIALIZE DATA
 ================================ */
-console.log('[STARTUP] Initializing data directory...');
+
 try {
     initializeDataDirectory();
     
     // Initialize TiDB Schema
     (async () => {
         try {
-            console.log('🚀 [STARTUP] Initializing TiDB Schema...');
+
             await query(`
                 CREATE TABLE IF NOT EXISTS settings (
                     guild_id VARCHAR(255),
@@ -123,7 +123,7 @@ try {
                     payment_method VARCHAR(64)   NOT NULL DEFAULT 'admin',
                     transaction_id VARCHAR(255),
                     activated_at   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                    expires_at     DATETIME      NOT NULL DEFAULT (DATE_ADD(NOW(), INTERVAL 30 DAY)),
+                    expires_at     DATETIME      NOT NULL,
                     granted_by     VARCHAR(32)   DEFAULT NULL,
                     user_id        VARCHAR(32)   DEFAULT NULL
                 )
@@ -177,13 +177,13 @@ try {
                     INDEX idx_guild (guild_id)
                 )
             `);
-            console.log('✅ [STARTUP] TiDB Schema ready.');
+
             
             // Initialize Leveling System tables
-            console.log('⭐ [STARTUP] Initializing Leveling System tables...');
+
             const levelSystem = require('./utils/levelSystem');
             await levelSystem.ensureTables();
-            console.log('✅ [STARTUP] Leveling System tables ready.');
+
             
             // Run migration to add missing columns if table already existed
             await fixDatabase();
@@ -342,14 +342,14 @@ client.once('ready', async () => {
     }
     try {
         await initializePlayer(client);
-        console.log('🎵 [MUSIC] Player initialized successfully!');
+
     } catch (err) {
         console.error('❌ [MUSIC] Failed to initialize player:', err.message);
     }
     
     // CRITICAL FIX: Cache invites BEFORE the bot is fully ready
     // This prevents race conditions where members join before cache is loaded
-    console.log('[CACHE] Starting invite cache initialization...');
+
     try {
         for (const guild of client.guilds.cache.values()) {
             try {
@@ -362,23 +362,23 @@ client.once('ready', async () => {
                     const vanityData = await guild.fetchVanityData().catch(() => null);
                     if (vanityData) {
                         inviteMap.set('VANITY', vanityData.uses);
-                        console.log(`📦 [CACHE] Loaded Vanity URL uses (${vanityData.uses}) for ${guild.name}`);
+    
                     }
                 }
                 
                 client.invites.set(guild.id, inviteMap);
-                console.log(`📦 [CACHE] Loaded ${invites.size} invites for ${guild.name}`);
+
 
                 // Optimization: Don't fetch all members on startup to avoid rate limits
                 // The dashboard will handle fetching if the cache is empty
-                console.log(`👥 [CACHE] Skip full member fetch for ${guild.name} to avoid rate limits. Cache size: ${guild.members.cache.size}`);
+
             } catch (err) {
                 console.warn(`⚠️ [CACHE] Could not fetch data for ${guild.name}: ${err.message}`);
                 // Initialize empty cache for this guild to prevent undefined errors
                 client.invites.set(guild.id, new Map());
             }
         }
-        console.log('[CACHE] ✅ Invite cache initialization complete!');
+
     } catch (err) {
         console.error('[CACHE] ❌ Fatal error during cache initialization:', err);
     }
@@ -387,7 +387,7 @@ client.once('ready', async () => {
     const STICKY_CHANNEL_ID = '1451917967540355189';
     const STICKY_INTERVAL = 10 * 60 * 1000; // 10 minutes
     
-    console.log(`[STICKY] Initializing sticky notes for channel ${STICKY_CHANNEL_ID} every 10 minutes.`);
+
     
     setInterval(async () => {
         try {
@@ -507,7 +507,7 @@ function loadCommands(dir) {
                 const command = require(itemPath);
                 if (command.data && command.execute) {
                     client.commands.set(command.data.name, command);
-                    console.log(`⚙️ [LOAD] Command: ${command.data.name}`);
+
                 }
             } catch (err) {
                 console.error(`❌ [LOAD] Failed command ${itemPath}:`, err.message);
@@ -533,7 +533,7 @@ if (fs.existsSync(eventsPath)) {
             };
             if (event.once) client.once(event.name, executeEvent);
             else client.on(event.name, executeEvent);
-            console.log(`⚙️ [LOAD] Event: ${event.name || file}`);
+
         } catch (err) {
             console.error(`❌ [LOAD] Failed event ${file}:`, err.message);
         }

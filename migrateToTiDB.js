@@ -4,7 +4,7 @@ const { query } = require('./utils/db');
 const { getPath } = require('./pathConfig');
 
 async function initSchema() {
-    console.log('🚀 Initializing TiDB Schema...');
+
     
     // Settings table
     await query(`
@@ -68,7 +68,7 @@ async function initSchema() {
     // Force drop and recreate to fix any existing broken schema
     try {
         await query('DROP TABLE IF EXISTS ai_memory');
-        console.log('🔧 Dropped old ai_memory table (if existed)');
+
     } catch (err) {
         console.log('⚠️ ai_memory drop skipped:', err.message);
     }
@@ -94,11 +94,11 @@ async function initSchema() {
         )
     `);
 
-    console.log('✅ Schema initialized (including AI tables).');
+
 }
 
 async function migrateData() {
-    console.log('📦 Checking for Data Migration...');
+
 
     // 1. Migrate Settings
     const settingsCount = await query('SELECT COUNT(*) as count FROM settings');
@@ -114,10 +114,10 @@ async function migrateData() {
                     );
                 }
             }
-            console.log('✅ Migrated Settings');
+
         }
     } else {
-        console.log('ℹ️ Settings table not empty, skipping migration.');
+
     }
 
     // 2. Migrate Invites
@@ -134,10 +134,10 @@ async function migrateData() {
                     );
                 }
             }
-            console.log('✅ Migrated Invites');
+
         }
     } else {
-        console.log('ℹ️ Invites table not empty, skipping migration.');
+
     }
 
     // 3. Migrate Join History
@@ -155,10 +155,10 @@ async function migrateData() {
                     );
                 }
             }
-            console.log('✅ Migrated Join History');
+
         }
     } else {
-        console.log('ℹ️ Join History table not empty, skipping migration.');
+
     }
 
     // 4. Migrate Transcripts
@@ -175,13 +175,13 @@ async function migrateData() {
                     );
                 }
             }
-            console.log('✅ Migrated Transcripts');
+
         }
     } else {
-        console.log('ℹ️ Transcripts table not empty, skipping migration.');
+
     }
 
-    console.log('🏁 Migration Check Complete!');
+
 }
 
 async function run() {

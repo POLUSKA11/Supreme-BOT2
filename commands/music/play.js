@@ -116,6 +116,9 @@ module.exports = {
                 leaveOnEnd: false,
                 leaveOnEndCooldown: 30000,
                 skipOnNoStream: true,
+                // Voice Fixes:
+                connectionTimeout: 30000,
+                bufferingTimeout: 3000,
             });
 
             if (!queue.connection) {

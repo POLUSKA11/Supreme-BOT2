@@ -13,7 +13,7 @@ module.exports = {
 
         // Run background tasks to avoid blocking the ready event
         (async () => {
-            console.log('[DEBUG] Starting background initialization tasks...');
+
 
             // --- AUTOMATIC RECRUITMENT PANEL ---
             try {
@@ -41,9 +41,9 @@ module.exports = {
                             );
 
                         await channel.send({ embeds: [embed], components: [row] });
-                        console.log('[INFO] Recruitment panel sent to channel.');
+
                     } else {
-                        console.log('[INFO] Recruitment panel already exists. Skipping.');
+
                     }
                 }
             } catch (err) {
@@ -85,15 +85,15 @@ module.exports = {
                 if (!clientId) {
                     console.error('[ERROR] CLIENT_ID is missing and client.user.id is unavailable. Cannot register slash commands.');
                 } else {
-                    console.log(`[INFO] Registering ${commands.length} slash commands for Client ID: ${clientId}`);
+
                     await rest.put(Routes.applicationCommands(clientId), { body: commands });
-                    console.log('[SUCCESS] Slash commands registered successfully!');
+
                 }
             } catch (error) {
                 console.error('[ERROR] Failed to register slash commands:', error);
             }
             
-            console.log('[DEBUG] Background initialization tasks complete.');
+
         })();
     },
 };

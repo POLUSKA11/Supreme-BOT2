@@ -241,7 +241,11 @@ async function initializePlayer(client) {
         ytdlOptions: {
             quality: 'highestaudio',
             highWaterMark: 1 << 25,
-        }
+        },
+        // Voice Fixes:
+        connectionTimeout: 30000,
+        smoothVolume: true,
+        lagMonitor: 1000,
     });
 
     // Use ffmpeg-static if available
@@ -257,9 +261,10 @@ async function initializePlayer(client) {
 
     // Load YouTube extractor (youtubei — no API key needed)
     // The [YOUTUBEJS][Text] warnings are cosmetic and do not affect playback.
+    // Load YouTube extractor (youtubei — no API key needed)
     await player.extractors.register(YoutubeiExtractor, {
         streamOptions: {
-            useClient: 'ANDROID', // Use Android client for better stability
+            useClient: 'ANDROID', 
             highWaterMark: 1 << 25,
         }
     });
@@ -345,7 +350,7 @@ async function initializePlayer(client) {
         }).catch(() => {});
     });
 
-    console.log('🎵 [MUSIC] Player initialized with extractors:', player.extractors.store.size);
+
     return player;
 }
 

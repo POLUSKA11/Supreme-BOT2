@@ -97,7 +97,7 @@ async function initMusicSchema() {
         )
     `);
 
-    console.log('🎵 [MUSIC DB] Schema initialised successfully.');
+
 }
 
 // ─── Play History ─────────────────────────────────────────────────────────────

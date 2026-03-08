@@ -406,18 +406,19 @@ router.post('/paypal/webhook', express.raw({ type: 'application/json' }), async 
 
 async function getCryptoPrice(symbol) {
     try {
-        const coinIds = {
-            BTC: 'bitcoin', ETH: 'ethereum', LTC: 'litecoin',
-            USDT_TRC20: 'tether', USDT_ERC20: 'tether',
-            BNB: 'binancecoin', SOL: 'solana',
-        };
-        const coinId = coinIds[symbol];
-        if (!coinId) return null;
+        // Using Binance API for more reliable price fetching
+        const binanceSymbol = {
+            BTC: 'BTCUSDT', ETH: 'ETHUSDT', LTC: 'LTCUSDT',
+            USDT_TRC20: 'USDTUSDT', USDT_ERC20: 'USDTUSDT',
+            BNB: 'BNBUSDT', SOL: 'SOLUSDT',
+        }[symbol];
+        if (!binanceSymbol) return null;
+
         const resp = await axios.get(
-            `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`,
+            `https://api.binance.com/api/v3/ticker/price?symbol=${binanceSymbol}`,
             { timeout: 8000 }
         );
-        return resp.data[coinId]?.usd || null;
+        return parseFloat(resp.data.price) || null;
     } catch { return null; }
 }
 

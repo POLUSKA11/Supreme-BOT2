@@ -33,6 +33,9 @@ module.exports = {
                 leaveOnEmpty: true,
                 leaveOnEmptyCooldown: 30000,
                 leaveOnEnd: false,
+                // Voice Fixes:
+                connectionTimeout: 30000,
+                bufferingTimeout: 3000,
             });
 
             if (!queue.connection) {

@@ -64,10 +64,10 @@ module.exports = {
                 activeVoiceChannels.set(member.id, { channelId: voiceChannel.id, controlMessageId: null });
                 channelOwners.set(voiceChannel.id, member.id);
                 
-                console.log(`[VOICE] Created voice channel for ${member.user.tag} (${voiceChannel.id})`);
+
 
                 // Control panel is now persistent, no need to send per channel
-                console.log(`[VOICE] Voice channel created for ${member.user.tag}. Persistent control room is active.`);
+
             } catch (error) {
                 console.error('Error creating voice channel:', error);
             }
@@ -95,7 +95,7 @@ module.exports = {
                     [PermissionFlagsBits.ManageChannels]: true,
                     [PermissionFlagsBits.ViewChannel]: true
                 });
-                console.log(`[VOICE] Re-applied owner permissions for ${ownerId} in ${channel.name}`);
+
             } catch (error) {
                 console.error('[VOICE] Error re-applying owner permissions:', error);
             }
@@ -111,7 +111,7 @@ module.exports = {
             
             if (channel && channel.members.size === 0) {
                 try {
-                    console.log(`[VOICE] Deleting empty voice channel ${channel.name} (${channel.id})`);
+
                     
                     // Find the owner to clean up tracking
                     const ownerId = channelOwners.get(channel.id);
@@ -123,7 +123,7 @@ module.exports = {
                     if (ownerId) activeVoiceChannels.delete(ownerId);
                     channelOwners.delete(channel.id);
                     
-                    console.log(`[VOICE] Successfully cleaned up empty voice channel.`);
+
                 } catch (error) {
                     // Ignore 10003 (Unknown Channel) as it might already be deleted
                     if (error.code !== 10003) {
