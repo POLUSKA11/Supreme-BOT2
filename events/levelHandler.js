@@ -104,6 +104,7 @@ module.exports = {
                     currentXp,
                     xpNeeded,
                     totalXp:     result.newXp,
+                    guildName:   message.guild.name,
                     cardSettings,
                 });
                 

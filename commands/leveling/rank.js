@@ -62,11 +62,13 @@ module.exports = {
         const target  = interaction.options.getUser('user') || interaction.user;
         const { guild } = interaction;
 
-        const userData = await levelSystem.getUserData(guild.id, target.id);
+        // Explicitly use the current guild's ID to prevent cross-server data leakage
+        const currentGuildId = guild.id;
+        const userData = await levelSystem.getUserData(currentGuildId, target.id);
         const { level, currentXp, xpNeeded } = levelSystem.getLevelFromXp(userData.xp);
 
-        // Rank position
-        const leaderboard = await levelSystem.getLeaderboard(guild.id, 100);
+        // Rank position within the current guild
+        const leaderboard = await levelSystem.getLeaderboard(currentGuildId, 100);
         const rankPos     = leaderboard.findIndex(u => u.user_id === target.id) + 1;
 
         // Load card settings
@@ -82,6 +84,7 @@ module.exports = {
                 currentXp,
                 xpNeeded,
                 totalXp:     userData.xp,
+                guildName:   guild.name,
                 cardSettings,
             });
             

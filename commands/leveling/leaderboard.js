@@ -26,9 +26,10 @@ module.exports = {
         const offset = page * limit;
 
         const { guild } = interaction;
+        const currentGuildId = guild.id;
 
-        // Fetch top 100 and slice for pagination
-        const all = await levelSystem.getLeaderboard(guild.id, 100);
+        // Fetch top 100 for the current guild only
+        const all = await levelSystem.getLeaderboard(currentGuildId, 100);
         const slice = all.slice(offset, offset + limit);
         const totalPages = Math.ceil(all.length / limit);
 
