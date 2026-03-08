@@ -118,12 +118,39 @@ try {
             `);
             await query(`
                 CREATE TABLE IF NOT EXISTS premium_subscriptions (
-                    guild_id VARCHAR(255) PRIMARY KEY,
-                    user_id VARCHAR(255),
-                    plan VARCHAR(50),
-                    expires_at DATETIME,
-                    order_id VARCHAR(255),
-                    activated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    guild_id       VARCHAR(32)   PRIMARY KEY,
+                    plan           VARCHAR(32)   NOT NULL DEFAULT 'pro',
+                    payment_method VARCHAR(64)   NOT NULL DEFAULT 'admin',
+                    transaction_id VARCHAR(255),
+                    activated_at   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    expires_at     DATETIME      NOT NULL DEFAULT (DATE_ADD(NOW(), INTERVAL 30 DAY)),
+                    granted_by     VARCHAR(32)   DEFAULT NULL,
+                    user_id        VARCHAR(32)   DEFAULT NULL
+                )
+            `);
+            await query(`
+                CREATE TABLE IF NOT EXISTS crypto_payments (
+                    id             VARCHAR(64)   PRIMARY KEY,
+                    guild_id       VARCHAR(32)   NOT NULL,
+                    user_id        VARCHAR(32)   NOT NULL,
+                    plan           VARCHAR(32)   NOT NULL,
+                    coin           VARCHAR(32)   NOT NULL,
+                    wallet_address VARCHAR(255)  NOT NULL,
+                    amount_usd     DECIMAL(10,2) NOT NULL,
+                    amount_crypto  DECIMAL(20,8) NOT NULL,
+                    status         VARCHAR(32)   NOT NULL DEFAULT 'pending',
+                    created_at     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    expires_at     DATETIME      NOT NULL,
+                    confirmed_at   DATETIME      DEFAULT NULL,
+                    tx_hash        VARCHAR(255)  DEFAULT NULL
+                )
+            `);
+            await query(`
+                CREATE TABLE IF NOT EXISTS premium_trials (
+                    guild_id   VARCHAR(32) PRIMARY KEY,
+                    user_id    VARCHAR(32) NOT NULL,
+                    started_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    expires_at DATETIME    NOT NULL
                 )
             `);
             await query(`
@@ -601,6 +628,8 @@ app.use(session({
 console.log('📦 [SESSION] File-based session store initialized (30-day persistence)');
 
 // Middleware
+// Raw body parser for PayPal webhook signature verification (MUST be before express.json)
+app.use('/api/payments/paypal/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
