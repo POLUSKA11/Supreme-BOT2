@@ -62,10 +62,20 @@ module.exports = {
         const target  = interaction.options.getUser('user') || interaction.user;
         const { guild } = interaction;
 
+        // 1. Bot check
+        if (target.bot) {
+            return interaction.editReply({ content: `**${target.username}** is a bot! Bots aren't invited to the super fancy /rank party.` });
+        }
+
         // Explicitly use the current guild's ID to prevent cross-server data leakage
         const currentGuildId = guild.id;
         const userData = await levelSystem.getUserData(currentGuildId, target.id);
         const { level, currentXp, xpNeeded } = levelSystem.getLevelFromXp(userData.xp);
+
+        // 2. Level 1 requirement check
+        if (level < 1) {
+            return interaction.editReply({ content: `**${target.username}** isn't ranked yet! They need to reach at least **Level 1** to get a rank card.` });
+        }
 
         // Rank position within the current guild
         const leaderboard = await levelSystem.getLeaderboard(currentGuildId, 100);
