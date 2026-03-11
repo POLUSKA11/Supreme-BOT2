@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ShieldAlert, ShieldCheck, Link as LinkIcon, Megaphone, Zap, MessageSquare, Lock, Settings, Info, Save, CheckCircle2, XCircle } from 'lucide-react';
 
 export default function AntiRaid({ selectedGuild }) {
   const { t } = useTranslation();
@@ -72,7 +73,7 @@ export default function AntiRaid({ selectedGuild }) {
       });
 
       if (res.ok) {
-        setSuccess('✅ Anti-Raid configuration saved successfully!');
+        setSuccess('Anti-Raid configuration saved successfully!');
         setConfig(configToSave);
       } else {
         const data = await res.json();
@@ -90,30 +91,35 @@ export default function AntiRaid({ selectedGuild }) {
     setConfig(prev => ({ ...prev, [module]: !prev[module] }));
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 lg:p-8 max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">
-          <span className="text-red-400">🛡️ Anti-Raid</span> System
+        <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+          <ShieldAlert className="w-8 h-8 text-red-400" />
+          <span className="text-red-400">Anti-Raid</span> System
         </h1>
         <p className="text-slate-400">Protect your server from raids, spam, and malicious content.</p>
       </div>
 
       {success && (
         <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-400 flex items-center gap-3">
-          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-          </svg>
+          <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
           {success}
         </div>
       )}
 
       {error && (
         <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-400 flex items-center gap-3">
-          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <XCircle className="w-5 h-5 flex-shrink-0" />
           {error}
         </div>
       )}
@@ -125,24 +131,27 @@ export default function AntiRaid({ selectedGuild }) {
           {/* Security Modules */}
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <ShieldCheck className="w-5 h-5 text-red-400" />
               Security Modules
             </h2>
 
             <div className="space-y-3">
               {[
-                { key: 'anti_link', label: '🔗 Anti-Link', desc: 'Block all external links' },
-                { key: 'anti_promo', label: '📢 Anti-Promotion', desc: 'Block Discord invite links' },
-                { key: 'anti_spam', label: '⚡ Anti-Spam', desc: 'Prevent message spamming' },
-                { key: 'anti_badwords', label: '🤬 Anti-BadWords', desc: 'Filter banned words' },
-                { key: 'lockdown', label: '🔒 Lockdown Mode', desc: 'Block all messages (emergency)' }
+                { key: 'anti_link', label: 'Anti-Link', Icon: LinkIcon, desc: 'Block all external links' },
+                { key: 'anti_promo', label: 'Anti-Promotion', Icon: Megaphone, desc: 'Block Discord invite links' },
+                { key: 'anti_spam', label: 'Anti-Spam', Icon: Zap, desc: 'Prevent message spamming' },
+                { key: 'anti_badwords', label: 'Anti-BadWords', Icon: MessageSquare, desc: 'Filter banned words' },
+                { key: 'lockdown', label: 'Lockdown Mode', Icon: Lock, desc: 'Block all messages (emergency)' }
               ].map(module => (
                 <div key={module.key} className="flex items-center justify-between p-4 bg-slate-900/40 rounded-xl border border-white/5 hover:border-white/10 transition-all">
-                  <div>
-                    <h3 className="text-sm font-semibold text-white">{module.label}</h3>
-                    <p className="text-xs text-slate-500">{module.desc}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400">
+                      <module.Icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-white">{module.label}</h3>
+                      <p className="text-xs text-slate-500">{module.desc}</p>
+                    </div>
                   </div>
                   <button
                     onClick={() => toggleModule(module.key)}
@@ -158,9 +167,7 @@ export default function AntiRaid({ selectedGuild }) {
           {/* Advanced Settings */}
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              </svg>
+              <Settings className="w-5 h-5 text-red-400" />
               Advanced Settings
             </h2>
 
@@ -220,9 +227,7 @@ export default function AntiRaid({ selectedGuild }) {
               </>
             ) : (
               <>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                </svg>
+                <Save className="w-5 h-5" />
                 Save Anti-Raid Configuration
               </>
             )}
@@ -234,9 +239,7 @@ export default function AntiRaid({ selectedGuild }) {
           {/* Current Status */}
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-              <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <Info className="w-4 h-4 text-amber-400" />
               Status Overview
             </h3>
             <div className="space-y-2 text-sm">
@@ -252,57 +255,22 @@ export default function AntiRaid({ selectedGuild }) {
               </div>
               <div className="flex items-center justify-between p-2 bg-slate-900/40 rounded">
                 <span className="text-slate-400">Log Channel:</span>
-                <span className="text-red-400 font-semibold">{config.log_channel ? '✅' : '❌'}</span>
+                <span className="text-red-400 font-semibold">
+                  {config.log_channel ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-red-400" />}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Features */}
-          <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-            <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
-              <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Features
-            </h3>
-            <ul className="space-y-2 text-xs text-slate-400">
-              <li className="flex items-start gap-2">
-                <span className="text-red-400 mt-0.5">•</span>
-                <span>Real-time message filtering</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-red-400 mt-0.5">•</span>
-                <span>Automatic violation logging</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-red-400 mt-0.5">•</span>
-                <span>Customizable banned words</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-red-400 mt-0.5">•</span>
-                <span>Spam rate limiting</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-red-400 mt-0.5">•</span>
-                <span>Emergency lockdown mode</span>
-              </li>
-            </ul>
-          </div>
-
           {/* Tips */}
-          <div className="bg-blue-500/10 backdrop-blur-xl rounded-2xl border border-blue-500/20 p-6">
-            <h3 className="text-sm font-bold text-blue-300 mb-3 flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Tips
+          <div className="bg-blue-600/10 border border-blue-500/20 rounded-2xl p-6">
+            <h3 className="text-sm font-bold text-blue-400 mb-3 flex items-center gap-2">
+              <Info className="w-4 h-4" />
+              Security Tip
             </h3>
-            <ul className="space-y-2 text-xs text-blue-200">
-              <li>• Moderators bypass all filters</li>
-              <li>• Set a log channel to track violations</li>
-              <li>• Use Lockdown only in emergencies</li>
-              <li>• Adjust spam threshold based on server activity</li>
-            </ul>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Always set a <strong>Log Channel</strong> to keep track of who is triggering the filters. This helps you identify and ban persistent raiders.
+            </p>
           </div>
         </div>
       </div>
