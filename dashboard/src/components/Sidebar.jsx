@@ -95,12 +95,12 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
       <div className="p-4 lg:p-6 flex items-center justify-between border-b border-white/8">
         {isOpen && (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 overflow-hidden font-bold text-white text-sm">
-              S
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30 overflow-hidden font-bold text-white text-sm">
+              N
             </div>
             <div>
-              <h1 className="text-lg font-black tracking-tight">Supreme</h1>
-              <p className="text-xs text-slate-500">Dashboard</p>
+              <h1 className="text-lg font-black tracking-tight">Nexus</h1>
+              <p className="text-xs text-slate-500">Bot</p>
             </div>
           </div>
         )}
@@ -122,28 +122,9 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
       )}
 
       {/* Server Selector */}
-      {isOpen && selectedGuild && (
+      {isOpen && (
         <div className="px-4 py-4 border-b border-white/8">
-          <div className="flex items-center justify-between mb-3 px-2">
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Current Server</p>
-            <button
-              onClick={handleChangeServer}
-              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
-              title="Change server"
-            >
-              Change
-            </button>
-          </div>
-          <div className="px-3 py-2.5 rounded-xl bg-indigo-600/15 border border-indigo-500/20 flex items-center gap-3">
-            {selectedGuild.icon ? (
-              <img src={selectedGuild.icon} alt={selectedGuild.name} className="w-8 h-8 rounded-lg" />
-            ) : (
-              <div className="w-8 h-8 rounded-lg bg-indigo-600/30 flex items-center justify-center text-indigo-400 font-bold text-xs">
-                {selectedGuild.name.charAt(0).toUpperCase()}
-              </div>
-            )}
-            <span className="text-sm font-bold text-white truncate">{selectedGuild.name}</span>
-          </div>
+          <ServerSelector selectedGuild={selectedGuild} onGuildChange={handleGuildChange} />
         </div>
       )}
 

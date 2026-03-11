@@ -55,7 +55,7 @@ export default function Dashboard({ selectedGuild }) {
           </svg>
         </div>
         <div className="max-w-md space-y-2">
-          <h2 className="text-3xl font-black text-white tracking-tight">Welcome to <span className="gradient-text">Supreme Dashboard</span></h2>
+                  <h2 className="text-3xl font-black text-white tracking-tight">Welcome to <span className="gradient-text">Nexus Dashboard</span></h2>
           <p className="text-slate-400">Please select a server from the sidebar to view its statistics and manage its settings.</p>
         </div>
         <div className="flex items-center gap-2 text-indigo-400 font-bold animate-bounce mt-4">
