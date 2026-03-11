@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Crown, CreditCard, Zap, Save, CheckCircle2, XCircle, Settings, Image as ImageIcon, Upload, Lock, Unlock } from 'lucide-react';
 
 export default function Leveling({ selectedGuild, user }) {
   const { t } = useTranslation();
@@ -296,7 +297,7 @@ export default function Leveling({ selectedGuild, user }) {
       <div className="glass rounded-3xl p-6 md:p-8 border border-white/5 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-2">
-            <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+            <CreditCard className="w-6 h-6 text-cyan-400" />
             Default server rank card
           </h2>
           <p className="text-sm text-slate-400">You can customize the default rank card in your server. By default, every member of your server will have that rank card.</p>
@@ -324,7 +325,7 @@ export default function Leveling({ selectedGuild, user }) {
       <div className="glass rounded-3xl p-6 md:p-8 border border-white/5 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-2">
-            <span className="text-2xl">👑</span>
+            <Crown className="w-6 h-6 text-amber-400" />
             XP Rate
           </h2>
           <p className="text-sm text-slate-400">Change the leveling difficulty by tweaking the rate at which your members will gain XP.</p>
@@ -376,12 +377,12 @@ export default function Leveling({ selectedGuild, user }) {
 
         {/* Config Save Feedback */}
         {configSaveMessage.text && (
-          <div className={`px-4 py-3 rounded-xl text-sm font-semibold ${
+          <div className={`px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-2 ${
             configSaveMessage.type === 'success'
               ? 'bg-green-500/20 text-green-400 border border-green-500/30'
               : 'bg-red-500/20 text-red-400 border border-red-500/30'
           }`}>
-            {configSaveMessage.type === 'success' ? '✅ ' : '❌ '}{configSaveMessage.text}
+            {configSaveMessage.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}{configSaveMessage.text}
           </div>
         )}
 
@@ -514,13 +515,13 @@ export default function Leveling({ selectedGuild, user }) {
 
                     {/* Upload error/info */}
                     {uploadError && (
-                      <div className="px-3 py-2 rounded-lg bg-red-500/20 text-red-400 text-xs border border-red-500/30">
-                        ❌ {uploadError}
+                      <div className="px-3 py-2 rounded-lg bg-red-500/20 text-red-400 text-xs border border-red-500/30 flex items-center gap-2">
+                        <XCircle className="w-3.5 h-3.5" /> {uploadError}
                       </div>
                     )}
                     {!canAccessPremiumFeatures && (
-                      <div className="px-3 py-2 rounded-lg bg-amber-500/10 text-amber-400/80 text-xs border border-amber-500/20">
-                        👑 Upload custom background and unlock all backgrounds require <strong>Premium</strong> or being the <strong>Server Owner</strong>.
+                      <div className="px-3 py-2 rounded-lg bg-amber-500/10 text-amber-400/80 text-xs border border-amber-500/20 flex items-center gap-2">
+                        <Crown className="w-3.5 h-3.5 text-amber-500" /> Upload custom background and unlock all backgrounds require <strong>Premium</strong> or being the <strong>Server Owner</strong>.
                       </div>
                     )}
                   </div>
@@ -700,26 +701,26 @@ export default function Leveling({ selectedGuild, user }) {
                     {saving ? 'Saving...' : 'Save Visibility Settings'}
                   </button>
 
-                  {configSaveMessage.text && (
-                    <div className={`px-4 py-3 rounded-xl text-sm font-semibold ${
-                      configSaveMessage.type === 'success'
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                        : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                    }`}>
-                      {configSaveMessage.type === 'success' ? '✅ ' : '❌ '}{configSaveMessage.text}
-                    </div>
-                  )}
+                    {configSaveMessage.text && (
+                      <div className={`px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-2 ${
+                        configSaveMessage.type === 'success'
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                          : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                      }`}>
+                        {configSaveMessage.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}{configSaveMessage.text}
+                      </div>
+                    )}
                 </div>
               )}
 
               {/* Save Feedback Message */}
               {saveMessage.text && (
-                <div className={`px-4 py-3 rounded-xl text-sm font-semibold ${
+                <div className={`px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-2 ${
                   saveMessage.type === 'success'
                     ? 'bg-green-500/20 text-green-400 border border-green-500/30'
                     : 'bg-red-500/20 text-red-400 border border-red-500/30'
                 }`}>
-                  {saveMessage.type === 'success' ? '✅ ' : '❌ '}{saveMessage.text}
+                  {saveMessage.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}{saveMessage.text}
                 </div>
               )}
 
