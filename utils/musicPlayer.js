@@ -260,12 +260,13 @@ async function initializePlayer(client) {
     }
 
     // Load YouTube extractor (youtubei — no API key needed)
-    // We use the TV_EMBEDDED client as it is currently the most stable for signature extraction
+    // We use the WEB_EMBEDDED client as it is currently the most stable for signature extraction
     await player.extractors.register(YoutubeiExtractor, {
         streamOptions: {
-            useClient: 'TV_EMBEDDED', 
+            useClient: 'WEB_EMBEDDED', 
             highWaterMark: 1 << 25,
-        }
+        },
+        suppressWarnings: true
     });
 
     // Load all default extractors (Spotify, SoundCloud, Apple Music, Vimeo, etc.)
