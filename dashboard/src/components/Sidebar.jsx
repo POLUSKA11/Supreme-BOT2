@@ -8,6 +8,11 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
   const { t } = useTranslation();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
+  const [expandedCategories, setExpandedCategories] = useState({
+    essentials: true,
+    management: true,
+    features: false,
+  });
   const navigate = useNavigate();
 
   const handleGuildChange = (guild) => {
@@ -28,7 +33,6 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
         credentials: 'include',
         body: JSON.stringify({ removeTrustedIP: true })
       });
-      
       if (response.ok) {
         sessionStorage.removeItem('selectedGuild');
         setSelectedGuild(null);
@@ -41,172 +45,219 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
     }
   };
 
-  const menuItems = [
-    { path: '/dashboard', label: t('nav.overview'), icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" /></svg>
-    )},
-    { path: '/dashboard/tickets', label: t('nav.tickets'), icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4v-3a2 2 0 00-2-2H5z" /></svg>
-    )},
-    { path: '/dashboard/ticket-setup', label: 'Ticket Setup', icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
-    )},
-    { path: '/dashboard/users', label: t('nav.users'), icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-    )},
-    { path: '/dashboard/giveaways', label: t('nav.giveaways'), icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg>
-    )},
-    { path: '/dashboard/settings', label: t('nav.settings'), icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-    )},
-    { path: `/dashboard/welcome-setup/${selectedGuild?.id || ''}`, label: t('nav.welcomeSetup'), icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" /></svg>
-    ), disabled: !selectedGuild },
+  const toggleCategory = (category) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
 
-    { path: '/dashboard/audit-logs', label: t('nav.auditLogs'), icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-    )},
-    { path: '/dashboard/transcripts', label: t('nav.transcripts'), icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-    )},
-    { path: `/dashboard/staff-verification/${selectedGuild?.id || ''}`, label: t('nav.staffVerification'), icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-    ), disabled: !selectedGuild },
-    { path: '/dashboard/anti-raid', label: 'Anti-Raid', icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-    )},
-    { path: '/dashboard/leveling', label: 'Leveling', icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-    )},
-    { path: '/dashboard/premium', label: 'Premium', icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" /></svg>
-    ), special: 'premium' },
-    // Admin panel — only visible to the designated admin user
-    ...(user?.id === '982731220913913856' ? [{
-      path: '/dashboard/admin',
-      label: 'Admin Panel',
-      special: 'admin',
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-      ),
-    }] : []),
+  const menuCategories = [
+    {
+      id: 'essentials',
+      label: 'ESSENTIALS',
+      items: [
+        { path: '/dashboard', label: t('nav.overview'), icon: '📊', badge: null },
+        { path: '/dashboard/welcome-setup/' + (selectedGuild?.id || ''), label: 'Welcome & Goodbye', icon: '👋', badge: '✨', disabled: !selectedGuild },
+        { path: '/dashboard/tickets', label: t('nav.tickets'), icon: '🎫', badge: null },
+        { path: '/dashboard/ticket-setup', label: 'Ticket Setup', icon: '⚙️', badge: null },
+        { path: '/dashboard/leveling', label: 'Levels', icon: '📈', badge: null },
+        { path: '/dashboard/anti-raid', label: 'Anti-Raid', icon: '🛡️', badge: null },
+      ]
+    },
+    {
+      id: 'management',
+      label: 'SERVER MANAGEMENT',
+      items: [
+        { path: '/dashboard/users', label: t('nav.users'), icon: '👥', badge: null },
+        { path: '/dashboard/giveaways', label: t('nav.giveaways'), icon: '🎁', badge: null },
+        { path: '/dashboard/audit-logs', label: t('nav.auditLogs'), icon: '📋', badge: null },
+        { path: '/dashboard/transcripts', label: t('nav.transcripts'), icon: '📄', badge: null },
+        { path: '/dashboard/staff-verification/' + (selectedGuild?.id || ''), label: t('nav.staffVerification'), icon: '✅', badge: null, disabled: !selectedGuild },
+      ]
+    },
+    {
+      id: 'features',
+      label: 'MORE FEATURES',
+      items: [
+        { path: '/dashboard/settings', label: t('nav.settings'), icon: '⚙️', badge: null },
+        { path: '/dashboard/ai', label: 'AI Characters', icon: '🤖', badge: null },
+        { path: '/dashboard/premium', label: 'Premium', icon: '👑', badge: '⭐', special: 'premium' },
+      ]
+    }
   ];
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/');
 
   return (
-    <div className={`${isOpen ? 'w-72' : 'w-20'} h-full bg-slate-900/50 backdrop-blur-xl border-r border-white/10 text-white transition-all duration-500 flex flex-col`}>
-      {/* Header */}
-      <div className="p-4 lg:p-6 flex items-center justify-between border-b border-white/5">
+    <div className={`${isOpen ? 'w-72' : 'w-20'} h-full bg-gradient-to-b from-slate-950/95 to-slate-900/95 backdrop-blur-xl border-r border-white/8 text-white transition-all duration-500 flex flex-col`}>
+      {/* Header with Logo */}
+      <div className="p-4 lg:p-6 flex items-center justify-between border-b border-white/8">
         {isOpen && (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center shadow-lg shadow-red-500/20 overflow-hidden">
-              <img src="/logo.webp" alt="NM" className="w-full h-full object-cover" />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 overflow-hidden font-bold text-white text-sm">
+              S
             </div>
-            <h1 className="text-xl font-bold tracking-tight">Nexus <span className="text-red-400">Bot</span></h1>
+            <div>
+              <h1 className="text-lg font-black tracking-tight">Supreme</h1>
+              <p className="text-xs text-slate-500">Dashboard</p>
+            </div>
           </div>
         )}
-        <div className="flex items-center gap-1">
-          {/* Close button for mobile */}
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-white/5 rounded-xl transition-colors lg:hidden"
-          >
-            <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          {/* Collapse button for desktop */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="p-2 hover:bg-white/5 rounded-xl transition-colors hidden lg:block"
-          >
-            <svg className={`w-6 h-6 text-slate-400 transition-transform duration-500 ${!isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-            </svg>
-          </button>
-        </div>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="p-2 hover:bg-white/10 rounded-xl transition-colors hidden lg:block"
+        >
+          <svg className={`w-5 h-5 text-slate-400 transition-transform duration-500 ${!isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
       </div>
 
       {/* Theme & Language Switcher */}
       {isOpen && (
-        <div className="px-4 py-3 border-b border-white/5 flex justify-center">
+        <div className="px-4 py-3 border-b border-white/8 flex justify-center">
           <ThemeLanguageSwitcher />
         </div>
       )}
 
       {/* Server Selector */}
-      {isOpen && (
-        <div className="px-4 py-4 border-b border-white/5">
+      {isOpen && selectedGuild && (
+        <div className="px-4 py-4 border-b border-white/8">
           <div className="flex items-center justify-between mb-3 px-2">
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Server</p>
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Current Server</p>
             <button
               onClick={handleChangeServer}
-              className="text-xs text-red-400 hover:text-red-300 font-medium transition-colors"
+              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
               title="Change server"
             >
               Change
             </button>
           </div>
-          <ServerSelector selectedGuild={selectedGuild} onGuildChange={handleGuildChange} />
+          <div className="px-3 py-2.5 rounded-xl bg-indigo-600/15 border border-indigo-500/20 flex items-center gap-3">
+            {selectedGuild.icon ? (
+              <img src={selectedGuild.icon} alt={selectedGuild.name} className="w-8 h-8 rounded-lg" />
+            ) : (
+              <div className="w-8 h-8 rounded-lg bg-indigo-600/30 flex items-center justify-center text-indigo-400 font-bold text-xs">
+                {selectedGuild.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <span className="text-sm font-bold text-white truncate">{selectedGuild.name}</span>
+          </div>
         </div>
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 lg:px-4 py-4 space-y-1.5 overflow-y-auto">
-        {menuItems.map((item) => {
-          if (item.disabled) {
-            return (
-              <div
-                key={item.path}
-                className="flex items-center gap-4 px-4 py-3 rounded-2xl text-slate-600 cursor-not-allowed opacity-50"
-                title="Select a server first"
-              >
-                <div>{item.icon}</div>
-                {isOpen && <span className="font-medium">{item.label}</span>}
-              </div>
-            );
-          }
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={onClose}
-              className={`flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group ${
-                item.special === 'premium'
-                  ? isActive(item.path)
-                    ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/30 shadow-lg shadow-amber-500/10'
-                    : 'text-amber-400/70 hover:bg-amber-500/10 hover:text-amber-400'
-                  : item.special === 'admin'
-                  ? isActive(item.path)
-                    ? 'bg-gradient-to-r from-red-600/30 to-rose-900/20 text-red-300 border border-red-500/40 shadow-lg shadow-red-500/20'
-                    : 'text-red-400/80 hover:bg-red-500/10 hover:text-red-300 border border-transparent hover:border-red-500/20'
-                  : isActive(item.path)
-                    ? 'bg-red-600/20 text-red-400 border border-red-500/30 shadow-lg shadow-red-500/10'
-                    : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
-              }`}
+      <nav className="flex-1 px-3 lg:px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar">
+        {menuCategories.map((category) => (
+          <div key={category.id} className="mb-4">
+            {/* Category Header */}
+            <button
+              onClick={() => toggleCategory(category.id)}
+              className="w-full flex items-center justify-between px-3 py-2 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-slate-400 transition-colors group"
             >
-              <div className={`transition-colors duration-300 ${item.special === 'premium' ? 'text-amber-400' : item.special === 'admin' ? 'text-red-400' : isActive(item.path) ? 'text-red-400' : 'group-hover:text-slate-200'}`}>
-                {item.icon}
-              </div>
-              {isOpen && <span className="font-medium">{item.label}</span>}
-              {isActive(item.path) && isOpen && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div>
+              <span>{category.label}</span>
+              {isOpen && (
+                <svg className={`w-3.5 h-3.5 transition-transform duration-300 ${expandedCategories[category.id] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7-7m0 0L5 14m7-7v12" />
+                </svg>
               )}
-            </Link>
-          );
-        })}
+            </button>
+
+            {/* Category Items */}
+            {expandedCategories[category.id] && (
+              <div className="space-y-1">
+                {category.items.map((item) => {
+                  if (item.disabled) {
+                    return (
+                      <div
+                        key={item.path}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 cursor-not-allowed opacity-40"
+                        title="Select a server first"
+                      >
+                        <span className="text-lg">{item.icon}</span>
+                        {isOpen && <span className="text-sm font-medium flex-1">{item.label}</span>}
+                      </div>
+                    );
+                  }
+
+                  const active = isActive(item.path);
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={onClose}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group ${
+                        active
+                          ? item.special === 'premium'
+                            ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                            : 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
+                          : item.special === 'premium'
+                          ? 'text-amber-400/70 hover:bg-amber-500/10 hover:text-amber-400'
+                          : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+                      }`}
+                    >
+                      <span className="text-lg">{item.icon}</span>
+                      {isOpen && (
+                        <>
+                          <span className="text-sm font-medium flex-1">{item.label}</span>
+                          {item.badge && <span className="text-xs">{item.badge}</span>}
+                          {active && <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]"></div>}
+                        </>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ))}
+
+        {/* Admin Panel - only for admin user */}
+        {user?.id === '982731220913913856' && (
+          <div className="mt-6 pt-4 border-t border-white/8">
+            <button
+              onClick={() => toggleCategory('admin')}
+              className="w-full flex items-center justify-between px-3 py-2 mb-2 text-xs font-bold text-red-600 uppercase tracking-wider hover:text-red-500 transition-colors"
+            >
+              <span>⚡ Admin</span>
+              {isOpen && (
+                <svg className={`w-3.5 h-3.5 transition-transform duration-300 ${expandedCategories['admin'] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7-7m0 0L5 14m7-7v12" />
+                </svg>
+              )}
+            </button>
+            {expandedCategories['admin'] && (
+              <Link
+                to="/dashboard/admin"
+                onClick={onClose}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
+                  isActive('/dashboard/admin')
+                    ? 'bg-red-600/20 text-red-300 border border-red-500/30'
+                    : 'text-red-400/70 hover:bg-red-500/10 hover:text-red-300'
+                }`}
+              >
+                <span className="text-lg">🔐</span>
+                {isOpen && (
+                  <>
+                    <span className="text-sm font-medium flex-1">Admin Panel</span>
+                    {isActive('/dashboard/admin') && <div className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div>}
+                  </>
+                )}
+              </Link>
+            )}
+          </div>
+        )}
       </nav>
 
-      {/* User Profile */}
-      <div className="p-4 border-t border-white/5 bg-black/20">
+      {/* User Profile Footer */}
+      <div className="p-4 border-t border-white/8 bg-white/3">
         {user && (
           <div className={`${isOpen ? 'flex items-center gap-3' : 'flex flex-col items-center'} p-2`}>
-            <img 
-              src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : 'https://cdn.discordapp.com/embed/avatars/0.png'} 
-              alt="Avatar" 
-              className="w-10 h-10 rounded-full border-2 border-red-500/30"
+            <img
+              src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : 'https://cdn.discordapp.com/embed/avatars/0.png'}
+              alt="Avatar"
+              className="w-10 h-10 rounded-full border-2 border-indigo-500/30"
             />
             {isOpen && (
               <div className="flex-1 min-w-0">
@@ -220,10 +271,12 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
             )}
             <button
               onClick={handleLogout}
-              className={`p-2 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all ${!isOpen && 'mt-2'}`}
+              className={`p-2 text-slate-400 hover:text-indigo-400 hover:bg-indigo-400/10 rounded-lg transition-all ${!isOpen && 'mt-2'}`}
               title="Logout"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
             </button>
           </div>
         )}
