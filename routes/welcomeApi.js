@@ -119,6 +119,74 @@ router.post('/:guildId', requireAuth, requireGuildPermission, (req, res) => {
 });
 
 /**
+ * GET /api/goodbye/:guildId
+ * Get goodbye message configuration for a guild
+ */
+router.get('/goodbye/:guildId', requireAuth, requireGuildPermission, (req, res) => {
+    try {
+        const { guildId } = req.params;
+        const config = storage.get(guildId, 'goodbye_config') || {};
+        
+        res.json({
+            enabled: !!config.channelId,
+            channelId: config.channelId || null,
+            title: config.title || '',
+            description: config.description || '',
+            bannerUrl: config.bannerUrl || '',
+        });
+    } catch (error) {
+        console.error('[Goodbye API] Error fetching config:', error);
+        res.status(500).json({ error: 'Failed to fetch goodbye configuration' });
+    }
+});
+
+/**
+ * POST /api/goodbye/:guildId
+ * Update goodbye message configuration for a guild
+ */
+router.post('/goodbye/:guildId', requireAuth, requireGuildPermission, (req, res) => {
+    try {
+        const { guildId } = req.params;
+        const { enabled, channelId, title, description, bannerUrl } = req.body;
+
+        if (!enabled) {
+            // Disable goodbye messages
+            storage.delete(guildId, 'goodbye_config');
+            return res.json({ success: true, message: 'Goodbye messages disabled' });
+        }
+
+        if (!channelId) {
+            return res.status(400).json({ error: 'Channel ID is required when enabled' });
+        }
+
+        // Verify the channel exists in the guild
+        const guild = req.targetGuild;
+        const channel = guild.channels.cache.get(channelId);
+        if (!channel) {
+            return res.status(400).json({ error: 'Channel not found in this server' });
+        }
+
+        const config = {
+            channelId,
+            title: title || '',
+            description: description || '',
+            bannerUrl: bannerUrl || '',
+        };
+
+        storage.set(guildId, 'goodbye_config', config);
+        
+        res.json({ 
+            success: true, 
+            message: 'Goodbye configuration saved',
+            config 
+        });
+    } catch (error) {
+        console.error('[Goodbye API] Error saving config:', error);
+        res.status(500).json({ error: 'Failed to save goodbye configuration' });
+    }
+});
+
+/**
  * GET /api/welcome/:guildId/channels
  * Get list of text channels in the guild
  */

@@ -2,9 +2,17 @@ const { Events, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const storage = require('../commands/utility/storage.js');
 const inviteManager = require('../inviteManager.js');
 
+// Nexus Bot Logo (Cyan/Blue gradient circle)
+const NEXUS_LOGO_URL = 'https://cdn.discordapp.com/avatars/1234567890/abcdef.png'; // Replace with actual bot avatar URL
+
 module.exports = {
     name: Events.GuildMemberAdd,
     async execute(member) {
+        // Safety check: Ensure member and guild are valid
+        if (!member || !member.guild) {
+            console.warn('[WELCOME] Invalid member or guild data received');
+            return;
+        }
         const guildId = member.guild.id;
 
         // --- 1. AUTO-ROLE LOGIC ---
@@ -119,26 +127,48 @@ module.exports = {
 
         // --- 3. WELCOME MESSAGE LOGIC ---
         const config = storage.get(guildId, 'welcome_config');
-        if (!config) return;
+        
+        // Check if welcome is enabled and has a valid channel configured
+        if (!config || !config.channelId) {
+            console.log(`[WELCOME] Welcome messages not configured for guild ${guildId}`);
+            return;
+        }
 
         const channel = member.guild.channels.cache.get(config.channelId);
-        if (!channel) return;
-
-        const embed = new EmbedBuilder()
-            .setTitle(config.title || member.guild.name)
-            .setDescription(`${config.description}\n\n**Invited by:** ${inviterMention}`)
-            .setImage(config.bannerUrl)
-            .setFooter({ text: `Thank you for choosing ${member.guild.name}!`, iconURL: member.guild.iconURL() })
-            .setTimestamp()
-            .setColor('#FF0000');
+        if (!channel) {
+            console.warn(`[WELCOME] Channel ${config.channelId} not found for guild ${guildId}`);
+            return;
+        }
 
         try {
+            // Build the welcome embed with Nexus branding
+            const embed = new EmbedBuilder()
+                .setTitle(config.title || `Welcome ${member.user.username}!`)
+                .setDescription(`${config.description || 'Welcome to the server!'}\n\n**Invited by:** ${inviterMention}`)
+                .setColor('#00B4D8') // Cyan/Blue color for Nexus
+                .setFooter({ 
+                    text: `Thank you for choosing ${member.guild.name}!`, 
+                    iconURL: member.client.user.displayAvatarURL() // Use bot's avatar as Nexus logo
+                })
+                .setTimestamp();
+
+            // Add banner/GIF if provided and valid
+            if (config.bannerUrl && config.bannerUrl.trim()) {
+                embed.setImage(config.bannerUrl);
+            }
+
+            // Add thumbnail with bot avatar (Nexus logo)
+            embed.setThumbnail(member.client.user.displayAvatarURL());
+
+            // Send the welcome message
             await channel.send({ 
-                content: `${member} Welcome To ${member.guild.name}`,
+                content: `${member} Welcome To ${member.guild.name}!`,
                 embeds: [embed]
             });
+
+            console.log(`[WELCOME] ✅ Welcome message sent for ${member.user.tag} in ${member.guild.name}`);
         } catch (error) {
-            console.error('[WELCOME] Error:', error);
+            console.error(`[WELCOME] ❌ Error sending welcome message for ${member.user.tag}:`, error.message);
         }
     },
 };
