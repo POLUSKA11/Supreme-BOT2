@@ -1,6 +1,25 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  LayoutGrid,
+  LogOut,
+  Users,
+  Gift,
+  FileText,
+  MessageSquare,
+  Settings,
+  Crown,
+  Zap,
+  Shield,
+  BarChart3,
+  Ticket,
+  Home,
+  Lock,
+  Inbox,
+  Sparkles,
+  ChevronDown,
+} from 'lucide-react';
 import ServerSelector from './ServerSelector';
 import ThemeLanguageSwitcher from './ThemeLanguageSwitcher';
 
@@ -57,32 +76,32 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
       id: 'essentials',
       label: 'ESSENTIALS',
       items: [
-        { path: '/dashboard', label: 'Dashboard', icon: '📊', badge: null },
-        { path: '/dashboard/welcome-setup/' + (selectedGuild?.id || ''), label: 'Welcome & Goodbye', icon: '👋', badge: null, disabled: !selectedGuild },
-        { path: '/dashboard/tickets', label: 'Tickets', icon: '🎫', badge: null },
-        { path: '/dashboard/ticket-setup', label: 'Ticket Setup', icon: '⚙️', badge: null },
-        { path: '/dashboard/leveling', label: 'Levels', icon: '📈', badge: null },
-        { path: '/dashboard/anti-raid', label: 'Anti-Raid', icon: '🛡️', badge: null },
+        { path: '/dashboard', label: 'Dashboard', Icon: Home, badge: null },
+        { path: '/dashboard/welcome-setup/' + (selectedGuild?.id || ''), label: 'Welcome & Goodbye', Icon: Inbox, badge: null, disabled: !selectedGuild },
+        { path: '/dashboard/tickets', label: 'Tickets', Icon: Ticket, badge: null },
+        { path: '/dashboard/ticket-setup', label: 'Ticket Setup', Icon: Settings, badge: null },
+        { path: '/dashboard/leveling', label: 'Levels', Icon: BarChart3, badge: null },
+        { path: '/dashboard/anti-raid', label: 'Anti-Raid', Icon: Shield, badge: null },
       ]
     },
     {
       id: 'management',
       label: 'SERVER MANAGEMENT',
       items: [
-        { path: '/dashboard/users', label: 'Users', icon: '👥', badge: null },
-        { path: '/dashboard/giveaways', label: 'Giveaways', icon: '🎁', badge: null },
-        { path: '/dashboard/audit-logs', label: 'Audit Logs', icon: '📋', badge: null },
-        { path: '/dashboard/transcripts', label: 'Transcripts', icon: '📄', badge: null },
-        { path: '/dashboard/staff-verification/' + (selectedGuild?.id || ''), label: 'Staff Verification', icon: '✅', badge: null, disabled: !selectedGuild },
+        { path: '/dashboard/users', label: 'Users', Icon: Users, badge: null },
+        { path: '/dashboard/giveaways', label: 'Giveaways', Icon: Gift, badge: null },
+        { path: '/dashboard/audit-logs', label: 'Audit Logs', Icon: FileText, badge: null },
+        { path: '/dashboard/transcripts', label: 'Transcripts', Icon: MessageSquare, badge: null },
+        { path: '/dashboard/staff-verification/' + (selectedGuild?.id || ''), label: 'Staff Verification', Icon: Lock, badge: null, disabled: !selectedGuild },
       ]
     },
     {
       id: 'features',
       label: 'MORE FEATURES',
       items: [
-        { path: '/dashboard/settings', label: 'Settings', icon: '⚙️', badge: null },
-        { path: '/dashboard/ai', label: 'AI Characters', icon: '🤖', badge: null },
-        { path: '/dashboard/premium', label: 'Premium', icon: '👑', badge: null, special: 'premium' },
+        { path: '/dashboard/settings', label: 'Settings', Icon: Settings, badge: null },
+        { path: '/dashboard/ai', label: 'AI Characters', Icon: Sparkles, badge: null },
+        { path: '/dashboard/premium', label: 'Premium', Icon: Crown, badge: null, special: 'premium' },
       ]
     }
   ];
@@ -108,9 +127,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
           onClick={() => setIsOpen(!isOpen)}
           className="p-2 hover:bg-white/10 rounded-xl transition-colors hidden lg:block"
         >
-          <svg className={`w-5 h-5 text-slate-400 transition-transform duration-500 ${!isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-500 ${!isOpen ? 'rotate-180' : 'rotate-90'}`} />
         </button>
       </div>
 
@@ -139,9 +156,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
             >
               <span>{category.label}</span>
               {isOpen && (
-                <svg className={`w-3.5 h-3.5 transition-transform duration-300 ${expandedCategories[category.id] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7-7m0 0L5 14m7-7v12" />
-                </svg>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${expandedCategories[category.id] ? 'rotate-180' : ''}`} />
               )}
             </button>
 
@@ -156,7 +171,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
                         className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 cursor-not-allowed opacity-40"
                         title="Select a server first"
                       >
-                        <span className="text-lg">{item.icon}</span>
+                        <item.Icon className="w-5 h-5 flex-shrink-0" />
                         {isOpen && <span className="text-sm font-medium flex-1">{item.label}</span>}
                       </div>
                     );
@@ -178,7 +193,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
                           : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
                       }`}
                     >
-                      <span className="text-lg">{item.icon}</span>
+                      <item.Icon className="w-5 h-5 flex-shrink-0" />
                       {isOpen && (
                         <>
                           <span className="text-sm font-medium flex-1">{item.label}</span>
@@ -201,11 +216,9 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
               onClick={() => toggleCategory('admin')}
               className="w-full flex items-center justify-between px-3 py-2 mb-2 text-xs font-bold text-red-600 uppercase tracking-wider hover:text-red-500 transition-colors"
             >
-              <span>⚡ Admin</span>
+              <span>Admin</span>
               {isOpen && (
-                <svg className={`w-3.5 h-3.5 transition-transform duration-300 ${expandedCategories['admin'] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7-7m0 0L5 14m7-7v12" />
-                </svg>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${expandedCategories['admin'] ? 'rotate-180' : ''}`} />
               )}
             </button>
             {expandedCategories['admin'] && (
@@ -218,7 +231,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
                     : 'text-red-400/70 hover:bg-red-500/10 hover:text-red-300'
                 }`}
               >
-                <span className="text-lg">🔐</span>
+                <Zap className="w-5 h-5 flex-shrink-0" />
                 {isOpen && (
                   <>
                     <span className="text-sm font-medium flex-1">Admin Panel</span>
@@ -255,9 +268,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
               className={`p-2 text-slate-400 hover:text-cyan-400 hover:bg-cyan-400/10 rounded-lg transition-all ${!isOpen && 'mt-2'}`}
               title="Logout"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
+              <LogOut className="w-5 h-5" />
             </button>
           </div>
         )}
