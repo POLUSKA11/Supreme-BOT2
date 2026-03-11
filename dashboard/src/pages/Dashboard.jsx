@@ -76,9 +76,9 @@ export default function Dashboard({ selectedGuild }) {
       plugins: [
         { id: 'welcome', name: 'Welcome & Goodbye', icon: '👋', description: 'Send custom messages when members join or leave', enabled: true, path: '/dashboard/welcome-setup/' + selectedGuild?.id },
         { id: 'tickets', name: 'Tickets', icon: '🎫', description: 'Create and manage support tickets', enabled: true, path: '/dashboard/tickets' },
-        { id: 'leveling', name: 'Leveling System', icon: '📈', description: 'Track member activity and assign ranks', enabled: true, path: '/dashboard/leveling' },
+        { id: 'leveling', name: 'Levels', icon: '📈', description: 'Track member activity and assign ranks', enabled: true, path: '/dashboard/leveling' },
         { id: 'giveaways', name: 'Giveaways', icon: '🎁', description: 'Host exciting giveaways for your community', enabled: true, path: '/dashboard/giveaways' },
-        { id: 'moderation', name: 'Moderation', icon: '🛡️', description: 'Anti-raid, spam filtering, and auto-moderation', enabled: true, path: '/dashboard/anti-raid' },
+        { id: 'moderation', name: 'Anti-Raid', icon: '🛡️', description: 'Anti-raid, spam filtering, and auto-moderation', enabled: true, path: '/dashboard/anti-raid' },
         { id: 'logs', name: 'Audit Logs', icon: '📋', description: 'Track all server activities and changes', enabled: true, path: '/dashboard/audit-logs' },
         { id: 'transcripts', name: 'Transcripts', icon: '📄', description: 'Save and export ticket transcripts', enabled: true, path: '/dashboard/transcripts' },
         { id: 'ai', name: 'AI Characters', icon: '🤖', description: 'Create AI-powered chatbots for your server', enabled: true, path: '/dashboard/ai' },
@@ -88,9 +88,10 @@ export default function Dashboard({ selectedGuild }) {
       id: 'essentials',
       name: 'Essentials',
       plugins: [
+        { id: 'dashboard', name: 'Dashboard', icon: '📊', description: 'View server statistics and overview', enabled: true, path: '/dashboard' },
         { id: 'welcome', name: 'Welcome & Goodbye', icon: '👋', description: 'Send custom messages when members join or leave', enabled: true, path: '/dashboard/welcome-setup/' + selectedGuild?.id },
         { id: 'tickets', name: 'Tickets', icon: '🎫', description: 'Create and manage support tickets', enabled: true, path: '/dashboard/tickets' },
-        { id: 'leveling', name: 'Leveling System', icon: '📈', description: 'Track member activity and assign ranks', enabled: true, path: '/dashboard/leveling' },
+        { id: 'leveling', name: 'Levels', icon: '📈', description: 'Track member activity and assign ranks', enabled: true, path: '/dashboard/leveling' },
       ]
     },
     {
@@ -98,14 +99,14 @@ export default function Dashboard({ selectedGuild }) {
       name: 'Community',
       plugins: [
         { id: 'giveaways', name: 'Giveaways', icon: '🎁', description: 'Host exciting giveaways for your community', enabled: true, path: '/dashboard/giveaways' },
-        { id: 'leveling', name: 'Leveling System', icon: '📈', description: 'Track member activity and assign ranks', enabled: true, path: '/dashboard/leveling' },
+        { id: 'leveling', name: 'Levels', icon: '📈', description: 'Track member activity and assign ranks', enabled: true, path: '/dashboard/leveling' },
       ]
     },
     {
       id: 'moderation',
       name: 'Moderation',
       plugins: [
-        { id: 'moderation', name: 'Moderation', icon: '🛡️', description: 'Anti-raid, spam filtering, and auto-moderation', enabled: true, path: '/dashboard/anti-raid' },
+        { id: 'moderation', name: 'Anti-Raid', icon: '🛡️', description: 'Anti-raid, spam filtering, and auto-moderation', enabled: true, path: '/dashboard/anti-raid' },
         { id: 'logs', name: 'Audit Logs', icon: '📋', description: 'Track all server activities and changes', enabled: true, path: '/dashboard/audit-logs' },
       ]
     },

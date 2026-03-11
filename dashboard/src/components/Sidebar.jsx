@@ -57,9 +57,9 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
       id: 'essentials',
       label: 'ESSENTIALS',
       items: [
-        { path: '/dashboard', label: t('nav.overview'), icon: '📊', badge: null },
-        { path: '/dashboard/welcome-setup/' + (selectedGuild?.id || ''), label: 'Welcome & Goodbye', icon: '👋', badge: '✨', disabled: !selectedGuild },
-        { path: '/dashboard/tickets', label: t('nav.tickets'), icon: '🎫', badge: null },
+        { path: '/dashboard', label: 'Dashboard', icon: '📊', badge: null },
+        { path: '/dashboard/welcome-setup/' + (selectedGuild?.id || ''), label: 'Welcome & Goodbye', icon: '👋', badge: null, disabled: !selectedGuild },
+        { path: '/dashboard/tickets', label: 'Tickets', icon: '🎫', badge: null },
         { path: '/dashboard/ticket-setup', label: 'Ticket Setup', icon: '⚙️', badge: null },
         { path: '/dashboard/leveling', label: 'Levels', icon: '📈', badge: null },
         { path: '/dashboard/anti-raid', label: 'Anti-Raid', icon: '🛡️', badge: null },
@@ -69,20 +69,20 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
       id: 'management',
       label: 'SERVER MANAGEMENT',
       items: [
-        { path: '/dashboard/users', label: t('nav.users'), icon: '👥', badge: null },
-        { path: '/dashboard/giveaways', label: t('nav.giveaways'), icon: '🎁', badge: null },
-        { path: '/dashboard/audit-logs', label: t('nav.auditLogs'), icon: '📋', badge: null },
-        { path: '/dashboard/transcripts', label: t('nav.transcripts'), icon: '📄', badge: null },
-        { path: '/dashboard/staff-verification/' + (selectedGuild?.id || ''), label: t('nav.staffVerification'), icon: '✅', badge: null, disabled: !selectedGuild },
+        { path: '/dashboard/users', label: 'Users', icon: '👥', badge: null },
+        { path: '/dashboard/giveaways', label: 'Giveaways', icon: '🎁', badge: null },
+        { path: '/dashboard/audit-logs', label: 'Audit Logs', icon: '📋', badge: null },
+        { path: '/dashboard/transcripts', label: 'Transcripts', icon: '📄', badge: null },
+        { path: '/dashboard/staff-verification/' + (selectedGuild?.id || ''), label: 'Staff Verification', icon: '✅', badge: null, disabled: !selectedGuild },
       ]
     },
     {
       id: 'features',
       label: 'MORE FEATURES',
       items: [
-        { path: '/dashboard/settings', label: t('nav.settings'), icon: '⚙️', badge: null },
+        { path: '/dashboard/settings', label: 'Settings', icon: '⚙️', badge: null },
         { path: '/dashboard/ai', label: 'AI Characters', icon: '🤖', badge: null },
-        { path: '/dashboard/premium', label: 'Premium', icon: '👑', badge: '⭐', special: 'premium' },
+        { path: '/dashboard/premium', label: 'Premium', icon: '👑', badge: null, special: 'premium' },
       ]
     }
   ];
@@ -91,12 +91,12 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
 
   return (
     <div className={`${isOpen ? 'w-72' : 'w-20'} h-full bg-gradient-to-b from-slate-950/95 to-slate-900/95 backdrop-blur-xl border-r border-white/8 text-white transition-all duration-500 flex flex-col`}>
-      {/* Header with Logo */}
+      {/* Header with Nexus Logo */}
       <div className="p-4 lg:p-6 flex items-center justify-between border-b border-white/8">
         {isOpen && (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30 overflow-hidden font-bold text-white text-sm">
-              N
+            <div className="w-8 h-8 rounded-lg overflow-hidden shadow-lg shadow-cyan-500/30">
+              <img src="/logo.webp" alt="Nexus" className="w-full h-full object-cover" />
             </div>
             <div>
               <h1 className="text-lg font-black tracking-tight">Nexus</h1>
@@ -172,7 +172,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
                         active
                           ? item.special === 'premium'
                             ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                            : 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
+                            : 'bg-cyan-600/20 text-cyan-300 border border-cyan-500/30'
                           : item.special === 'premium'
                           ? 'text-amber-400/70 hover:bg-amber-500/10 hover:text-amber-400'
                           : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
@@ -183,7 +183,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
                         <>
                           <span className="text-sm font-medium flex-1">{item.label}</span>
                           {item.badge && <span className="text-xs">{item.badge}</span>}
-                          {active && <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]"></div>}
+                          {active && <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>}
                         </>
                       )}
                     </Link>
@@ -238,7 +238,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
             <img
               src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : 'https://cdn.discordapp.com/embed/avatars/0.png'}
               alt="Avatar"
-              className="w-10 h-10 rounded-full border-2 border-indigo-500/30"
+              className="w-10 h-10 rounded-full border-2 border-cyan-500/30"
             />
             {isOpen && (
               <div className="flex-1 min-w-0">
@@ -252,7 +252,7 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
             )}
             <button
               onClick={handleLogout}
-              className={`p-2 text-slate-400 hover:text-indigo-400 hover:bg-indigo-400/10 rounded-lg transition-all ${!isOpen && 'mt-2'}`}
+              className={`p-2 text-slate-400 hover:text-cyan-400 hover:bg-cyan-400/10 rounded-lg transition-all ${!isOpen && 'mt-2'}`}
               title="Logout"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
