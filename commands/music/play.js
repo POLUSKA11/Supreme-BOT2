@@ -77,19 +77,24 @@ module.exports = {
   },
 
   async execute(interaction) {
+    console.log("[PLAY CMD] Received /play command");
     await interaction.deferReply();
+    console.log("[PLAY CMD] Deferred reply");
 
     const { valid, error, voiceChannel } = validateVoiceChannel(interaction);
     if (!valid) {
+      console.log("[PLAY CMD] Voice channel validation failed:", error);
       return interaction.editReply({
         embeds: [buildErrorEmbed(error, interaction.client)],
       });
     }
+    console.log("[PLAY CMD] Voice channel validated successfully");
 
     const query = interaction.options.getString("query", true);
-    const sourceOpt = interaction.options.getString("source");
+    let sourceOpt = interaction.options.getString("source");
     const shuffle = interaction.options.getBoolean("shuffle") || false;
     const insert = interaction.options.getBoolean("insert") || false;
+    console.log(`[PLAY CMD] Query: ${query}, Source: ${sourceOpt}`);
 
     const player = useMainPlayer();
 
@@ -99,15 +104,27 @@ module.exports = {
       soundcloud: QueryType.SOUNDCLOUD_SEARCH,
       apple_music: QueryType.APPLE_MUSIC_SEARCH,
     };
-    const searchEngine = sourceOpt ? queryTypeMap[sourceOpt] : QueryType.AUTO;
+    let searchEngine = sourceOpt ? queryTypeMap[sourceOpt] : QueryType.AUTO;
+
+    // Explicitly handle SoundCloud URLs to ensure correct extractor usage
+    if (!sourceOpt && (query.includes("soundcloud.com/playlist/") || query.includes("soundcloud.com/sets/"))) {
+        searchEngine = QueryType.SOUNDCLOUD_PLAYLIST;
+        console.log("[PLAY CMD] Detected SoundCloud playlist URL, forcing searchEngine to SOUNDCLOUD_PLAYLIST");
+    } else if (!sourceOpt && query.includes("soundcloud.com/")) {
+        searchEngine = QueryType.SOUNDCLOUD_TRACK;
+        console.log("[PLAY CMD] Detected SoundCloud track URL, forcing searchEngine to SOUNDCLOUD_TRACK");
+    }
 
     try {
+      console.log(`[PLAY CMD] Searching for track(s) with searchEngine: ${searchEngine}...`);
       const result = await player.search(query, {
         requestedBy: interaction.user,
         searchEngine,
       });
+      console.log("[PLAY CMD] Search complete");
 
       if (!result || result.isEmpty()) {
+        console.log("[PLAY CMD] No results found");
         return interaction.editReply({
           embeds: [
             buildErrorEmbed(
@@ -118,6 +135,7 @@ module.exports = {
         });
       }
 
+      console.log("[PLAY CMD] Creating or getting queue...");
       const queue = player.nodes.create(interaction.guild, {
         metadata: {
           channel: interaction.channel,
@@ -133,14 +151,20 @@ module.exports = {
         connectionTimeout: 30000,
         bufferingTimeout: 3000,
       });
+      console.log("[PLAY CMD] Queue created or retrieved");
 
       if (!queue.connection) {
+        console.log("[PLAY CMD] Connecting to voice channel...");
         await queue.connect(voiceChannel);
+        console.log("[PLAY CMD] Connected to voice channel");
       } else if (queue.connection.channel.id !== voiceChannel.id) {
+        console.log("[PLAY CMD] Switching voice channel...");
         await queue.connect(voiceChannel);
+        console.log("[PLAY CMD] Switched voice channel");
       }
 
       if (result.hasPlaylist()) {
+        console.log("[PLAY CMD] Playlist found");
         let tracks = result.tracks;
         if (shuffle) {
           tracks = [...tracks].sort(() => Math.random() - 0.5);
@@ -151,8 +175,11 @@ module.exports = {
           queue.addTrack(tracks);
         }
 
+        console.log(`[PLAY CMD] Added ${tracks.length} tracks to queue. First track duration: ${formatDuration(tracks[0]?.durationMS)}, isLive: ${tracks[0]?.isLive}`);
         if (!queue.isPlaying()) {
+          console.log("[PLAY CMD] Starting playback of playlist...");
           await queue.node.play();
+          console.log("[PLAY CMD] Playback started");
         }
 
         const embed = buildPlaylistAddedEmbed(
@@ -163,6 +190,7 @@ module.exports = {
         );
         return interaction.editReply({ embeds: [embed] });
       } else {
+        console.log("[PLAY CMD] Single track found");
         const track = result.tracks[0];
         if (insert && queue.currentTrack) {
           queue.insertTrack(track, 0);
@@ -170,8 +198,11 @@ module.exports = {
           queue.addTrack(track);
         }
 
+        console.log(`[PLAY CMD] Added single track to queue. Duration: ${formatDuration(track?.durationMS)}, isLive: ${track?.isLive}`);
         if (!queue.isPlaying()) {
+          console.log("[PLAY CMD] Starting playback of single track...");
           await queue.node.play();
+          console.log("[PLAY CMD] Playback started");
         }
 
         const isNowPlaying =
