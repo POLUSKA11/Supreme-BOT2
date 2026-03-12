@@ -93,7 +93,6 @@ export default function Dashboard({ selectedGuild }) {
         { id: 'moderation', name: 'Anti-Raid', Icon: Shield, description: 'Anti-raid, spam filtering, and auto-moderation', enabled: true, path: '/dashboard/anti-raid' },
         { id: 'logs', name: 'Audit Logs', Icon: FileText, description: 'Track all server activities and changes', enabled: true, path: '/dashboard/audit-logs' },
         { id: 'transcripts', name: 'Transcripts', Icon: MessageSquare, description: 'Save and export ticket transcripts', enabled: true, path: '/dashboard/transcripts' },
-        { id: 'ai', name: 'AI Characters', Icon: Sparkles, description: 'Create AI-powered chatbots for your server', enabled: true, path: '/dashboard/ai' },
       ]
     },
     {

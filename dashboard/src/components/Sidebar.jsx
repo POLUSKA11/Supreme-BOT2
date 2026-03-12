@@ -100,7 +100,6 @@ export default function Sidebar({ user, selectedGuild, setSelectedGuild, setIsAu
       label: 'MORE FEATURES',
       items: [
         { path: '/dashboard/settings', label: 'Settings', Icon: Settings, badge: null },
-        { path: '/dashboard/ai', label: 'AI Characters', Icon: Sparkles, badge: null },
         { path: '/dashboard/premium', label: 'Premium', Icon: Crown, badge: null, special: 'premium' },
       ]
     }

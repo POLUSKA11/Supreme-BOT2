@@ -5,14 +5,13 @@ import {
   Image as ImageIcon, 
   FileText, 
   Crown, 
-  Save, 
-  RotateCcw, 
   ShieldCheck,
   Zap,
   CheckCircle2,
   XCircle,
   AlertCircle
 } from 'lucide-react';
+import SaveBar from '../components/SaveBar';
 
 export default function Settings({ selectedGuild }) {
   const { t } = useTranslation();
@@ -20,6 +19,10 @@ export default function Settings({ selectedGuild }) {
   const [settings, setSettings] = useState({
     autoRole: ''
   });
+  const [initialSettings, setInitialSettings] = useState({
+    autoRole: ''
+  });
+  
   const [guildData, setGuildData] = useState({ roles: [], channels: [] });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -33,8 +36,23 @@ export default function Settings({ selectedGuild }) {
     banner: '',
     bio: 'Professional Discord Solutions'
   });
+  const [initialCustomization, setInitialCustomization] = useState({
+    name: '',
+    avatar: '',
+    banner: '',
+    bio: 'Professional Discord Solutions'
+  });
+  
   const [isPremium, setIsPremium] = useState(false);
-  const [customSaving, setCustomSaving] = useState(false);
+
+  // Track if there are unsaved changes
+  const [isDirty, setIsDirty] = useState(false);
+
+  useEffect(() => {
+    const hasChanges = JSON.stringify(settings) !== JSON.stringify(initialSettings) ||
+                       JSON.stringify(customization) !== JSON.stringify(initialCustomization);
+    setIsDirty(hasChanges);
+  }, [settings, customization, initialSettings, initialCustomization]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,9 +66,11 @@ export default function Settings({ selectedGuild }) {
 
         if (settingsRes.ok) {
           const data = await settingsRes.json();
-          setSettings({
+          const settingsData = {
             autoRole: data.autoRole || ''
-          });
+          };
+          setSettings(settingsData);
+          setInitialSettings(settingsData);
         }
 
         if (guildDataRes.ok) {
@@ -61,6 +81,10 @@ export default function Settings({ selectedGuild }) {
         if (customRes.ok) {
           const data = await customRes.json();
           setCustomization(prev => ({
+            ...prev,
+            ...data
+          }));
+          setInitialCustomization(prev => ({
             ...prev,
             ...data
           }));
@@ -92,23 +116,33 @@ export default function Settings({ selectedGuild }) {
 
   const showMessage = (type, text) => {
     setMessage({ type, text });
-    setTimeout(() => setMessage({ type: '', text: '' }), 5000);
+    setTimeout(() => setMessage({ type: '', text: '' }), 4000);
   };
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      const response = await fetch('/api/dashboard/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(settings)
-      });
+      const [settingsRes, customRes] = await Promise.all([
+        fetch('/api/dashboard/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(settings)
+        }),
+        isPremium ? fetch('/api/dashboard/bot/customization', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(customization)
+        }) : Promise.resolve({ ok: true })
+      ]);
 
-      if (response.ok) {
-        showMessage('success', 'General settings saved successfully!');
+      if (settingsRes.ok && customRes.ok) {
+        showMessage('success', 'All settings saved successfully!');
+        setInitialSettings(settings);
+        setInitialCustomization(customization);
       } else {
-        showMessage('error', 'Failed to save general settings.');
+        showMessage('error', 'Failed to save some settings.');
       }
     } catch (error) {
       showMessage('error', 'An error occurred while saving.');
@@ -117,28 +151,10 @@ export default function Settings({ selectedGuild }) {
     }
   };
 
-  const handleCustomSave = async () => {
-    if (!isPremium) return;
-    setCustomSaving(true);
-    try {
-      const response = await fetch('/api/dashboard/bot/customization', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(customization)
-      });
-
-      if (response.ok) {
-        showMessage('success', 'Bot customization applied in real-time!');
-      } else {
-        const data = await response.json();
-        showMessage('error', data.error || 'Failed to save customization.');
-      }
-    } catch (error) {
-      showMessage('error', 'An error occurred.');
-    } finally {
-      setCustomSaving(false);
-    }
+  const handleDiscard = () => {
+    setSettings(initialSettings);
+    setCustomization(initialCustomization);
+    showMessage('info', 'Changes discarded.');
   };
 
   const resetBio = () => {
@@ -157,7 +173,7 @@ export default function Settings({ selectedGuild }) {
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700">
+    <div className="p-6 lg:p-8 max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700 pb-32">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
@@ -171,17 +187,6 @@ export default function Settings({ selectedGuild }) {
           <p className="text-slate-400 mt-1 text-sm">Customize how Nexus looks and speaks in your server.</p>
         </div>
       </header>
-
-      {message.text && (
-        <div className={`p-4 rounded-2xl border flex items-center gap-3 animate-in slide-in-from-top duration-300 ${
-          message.type === 'success' 
-            ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
-            : 'bg-red-500/10 border-red-500/20 text-red-400'
-        }`}>
-          {message.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
-          <span className="font-medium">{message.text}</span>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left: Customization Form */}
@@ -267,22 +272,12 @@ export default function Settings({ selectedGuild }) {
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-3 pt-4">
-              <button 
-                onClick={handleCustomSave}
-                disabled={customSaving}
-                className="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-sm font-bold transition-all flex items-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50"
-              >
-                {customSaving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <Save className="w-4 h-4" />}
-                Apply Real-Time Changes
-              </button>
-              <button 
-                onClick={resetBio}
-                className="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-bold transition-all border border-white/5 flex items-center gap-2"
-              >
-                <RotateCcw className="w-4 h-4" /> Reset Bio
-              </button>
-            </div>
+            <button 
+              onClick={resetBio}
+              className="w-full px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-bold transition-all border border-white/5 flex items-center justify-center gap-2"
+            >
+              Reset Bio to Default
+            </button>
           </section>
 
           {/* General Settings */}
@@ -306,15 +301,6 @@ export default function Settings({ selectedGuild }) {
                 </select>
                 <p className="text-[10px] text-slate-500 px-1">Role given to new members automatically upon joining.</p>
               </div>
-
-              <button 
-                onClick={handleSave}
-                disabled={saving}
-                className="w-full py-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/20 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                {saving ? <div className="w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div> : <Save className="w-4 h-4" />}
-                Save Automation Settings
-              </button>
             </div>
           </section>
         </div>
@@ -383,12 +369,22 @@ export default function Settings({ selectedGuild }) {
 
             <div className="mt-4 p-4 bg-cyan-500/5 border border-cyan-500/10 rounded-2xl">
               <p className="text-[10px] text-cyan-400/70 leading-relaxed">
-                <span className="font-bold text-cyan-400">Note:</span> Real-time changes apply instantly to the bot's nickname in your server. Avatar and bio changes are displayed in the bot's profile within the server context.
+                <span className="font-bold text-cyan-400">Note:</span> Real-time changes apply instantly to the bot's nickname in your server.
               </p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Discord-style Save Bar */}
+      <SaveBar 
+        isDirty={isDirty}
+        isSaving={saving}
+        onSave={handleSave}
+        onDiscard={handleDiscard}
+        message={message.text}
+        messageType={message.type}
+      />
     </div>
   );
 }
