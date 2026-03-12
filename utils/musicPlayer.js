@@ -241,9 +241,10 @@ async function initializePlayer(client) {
         ytdlOptions: {
             quality: 'highestaudio',
             highWaterMark: 1 << 25,
+            filter: 'audioonly',
         },
         // Voice Fixes:
-        connectionTimeout: 30000,
+        connectionTimeout: 60000,
         smoothVolume: true,
         lagMonitor: 1000,
     });
@@ -260,10 +261,10 @@ async function initializePlayer(client) {
     }
 
     // Load YouTube extractor (youtubei — no API key needed)
-    // We use the WEB_EMBEDDED client as it is currently the most stable for signature extraction
+    // We use the TV_EMBEDDED client as it is currently the most stable for signature extraction
     await player.extractors.register(YoutubeiExtractor, {
         streamOptions: {
-            useClient: 'WEB_EMBEDDED', 
+            useClient: 'TV_EMBEDDED', 
             highWaterMark: 1 << 25,
         },
         suppressWarnings: true
