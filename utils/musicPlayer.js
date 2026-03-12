@@ -246,6 +246,11 @@ async function initializePlayer(client) {
         connectionTimeout: 60000,
         smoothVolume: true,
         lagMonitor: 1000,
+        ytdlOptions: {
+            quality: 'highestaudio',
+            highWaterMark: 1 << 25,
+            filter: 'audioonly',
+        }
     });
 
     // Use ffmpeg-static if available
