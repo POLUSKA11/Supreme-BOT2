@@ -16,7 +16,7 @@
 
 const { Player, GuildQueueEvent } = require('discord-player');
 const { DefaultExtractors } = require('@discord-player/extractor');
-const { SoundCloudExtractor } = require('discord-player-soundcloud');
+const { SoundcloudExtractor } = require('discord-player-soundcloud');
 const { YoutubeSabrExtractor } = require('discord-player-googlevideo');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits } = require('discord.js');
 const { recordPlay } = require('./musicDb');
@@ -275,9 +275,10 @@ async function initializePlayer(client) {
 
     // Load all default extractors (Spotify, SoundCloud, Apple Music, Vimeo, etc.)
     // Explicitly register SoundCloud extractor to handle potential 'LIVE' stream misidentification
+    // Note: The export is 'SoundcloudExtractor' (lowercase 'c'), not 'SoundCloudExtractor'
     await player.extractors.loadMulti(DefaultExtractors);
-    await player.extractors.register(SoundCloudExtractor, {});
-    console.log('🎵 [MUSIC] Default extractors loaded, including SoundCloudExtractor');
+    await player.extractors.register(SoundcloudExtractor, {});
+    console.log('🎵 [MUSIC] Default extractors loaded, including SoundcloudExtractor');
 
     // ─── Player Events ────────────────────────────────────────────────────────
 
@@ -311,8 +312,6 @@ async function initializePlayer(client) {
 
     player.events.on(GuildQueueEvent.PlayerStart, async (queue, track) => {
         console.log(`🎵 [PLAYER] Started playing: ${track.title} in ${queue.guild.name}`);
-        // playerStart: announce now-playing + record to TiDB
-    player.events.on(GuildQueueEvent.playerStart, async (queue, track) => {
         const channel = queue.metadata?.channel;
 
         // Record play to TiDB history
