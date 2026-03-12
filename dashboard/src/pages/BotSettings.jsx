@@ -5,8 +5,7 @@ export default function Settings({ selectedGuild }) {
   const { t } = useTranslation();
   
   const [settings, setSettings] = useState({
-    autoRole: '',
-    ticketCategory: ''
+    autoRole: ''
   });
   const [guildData, setGuildData] = useState({ roles: [], channels: [] });
   const [loading, setLoading] = useState(true);
@@ -36,8 +35,7 @@ export default function Settings({ selectedGuild }) {
         if (settingsRes.ok) {
           const data = await settingsRes.json();
           setSettings({
-            autoRole: data.autoRole || '',
-            ticketCategory: data.ticketCategory || ''
+            autoRole: data.autoRole || ''
           });
         }
 
@@ -204,7 +202,7 @@ export default function Settings({ selectedGuild }) {
                     <img src={customization.banner} alt="Bot Banner" className="w-full h-full object-cover" />
                   ) : (
                     <div className="text-center">
-                      <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">TICKET TOOL</p>
+                      <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">NEXUS BOT</p>
                     </div>
                   )}
                 </div>
@@ -236,8 +234,8 @@ export default function Settings({ selectedGuild }) {
           {/* Bio Section */}
           <div className="space-y-4">
             <div className="flex justify-between items-end">
-              <label className="text-sm font-bold text-slate-400 uppercase tracking-wider">Bio (190 character limit)</label>
-              <span className="text-[10px] text-slate-500">{customization.bio.length}/190</span>
+              <label className="text-sm font-bold text-slate-400 uppercase tracking-wider">Bot Bio / Description</label>
+              <span className="text-[10px] text-slate-500 font-mono">{customization.bio.length}/190</span>
             </div>
             <div className="relative">
               <textarea 
@@ -315,24 +313,6 @@ export default function Settings({ selectedGuild }) {
               </select>
               <p className="text-[10px] text-slate-500 px-2">Role given to new members automatically.</p>
             </div>
-          </div>
-        </section>
-
-        <section className="glass rounded-2xl md:rounded-3xl p-5 md:p-8 border border-white/5 space-y-6">
-          <h2 className="text-lg md:text-xl font-bold text-white flex items-center gap-2">
-            <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4v-3a2 2 0 00-2-2H5z" /></svg>
-            Ticket System
-          </h2>
-          <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-400 uppercase tracking-wider">Ticket Category ID</label>
-            <input 
-              type="text" 
-              value={settings.ticketCategory} 
-              onChange={(e) => setSettings({...settings, ticketCategory: e.target.value})}
-              className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-red-500/50 outline-none transition-all"
-              placeholder="Enter Category ID"
-            />
-            <p className="text-[10px] text-slate-500 px-2">Category where new ticket channels will be created.</p>
           </div>
         </section>
 

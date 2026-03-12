@@ -1098,12 +1098,8 @@ router.get('/settings', requireAuth, requireGuildAccess, async (req, res) => {
         // Fetch auto-role from storage (same key as /auto-role command)
         const autoRoleId = storage.get(guild.id, 'autoRoleId') || '';
         
-        // Fetch ticket category from storage
-        const ticketCategory = storage.get(guild.id, 'ticketCategoryId') || '';
-
         res.json({
-            autoRole: autoRoleId,
-            ticketCategory: ticketCategory
+            autoRole: autoRoleId
         });
     } catch (error) {
         console.error('Settings fetch error:', error);
@@ -1119,16 +1115,11 @@ router.post('/settings', requireAuth, requireGuildAccess, async (req, res) => {
         const guild = getSelectedGuild(req);
         if (!guild) return res.status(404).json({ error: 'No server selected' });
 
-        const { autoRole, ticketCategory } = req.body;
+        const { autoRole } = req.body;
 
         // Save auto-role (same key as /auto-role command)
         if (autoRole !== undefined) {
             storage.set(guild.id, 'autoRoleId', autoRole || null);
-        }
-
-        // Save ticket category
-        if (ticketCategory !== undefined) {
-            storage.set(guild.id, 'ticketCategoryId', ticketCategory || null);
         }
 
         res.json({ success: true, message: 'Settings saved successfully' });

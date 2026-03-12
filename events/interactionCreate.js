@@ -216,7 +216,7 @@ module.exports = {
                     await storage.set(guild.id, 'ticketCount', ticketCount);
                     
                     const ticketNumber = ticketCount.toString().padStart(4, '0');
-                    let ticketCategoryId = storage.get(guild.id, 'ticketCategory') || CONFIG.TICKET_CATEGORY_ID;
+                    let ticketCategoryId = storage.get(guild.id, 'ticketCategoryId') || CONFIG.TICKET_CATEGORY_ID;
 
                     // Validate category exists
                     if (ticketCategoryId) {
@@ -655,7 +655,7 @@ module.exports = {
                         await storage.set(guild.id, 'ticketCount', ticketCount);
                         
                         const ticketNumber = ticketCount.toString().padStart(4, '0');
-                        let ticketCategoryId = storage.get(guild.id, 'ticketCategory') || CONFIG.TICKET_CATEGORY_ID;
+                        let ticketCategoryId = storage.get(guild.id, 'ticketCategoryId') || CONFIG.TICKET_CATEGORY_ID;
                         
                         // Validate category exists
                         if (ticketCategoryId) {
