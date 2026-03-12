@@ -23,14 +23,16 @@ require('dotenv').config();
 
 // --- CRASH RECOVERY ---
 process.on('uncaughtException', (err) => {
-    console.error('🔥 [FATAL] Uncaught Exception:', err);
+    console.error("🔥 [FATAL] Uncaught Exception:", err);
+    if (err.stack) console.error(err.stack);
     // Give time for logs to flush before exiting
     setTimeout(() => process.exit(1), 1000);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-    console.error('🔥 [FATAL] Unhandled Rejection at:', promise, 'reason:', reason);
-    console.error('🔄 [RECOVERY] Exiting process for automatic restart...');
+    console.error("🔥 [FATAL] Unhandled Rejection at:", promise, "reason:", reason);
+    if (reason instanceof Error && reason.stack) console.error(reason.stack);
+    console.error("🔄 [RECOVERY] Exiting process for automatic restart...");
     // Give time for logs to flush before exiting
     setTimeout(() => process.exit(1), 1000);
 });
