@@ -38,7 +38,12 @@ module.exports = {
             try {
                 await command.autocomplete(interaction);
             } catch (err) {
-                console.error('❌ [AUTOCOMPLETE ERROR]:', err.message);
+                // Silently ignore "Unknown interaction" (10062) — this happens when the
+                // autocomplete interaction expires before the bot can respond (e.g. slow
+                // YouTube search).  Any other error is still logged for debugging.
+                if (err.code !== 10062 && err.message !== 'Unknown interaction') {
+                    console.error('❌ [AUTOCOMPLETE ERROR]:', err.message);
+                }
             }
             return;
         }

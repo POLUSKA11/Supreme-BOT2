@@ -1,6 +1,8 @@
 FROM node:20-slim
 
 # Install build and audio dependencies
+# Note: libcairo2-dev, libpango1.0-dev, libjpeg-dev, libgif-dev, librsvg2-dev
+# are required by @napi-rs/canvas (used by discord-player-googlevideo and rank cards)
 RUN apt-get update && apt-get install -y \
     python3 \
     make \
@@ -9,6 +11,11 @@ RUN apt-get update && apt-get install -y \
     libtool \
     autoconf \
     automake \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libjpeg-dev \
+    libgif-dev \
+    librsvg2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

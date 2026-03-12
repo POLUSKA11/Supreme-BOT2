@@ -6,13 +6,17 @@
  * Fixes applied:
  *  - @snazzah/davey installed → DAVE protocol crash resolved
  *  - TiDB play-history recording on every playerStart event
- *  - YoutubeiExtractor registered with suppressWarnings option
+ *  - YoutubeSabrExtractor (discord-player-googlevideo) replaces YoutubeiExtractor
+ *    → Fixes: "Failed to extract signature decipher algorithm" and all
+ *      youtubei.js parser JIT errors (GridShelfView, SectionHeaderView, ListView, etc.)
+ *  - youtubei.js overridden to ^16.0.1 in package.json overrides
  *  - Correct PermissionFlagsBits usage for voice permission checks
+ *  - Autocomplete interactions now handle expired/unknown interaction errors gracefully
  */
 
 const { Player, GuildQueueEvent } = require('discord-player');
 const { DefaultExtractors } = require('@discord-player/extractor');
-const { YoutubeiExtractor } = require('discord-player-youtubei');
+const { YoutubeSabrExtractor } = require('discord-player-googlevideo');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits } = require('discord.js');
 const { recordPlay } = require('./musicDb');
 
@@ -238,11 +242,6 @@ async function initializePlayer(client) {
     const player = new Player(client, {
         skipFFmpeg: false,
         useLegacyFFmpeg: false,
-        ytdlOptions: {
-            quality: 'highestaudio',
-            highWaterMark: 1 << 25,
-            filter: 'audioonly',
-        },
         // Voice Fixes:
         connectionTimeout: 60000,
         smoothVolume: true,
@@ -260,15 +259,13 @@ async function initializePlayer(client) {
         console.warn('⚠️ [MUSIC] ffmpeg-static not found, using system ffmpeg');
     }
 
-    // Load YouTube extractor (youtubei — no API key needed)
-    // We use the TV_EMBEDDED client as it is currently the most stable for signature extraction
-    await player.extractors.register(YoutubeiExtractor, {
-        streamOptions: {
-            useClient: 'TV_EMBEDDED', 
-            highWaterMark: 1 << 25,
-        },
-        suppressWarnings: true
-    });
+    // ─── YouTube Extractor (SABR streaming via googlevideo) ───────────────────
+    // Replaces the broken discord-player-youtubei extractor.
+    // YoutubeSabrExtractor uses YouTube's SABR (Streaming ABR) protocol via the
+    // googlevideo library, which is not affected by the signature decipher or
+    // youtubei.js parser JIT errors that broke the old YoutubeiExtractor.
+    await player.extractors.register(YoutubeSabrExtractor, {});
+    console.log('🎵 [MUSIC] YoutubeSabrExtractor registered (discord-player-googlevideo)');
 
     // Load all default extractors (Spotify, SoundCloud, Apple Music, Vimeo, etc.)
     await player.extractors.loadMulti(DefaultExtractors);

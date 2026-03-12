@@ -58,8 +58,12 @@ module.exports = {
                     value: t.url || t.title,
                 }))
             );
-        } catch {
-            await interaction.respond([]);
+        } catch (err) {
+            // Ignore "Unknown interaction" (10062) — the interaction expired before
+            // we could respond.  For all other errors, attempt an empty respond.
+            if (err?.code !== 10062 && err?.message !== 'Unknown interaction') {
+                try { await interaction.respond([]); } catch { /* already expired */ }
+            }
         }
     },
 
