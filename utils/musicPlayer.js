@@ -16,6 +16,7 @@
 
 const { Player, GuildQueueEvent } = require('discord-player');
 const { DefaultExtractors } = require('@discord-player/extractor');
+const { SoundCloudExtractor } = require('discord-player-soundcloud');
 const { YoutubeSabrExtractor } = require('discord-player-googlevideo');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits } = require('discord.js');
 const { recordPlay } = require('./musicDb');
@@ -273,7 +274,10 @@ async function initializePlayer(client) {
     console.log('🎵 [MUSIC] YoutubeSabrExtractor registered (discord-player-googlevideo)');
 
     // Load all default extractors (Spotify, SoundCloud, Apple Music, Vimeo, etc.)
+    // Explicitly register SoundCloud extractor to handle potential 'LIVE' stream misidentification
     await player.extractors.loadMulti(DefaultExtractors);
+    await player.extractors.register(SoundCloudExtractor, {});
+    console.log('🎵 [MUSIC] Default extractors loaded, including SoundCloudExtractor');
 
     // ─── Player Events ────────────────────────────────────────────────────────
 
