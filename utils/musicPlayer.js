@@ -281,7 +281,37 @@ async function initializePlayer(client) {
 
     // ─── Player Events ────────────────────────────────────────────────────────
 
-    // playerStart: announce now-playing + record to TiDB
+    player.events.on(GuildQueueEvent.Error, (queue, error) => {
+        console.error(`❌ [PLAYER ERROR] Guild: ${queue.guild.name} (${queue.guild.id}) | Error: ${error.message}`);
+        if (error.stack) console.error(error.stack);
+        if (queue.metadata?.channel) {
+            queue.metadata.channel.send({ embeds: [buildErrorEmbed(`An unexpected player error occurred: ${error.message}`, queue.client)] }).catch(console.error);
+        }
+    });
+
+    player.events.on(GuildQueueEvent.PlayerError, (queue, error) => {
+        console.error(`❌ [PLAYER PLAYBACK ERROR] Guild: ${queue.guild.name} (${queue.guild.id}) | Error: ${error.message}`);
+        if (error.stack) console.error(error.stack);
+        if (queue.metadata?.channel) {
+            queue.metadata.channel.send({ embeds: [buildErrorEmbed(`A playback error occurred: ${error.message}`, queue.client)] }).catch(console.error);
+        }
+    });
+
+    player.events.on(GuildQueueEvent.ConnectionError, (queue, error) => {
+        console.error(`❌ [PLAYER CONNECTION ERROR] Guild: ${queue.guild.name} (${queue.guild.id}) | Error: ${error.message}`);
+        if (error.stack) console.error(error.stack);
+        if (queue.metadata?.channel) {
+            queue.metadata.channel.send({ embeds: [buildErrorEmbed(`A connection error occurred: ${error.message}`, queue.client)] }).catch(console.error);
+        }
+    });
+
+    player.events.on(GuildQueueEvent.Debug, (queue, message) => {
+        console.log(`[PLAYER DEBUG] Guild: ${queue.guild.name} (${queue.guild.id}) | ${message}`);
+    });
+
+    player.events.on(GuildQueueEvent.PlayerStart, async (queue, track) => {
+        console.log(`🎵 [PLAYER] Started playing: ${track.title} in ${queue.guild.name}`);
+        // playerStart: announce now-playing + record to TiDB
     player.events.on(GuildQueueEvent.playerStart, async (queue, track) => {
         const channel = queue.metadata?.channel;
 
