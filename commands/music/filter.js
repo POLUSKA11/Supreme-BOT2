@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { buildErrorEmbed, COLORS } = require('../../utils/musicPlayer');
+const { buildErrorEmbed, COLORS getGlobalPlayer, } = require('../../utils/musicPlayer');
 
 // Valid filter names as defined in discord-player's AudioFilters
 // Note: 8D audio uses '8D' (uppercase) — not '8d'
@@ -51,7 +51,11 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        const queue = useQueue(interaction.guild.id);
+        const player = getGlobalPlayer();
+        if (!player) {
+            return interaction.editReply({ embeds: [buildErrorEmbed('Music player is not initialized.', interaction.client)] });
+        }
+        const queue = player.nodes.cache.get(interaction.guild.id);
         if (!queue || !queue.isPlaying()) {
             return interaction.editReply({
                 embeds: [buildErrorEmbed('Nothing is playing!', interaction.client)]

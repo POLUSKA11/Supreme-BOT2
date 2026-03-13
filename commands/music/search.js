@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { useMainPlayer, QueryType } = require('discord-player');
-const { validateVoiceChannel, buildErrorEmbed, buildTrackAddedEmbed, buildMusicControlsRow, formatDuration, COLORS } = require('../../utils/musicPlayer');
+const { validateVoiceChannel, buildErrorEmbed, buildTrackAddedEmbed, buildMusicControlsRow, formatDuration, COLORS, getGlobalPlayer } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -40,7 +40,10 @@ module.exports = {
         };
         const searchEngine = sourceOpt ? queryTypeMap[sourceOpt] : QueryType.YOUTUBE_SEARCH;
 
-        const player = useMainPlayer();
+        const player = getGlobalPlayer();
+        if (!player) {
+            return interaction.editReply({ embeds: [buildErrorEmbed('Music player is not initialized.', interaction.client)] });
+        }
 
         try {
             const result = await player.search(query, {

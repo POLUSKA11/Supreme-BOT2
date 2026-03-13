@@ -308,7 +308,7 @@ module.exports = {
             if (customId.startsWith('music_')) {
                 try {
                     const { useQueue, useHistory } = require('discord-player');
-                    const { buildNowPlayingEmbed, buildQueueEmbed, buildMusicControlsRow } = require('../utils/musicPlayer');
+                    const { buildNowPlayingEmbed, buildQueueEmbed, buildMusicControlsRow, getGlobalPlayer } = require('../utils/musicPlayer');
 
                     // Validate user is in a voice channel for control buttons (not for queue view)
                     const memberVoice = interaction.member?.voice?.channel;
@@ -316,7 +316,12 @@ module.exports = {
                         return interaction.reply({ content: '❌ You must be in a voice channel to use music controls!', ephemeral: true }).catch(() => {});
                     }
 
-                    const queue = useQueue(interaction.guild.id);
+                    const player = getGlobalPlayer();
+                    if (!player) {
+                        return interaction.reply({ content: '❌ Music player is not initialized!', ephemeral: true }).catch(() => {});
+                    }
+
+                    const queue = player.nodes.cache.get(interaction.guild.id);
                     if (!queue) {
                         return interaction.reply({ content: '❌ Nothing is playing!', ephemeral: true }).catch(() => {});
                     }

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { useQueue, useMainPlayer, QueryType } = require('discord-player');
-const { buildErrorEmbed, buildTrackAddedEmbed, buildMusicControlsRow, validateVoiceChannel, formatDuration, COLORS } = require('../../utils/musicPlayer');
+const { buildErrorEmbed, buildTrackAddedEmbed, buildMusicControlsRow, validateVoiceChannel, formatDuration, COLORS getGlobalPlayer, } = require('../../utils/musicPlayer');
 const {
     createPlaylist, getUserPlaylists, getPlaylistByName,
     addTrackToPlaylist, getPlaylistTracks, deletePlaylist
@@ -75,7 +75,11 @@ module.exports = {
         // ── Add current track ─────────────────────────────────────────────────
         if (sub === 'add') {
             const name = interaction.options.getString('name', true);
-            const queue = useQueue(interaction.guild.id);
+            const player = getGlobalPlayer();
+        if (!player) {
+            return interaction.editReply({ embeds: [buildErrorEmbed('Music player is not initialized.', interaction.client)] });
+        }
+        const queue = player.nodes.cache.get(interaction.guild.id);
             if (!queue || !queue.currentTrack) {
                 return interaction.editReply({
                     embeds: [buildErrorEmbed('Nothing is currently playing!', interaction.client)]

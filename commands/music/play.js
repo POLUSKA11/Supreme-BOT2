@@ -8,6 +8,7 @@ const {
   buildNowPlayingEmbed,
   buildMusicControlsRow,
   formatDuration,
+  getGlobalPlayer,
 } = require("../../utils/musicPlayer");
 
 module.exports = {
@@ -96,7 +97,14 @@ module.exports = {
     const insert = interaction.options.getBoolean("insert") || false;
     console.log(`[PLAY CMD] Query: ${query}, Source: ${sourceOpt}`);
 
-    const player = useMainPlayer();
+    // Use the global player instance that was initialized at startup
+    const player = getGlobalPlayer();
+    if (!player) {
+      console.error('[PLAY CMD] Global player instance not found!');
+      return interaction.editReply({
+        embeds: [buildErrorEmbed('Music player is not initialized. Please try again in a moment.', interaction.client)],
+      });
+    }
 
     const queryTypeMap = {
       youtube: QueryType.YOUTUBE_SEARCH,

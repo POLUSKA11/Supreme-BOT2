@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { buildNowPlayingEmbed, buildErrorEmbed, buildMusicControlsRow } = require('../../utils/musicPlayer');
+const { buildNowPlayingEmbed, buildErrorEmbed, buildMusicControlsRow, getGlobalPlayer } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,7 +10,16 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        const queue = useQueue(interaction.guild.id);
+        // Get the global player instance
+        const player = getGlobalPlayer();
+        if (!player) {
+            return interaction.editReply({
+                embeds: [buildErrorEmbed('Music player is not initialized. Please try again in a moment.', interaction.client)]
+            });
+        }
+
+        // Get the queue for this guild using the global player
+        const queue = player.nodes.cache.get(interaction.guild.id);
         if (!queue || !queue.isPlaying()) {
             return interaction.editReply({
                 embeds: [buildErrorEmbed('Nothing is currently playing! Use `/play` to start music.', interaction.client)]

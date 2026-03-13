@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue, useMainPlayer, QueryType } = require('discord-player');
-const { buildErrorEmbed, formatDuration, getPlatformEmoji, COLORS } = require('../../utils/musicPlayer');
+const { buildErrorEmbed, formatDuration, getPlatformEmoji, COLORS getGlobalPlayer, } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -31,7 +31,11 @@ module.exports = {
             }
             track = result.tracks[0];
         } else {
-            const queue = useQueue(interaction.guild.id);
+            const player = getGlobalPlayer();
+        if (!player) {
+            return interaction.editReply({ embeds: [buildErrorEmbed('Music player is not initialized.', interaction.client)] });
+        }
+        const queue = player.nodes.cache.get(interaction.guild.id);
             if (!queue?.currentTrack) {
                 return interaction.editReply({
                     embeds: [buildErrorEmbed('Nothing is playing! Use `/trackinfo <query>` to look up a track.', interaction.client)]

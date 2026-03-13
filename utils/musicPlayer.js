@@ -386,6 +386,9 @@ async function initializePlayer(client) {
         }).catch(() => {});
     });
 
+    // Store the player instance globally so all commands can access it
+    setGlobalPlayer(player);
+    console.log('🎵 [MUSIC] Player instance stored globally');
 
     return player;
 }
@@ -410,6 +413,17 @@ function validateVoiceChannel(interaction) {
     return { valid: true, voiceChannel };
 }
 
+// Global player instance storage
+let globalPlayer = null;
+
+function setGlobalPlayer(player) {
+    globalPlayer = player;
+}
+
+function getGlobalPlayer() {
+    return globalPlayer;
+}
+
 module.exports = {
     initializePlayer,
     validateVoiceChannel,
@@ -426,4 +440,6 @@ module.exports = {
     detectPlatform,
     getPlatformEmoji,
     COLORS,
+    setGlobalPlayer,
+    getGlobalPlayer,
 };
