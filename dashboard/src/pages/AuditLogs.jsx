@@ -20,6 +20,7 @@ const ACTION_COLORS = {
 const DEFAULT_COLOR = 'text-slate-400 bg-slate-500/10 border-slate-500/20';
 
 export default function AuditLogs({ selectedGuild }) {
+  const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
@@ -59,7 +60,8 @@ export default function AuditLogs({ selectedGuild }) {
       if (diffHr < 24) return t('auditLogs.hoursAgo', { hours: diffHr });
       if (diffDay < 7) return t('auditLogs.daysAgo', { days: diffDay });
       return date.toLocaleDateString();
-    } catch {
+    } catch (e) {
+      console.error('Error formatting timestamp:', e);
       return ts;
     }
   };

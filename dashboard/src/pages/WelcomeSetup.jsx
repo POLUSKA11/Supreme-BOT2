@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import Toast from '../components/Toast';
 import { Layout, LogIn, LogOut, Image as ImageIcon, Hash, Save, Info, Eye } from 'lucide-react';
 
 export default function WelcomeSetup() {
+  const { t } = useTranslation();
   const { guildId } = useParams();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

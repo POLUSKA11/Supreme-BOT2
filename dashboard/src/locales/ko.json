@@ -402,5 +402,33 @@
       "durationPlaceholder": "예: 30, 60, 90",
       "grantButton": "무료 프리미엄 부여"
     }
+  },
+  "serverSelection": {
+    "failedToFetchServers": "서버를 가져오지 못했습니다",
+    "addBotMessage": "봇을 서버에 추가한 후 이 페이지를 새로고침하세요",
+    "failedToSelectServer": "서버 선택에 실패했습니다",
+    "logoutFailed": "로그아웃에 실패했습니다. 다시 시도하세요.",
+    "loadingServers": "서버를 불러오는 중...",
+    "supremeBot": "슈프림 봇",
+    "logout": "로그아웃",
+    "selectServerTitle": "<span className=\"gradient-text\">서버</span> 선택",
+    "selectServerSubtitle": "슈프림 봇으로 관리할 서버를 선택하세요.",
+    "noServersFoundTitle": "서버를 찾을 수 없습니다",
+    "noServersFoundDescription": "어떤 서버에서도 관리자 또는 서버 관리 권한이 없습니다.",
+    "tryAnotherAccount": "다른 계정 시도",
+    "totalServers": "총 서버 수",
+    "botActive": "봇 활성화됨",
+    "needsSetup": "설정 필요",
+    "searchServersPlaceholder": "서버 검색...",
+    "allFilter": "전체",
+    "activeFilter": "활성",
+    "needsBotFilter": "봇 필요",
+    "ownerBadge": "소유자",
+    "activeBadge": "활성",
+    "inactiveBadge": "비활성",
+    "addBotButton": "봇 추가",
+    "manageServerButton": "서버 관리",
+    "noServersMatch": "검색과 일치하는 서버가 없습니다.",
+    "loading": "로딩 중..."
   }
 }

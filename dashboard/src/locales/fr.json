@@ -400,5 +400,33 @@
       "durationPlaceholder": "ex. 30, 60, 90",
       "grantButton": "Accorder Premium Gratuit"
     }
+  },
+  "serverSelection": {
+    "failedToFetchServers": "Échec de la récupération des serveurs",
+    "addBotMessage": "Veuillez ajouter le bot à votre serveur, puis actualisez cette page",
+    "failedToSelectServer": "Échec de la sélection du serveur",
+    "logoutFailed": "Déconnexion échouée. Veuillez réessayer.",
+    "loadingServers": "Chargement de vos serveurs...",
+    "supremeBot": "Supreme Bot",
+    "logout": "Déconnexion",
+    "selectServerTitle": "Sélectionnez un <span className=\"gradient-text\">Serveur</span>",
+    "selectServerSubtitle": "Choisissez le serveur que vous souhaitez gérer avec Supreme Bot.",
+    "noServersFoundTitle": "Aucun serveur trouvé",
+    "noServersFoundDescription": "Vous n'avez pas les permissions d'administrateur ou de gestion de serveur sur aucun serveur.",
+    "tryAnotherAccount": "Essayer un autre compte",
+    "totalServers": "Total des serveurs",
+    "botActive": "Bot actif",
+    "needsSetup": "Nécessite une configuration",
+    "searchServersPlaceholder": "Rechercher des serveurs...",
+    "allFilter": "Tous",
+    "activeFilter": "Actifs",
+    "needsBotFilter": "Besoin du bot",
+    "ownerBadge": "Propriétaire",
+    "activeBadge": "Actif",
+    "inactiveBadge": "Inactif",
+    "addBotButton": "Ajouter le bot",
+    "manageServerButton": "Gérer le serveur",
+    "noServersMatch": "Aucun serveur ne correspond à votre recherche.",
+    "loading": "Chargement..."
   }
 }

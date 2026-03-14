@@ -402,5 +402,33 @@
       "durationPlaceholder": "ör. 30, 60, 90",
       "grantButton": "Ücretsiz Premium Ver"
     }
+  },
+  "serverSelection": {
+    "failedToFetchServers": "Sunucular alınamadı",
+    "addBotMessage": "Lütfen botu sunucunuza ekleyin, ardından bu sayfayı yenileyin",
+    "failedToSelectServer": "Sunucu seçilemedi",
+    "logoutFailed": "Çıkış yapılamadı. Lütfen tekrar deneyin.",
+    "loadingServers": "Sunucularınız yükleniyor...",
+    "supremeBot": "Supreme Bot",
+    "logout": "Çıkış Yap",
+    "selectServerTitle": "<span className=\"gradient-text\">Sunucu</span> Seçin",
+    "selectServerSubtitle": "Supreme Bot ile yönetmek istediğiniz sunucuyu seçin.",
+    "noServersFoundTitle": "Sunucu Bulunamadı",
+    "noServersFoundDescription": "Hiçbir sunucuda Yönetici veya Sunucuyu Yönet izinleriniz yok.",
+    "tryAnotherAccount": "Başka Bir Hesap Deneyin",
+    "totalServers": "Toplam Sunucu",
+    "botActive": "Bot Aktif",
+    "needsSetup": "Kurulum Gerekiyor",
+    "searchServersPlaceholder": "Sunucularda ara...",
+    "allFilter": "Tümü",
+    "activeFilter": "Aktif",
+    "needsBotFilter": "Bot Gerekiyor",
+    "ownerBadge": "Sahip",
+    "activeBadge": "Aktif",
+    "inactiveBadge": "Pasif",
+    "addBotButton": "Bot Ekle",
+    "manageServerButton": "Sunucuyu Yönet",
+    "noServersMatch": "Aramanızla eşleşen sunucu yok.",
+    "loading": "Yükleniyor..."
   }
 }

@@ -402,5 +402,33 @@
       "durationPlaceholder": "например, 30, 60, 90",
       "grantButton": "Предоставить бесплатный премиум"
     }
+  },
+  "serverSelection": {
+    "failedToFetchServers": "Не удалось получить список серверов",
+    "addBotMessage": "Пожалуйста, добавьте бота на ваш сервер, затем обновите эту страницу",
+    "failedToSelectServer": "Не удалось выбрать сервер",
+    "logoutFailed": "Выход не удался. Пожалуйста, попробуйте снова.",
+    "loadingServers": "Загрузка ваших серверов...",
+    "supremeBot": "Supreme Bot",
+    "logout": "Выйти",
+    "selectServerTitle": "Выберите <span className=\"gradient-text\">сервер</span>",
+    "selectServerSubtitle": "Выберите сервер, которым хотите управлять с помощью Supreme Bot.",
+    "noServersFoundTitle": "Серверы не найдены",
+    "noServersFoundDescription": "У вас нет прав администратора или управления сервером ни на одном сервере.",
+    "tryAnotherAccount": "Попробовать другой аккаунт",
+    "totalServers": "Всего серверов",
+    "botActive": "Бот активен",
+    "needsSetup": "Требуется настройка",
+    "searchServersPlaceholder": "Поиск серверов...",
+    "allFilter": "Все",
+    "activeFilter": "Активные",
+    "needsBotFilter": "Требуется бот",
+    "ownerBadge": "Владелец",
+    "activeBadge": "Активен",
+    "inactiveBadge": "Неактивен",
+    "addBotButton": "Добавить бота",
+    "manageServerButton": "Управлять сервером",
+    "noServersMatch": "Нет серверов, соответствующих вашему запросу.",
+    "loading": "Загрузка..."
   }
 }

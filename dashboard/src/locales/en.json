@@ -383,5 +383,33 @@
       "durationPlaceholder": "e.g., 30, 60, 90",
       "grantButton": "Grant Free Premium"
     }
+  },
+  "serverSelection": {
+    "failedToFetchServers": "Failed to fetch servers",
+    "addBotMessage": "Please add the bot to your server, then refresh this page",
+    "failedToSelectServer": "Failed to select server",
+    "logoutFailed": "Logout failed. Please try again.",
+    "loadingServers": "Loading your servers...",
+    "supremeBot": "Supreme Bot",
+    "logout": "Logout",
+    "selectServerTitle": "Select a Server",
+    "selectServerSubtitle": "Choose the server you want to manage with Supreme Bot.",
+    "noServersFoundTitle": "No Servers Found",
+    "noServersFoundDescription": "You don't have Administrator or Manage Server permissions in any servers.",
+    "tryAnotherAccount": "Try Another Account",
+    "totalServers": "Total Servers",
+    "botActive": "Bot Active",
+    "needsSetup": "Needs Setup",
+    "searchServersPlaceholder": "Search servers...",
+    "allFilter": "All",
+    "activeFilter": "Active",
+    "needsBotFilter": "Needs Bot",
+    "ownerBadge": "Owner",
+    "activeBadge": "Active",
+    "inactiveBadge": "Inactive",
+    "addBotButton": "Add Bot",
+    "manageServerButton": "Manage Server",
+    "noServersMatch": "No servers match your search.",
+    "loading": "Loading..."
   }
 }

@@ -402,5 +402,33 @@
       "durationPlaceholder": "z.B. 30, 60, 90",
       "grantButton": "Kostenloses Premium gewähren"
     }
+  },
+  "serverSelection": {
+    "failedToFetchServers": "Server konnten nicht abgerufen werden",
+    "addBotMessage": "Bitte füge den Bot zu deinem Server hinzu und aktualisiere dann diese Seite",
+    "failedToSelectServer": "Server konnte nicht ausgewählt werden",
+    "logoutFailed": "Abmeldung fehlgeschlagen. Bitte versuche es erneut.",
+    "loadingServers": "Deine Server werden geladen...",
+    "supremeBot": "Supreme Bot",
+    "logout": "Abmelden",
+    "selectServerTitle": "Wähle einen <span className=\"gradient-text\">Server</span>",
+    "selectServerSubtitle": "Wähle den Server, den du mit Supreme Bot verwalten möchtest.",
+    "noServersFoundTitle": "Keine Server gefunden",
+    "noServersFoundDescription": "Du hast keine Administrator- oder Serververwaltungsrechte auf irgendeinem Server.",
+    "tryAnotherAccount": "Anderes Konto versuchen",
+    "totalServers": "Gesamtanzahl der Server",
+    "botActive": "Bot aktiv",
+    "needsSetup": "Benötigt Einrichtung",
+    "searchServersPlaceholder": "Server suchen...",
+    "allFilter": "Alle",
+    "activeFilter": "Aktiv",
+    "needsBotFilter": "Benötigt Bot",
+    "ownerBadge": "Besitzer",
+    "activeBadge": "Aktiv",
+    "inactiveBadge": "Inaktiv",
+    "addBotButton": "Bot hinzufügen",
+    "manageServerButton": "Server verwalten",
+    "noServersMatch": "Keine Server entsprechen Ihrer Suche.",
+    "loading": "Wird geladen..."
   }
 }

@@ -1,9 +1,11 @@
 import { useEffect, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Toast from '../components/Toast';
 import ThemeLanguageSwitcher from '../components/ThemeLanguageSwitcher';
 
 export default function ServerSelection({ setSelectedGuild, user }) {
+  const { t } = useTranslation();
   const [guilds, setGuilds] = useState([]);
   const [botInviteUrl, setBotInviteUrl] = useState('');
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
       } else if (response.status === 401) {
         navigate('/dashboard/login');
       } else {
-        setToast({ message: 'Failed to fetch servers', type: 'error' });
+        setToast({ message: t('serverSelection.failedToFetchServers'), type: 'error' });
       }
     } catch (error) {
       console.error('Failed to fetch guilds:', error);
@@ -43,7 +45,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
     if (!guild.botInGuild) {
       window.open(`${botInviteUrl}&guild_id=${guild.id}`, '_blank');
       setToast({
-        message: 'Please add the bot to your server, then refresh this page',
+        message: t('serverSelection.addBotMessage'),
         type: 'info',
       });
       return;
@@ -64,12 +66,12 @@ export default function ServerSelection({ setSelectedGuild, user }) {
         setTimeout(() => navigate('/dashboard'), 100);
       } else {
         const error = await response.json();
-        setToast({ message: error.error || 'Failed to select server', type: 'error' });
+        setToast({ message: error.error || t('serverSelection.failedToSelectServer'), type: 'error' });
         setSelectingId(null);
       }
     } catch (error) {
       console.error('Failed to select guild:', error);
-      setToast({ message: 'Failed to select server', type: 'error' });
+      setToast({ message: t('serverSelection.failedToSelectServer'), type: 'error' });
       setSelectingId(null);
     }
   };
@@ -87,7 +89,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
         window.location.href = '/dashboard/login';
       } else {
         setLoading(false);
-        setToast({ message: 'Logout failed. Please try again.', type: 'error' });
+        setToast({ message: t('serverSelection.logoutFailed'), type: 'error' });
       }
     } catch (error) {
       console.error('Logout failed:', error);
@@ -119,7 +121,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
             <div className="absolute inset-0 rounded-full border-4 border-indigo-500/20"></div>
             <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-indigo-500 animate-spin"></div>
           </div>
-          <p className="text-slate-400 text-sm font-medium tracking-wide">Loading your servers...</p>
+          <p className="text-slate-400 text-sm font-medium tracking-wide">{t('serverSelection.loadingServers')}</p>
         </div>
       </div>
     );
@@ -147,7 +149,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                 <div className="w-8 h-8 rounded-lg overflow-hidden shadow-lg shadow-indigo-500/20">
                   <img src="/logo.webp" alt="Logo" className="w-full h-full object-cover" />
                 </div>
-                <span className="text-white font-bold text-sm tracking-wide hidden sm:block">Supreme Bot</span>
+                <span className="text-white font-bold text-sm tracking-wide hidden sm:block">{t('serverSelection.supremeBot')}</span>
               </div>
 
               {/* Language Switcher */}
@@ -179,7 +181,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    <span className="hidden sm:inline">Logout</span>
+                    <span className="hidden sm:inline">{t('serverSelection.logout')}</span>
                   </button>
                 </div>
               )}
@@ -191,9 +193,9 @@ export default function ServerSelection({ setSelectedGuild, user }) {
             {/* Page Header */}
             <div className="mb-8">
               <h1 className="text-3xl font-black text-white mb-1 tracking-tight">
-                Select a <span className="gradient-text">Server</span>
+                {t('serverSelection.selectServerTitle')}
               </h1>
-              <p className="text-slate-500 text-sm">Choose the server you want to manage with Supreme Bot.</p>
+              <p className="text-slate-500 text-sm">{t('serverSelection.selectServerSubtitle')}</p>
             </div>
 
             {guilds.length === 0 ? (
@@ -204,15 +206,15 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">No Servers Found</h3>
+                <h3 className="text-xl font-bold text-white mb-2">{t('serverSelection.noServersFoundTitle')}</h3>
                 <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-                  You don't have Administrator or Manage Server permissions in any servers.
+                  {t('serverSelection.noServersFoundDescription')}
                 </p>
                 <button
                   onClick={handleLogout}
                   className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold transition-colors"
                 >
-                  Try Another Account
+                  {t('serverSelection.tryAnotherAccount')}
                 </button>
               </div>
             ) : (
@@ -220,9 +222,9 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                 {/* Stats Row */}
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   {[
-                    { label: 'Total Servers', value: guilds.length, color: 'text-white', bg: 'bg-white/5', border: 'border-white/8' },
-                    { label: 'Bot Active', value: totalWithBot, color: 'text-emerald-400', bg: 'bg-emerald-500/5', border: 'border-emerald-500/15' },
-                    { label: 'Needs Setup', value: totalWithout, color: 'text-amber-400', bg: 'bg-amber-500/5', border: 'border-amber-500/15' },
+                    { label: t('serverSelection.totalServers'), value: guilds.length, color: 'text-white', bg: 'bg-white/5', border: 'border-white/8' },
+                    { label: t('serverSelection.botActive'), value: totalWithBot, color: 'text-emerald-400', bg: 'bg-emerald-500/5', border: 'border-emerald-500/15' },
+                    { label: t('serverSelection.needsSetup'), value: totalWithout, color: 'text-amber-400', bg: 'bg-amber-500/5', border: 'border-amber-500/15' },
                   ].map((stat) => (
                     <div key={stat.label} className={`${stat.bg} border ${stat.border} rounded-xl px-4 py-3 flex items-center gap-3`}>
                       <div>
@@ -242,7 +244,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                     </svg>
                     <input
                       type="text"
-                      placeholder="Search servers..."
+                      placeholder={t('serverSelection.searchServersPlaceholder')}
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/8 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-white/8 transition-all"
@@ -251,11 +253,12 @@ export default function ServerSelection({ setSelectedGuild, user }) {
 
                   {/* Filter Tabs */}
                   <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/8">
-                    {[
-                      { id: 'all', label: 'All' },
-                      { id: 'active', label: 'Active' },
-                      { id: 'inactive', label: 'Needs Bot' },
-                    ].map((tab) => (
+                    {
+                      [
+                        { id: 'all', label: t('serverSelection.allFilter') },
+                        { id: 'active', label: t('serverSelection.activeFilter') },
+                        { id: 'inactive', label: t('serverSelection.needsBotFilter') },
+                      ].map((tab) => (
                       <button
                         key={tab.id}
                         onClick={() => setFilter(tab.id)}
@@ -274,7 +277,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                 {/* Server Grid */}
                 {filteredGuilds.length === 0 ? (
                   <div className="text-center py-20">
-                    <p className="text-slate-500 text-sm">No servers match your search.</p>
+                    <p className="text-slate-500 text-sm">{t('serverSelection.noServersMatch')}</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -330,7 +333,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                             {/* Owner crown */}
                             {guild.owner && (
                               <div className="absolute top-2.5 left-2.5 px-1.5 py-0.5 rounded-md bg-yellow-500/20 border border-yellow-500/20 text-yellow-400 text-xs font-bold">
-                                Owner
+                                {t('serverSelection.ownerBadge')}
                               </div>
                             )}
                           </div>
@@ -356,7 +359,7 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                             {isSelecting ? (
                               <div className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 text-xs font-semibold">
                                 <div className="w-3 h-3 border-2 border-indigo-400/30 border-t-indigo-400 rounded-full animate-spin"></div>
-                                Loading...
+                                {t('serverSelection.loading')}
                               </div>
                             ) : guild.botInGuild ? (
                               <div className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-indigo-600/15 border border-indigo-500/20 group-hover:bg-indigo-600/25 group-hover:border-indigo-500/40 text-indigo-400 text-xs font-semibold transition-all duration-200">
@@ -364,14 +367,14 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
-                                Manage Server
+                                {t('serverSelection.manageServerButton')}
                               </div>
                             ) : (
                               <div className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 group-hover:bg-amber-500/15 group-hover:border-amber-500/30 text-amber-400 text-xs font-semibold transition-all duration-200">
                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
-                                Add Bot
+                                {t('serverSelection.addBotButton')}
                               </div>
                             )}
                           </div>

@@ -400,5 +400,33 @@
       "durationPlaceholder": "مثلاً، 30، 60، 90",
       "grantButton": "منح المميز المجاني"
     }
+  },
+  "serverSelection": {
+    "failedToFetchServers": "فشل في جلب الخوادم",
+    "addBotMessage": "يرجى إضافة البوت إلى خادمك، ثم تحديث هذه الصفحة",
+    "failedToSelectServer": "فشل في اختيار الخادم",
+    "logoutFailed": "فشل تسجيل الخروج. يرجى المحاولة مرة أخرى.",
+    "loadingServers": "جارٍ تحميل خوادمك...",
+    "supremeBot": "بوت سوبريم",
+    "logout": "تسجيل الخروج",
+    "selectServerTitle": "اختر <span className=\"gradient-text\">الخادم</span>",
+    "selectServerSubtitle": "اختر الخادم الذي تريد إدارته باستخدام بوت سوبريم.",
+    "noServersFoundTitle": "لم يتم العثور على خوادم",
+    "noServersFoundDescription": "ليس لديك صلاحيات المسؤول أو إدارة الخادم في أي من الخوادم.",
+    "tryAnotherAccount": "جرب حسابًا آخر",
+    "totalServers": "إجمالي الخوادم",
+    "botActive": "البوت نشط",
+    "needsSetup": "يحتاج إلى إعداد",
+    "searchServersPlaceholder": "ابحث في الخوادم...",
+    "allFilter": "الكل",
+    "activeFilter": "نشط",
+    "needsBotFilter": "يحتاج إلى بوت",
+    "ownerBadge": "المالك",
+    "activeBadge": "نشط",
+    "inactiveBadge": "غير نشط",
+    "addBotButton": "إضافة بوت",
+    "manageServerButton": "إدارة الخادم",
+    "noServersMatch": "لا توجد خوادم تطابق بحثك.",
+    "loading": "جارٍ التحميل..."
   }
 }
