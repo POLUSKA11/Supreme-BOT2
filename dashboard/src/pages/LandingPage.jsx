@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import ThemeLanguageSwitcher from '../components/ThemeLanguageSwitcher';
 
 // Safe count-up hook with validation
 function useCountUp(target, duration = 2000, start = false) {
@@ -231,6 +232,9 @@ export default function LandingPage() {
           </ul>
 
           <div className="hidden md:flex items-center gap-3">
+            <div className="w-40">
+              <ThemeLanguageSwitcher />
+            </div>
             <Link to="/dashboard/login" className="text-slate-400 hover:text-white text-sm font-semibold transition-colors px-4 py-2">Login</Link>
             <a href={BOT_INVITE} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg transition-all duration-200 shadow-lg shadow-red-600/30 hover:shadow-red-600/50 hover:-translate-y-0.5">
               Add to Discord

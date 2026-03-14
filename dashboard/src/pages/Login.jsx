@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Toast from '../components/Toast';
+import ThemeLanguageSwitcher from '../components/ThemeLanguageSwitcher';
 
 export default function Login({ setIsAuthenticated, setUser }) {
   const { t } = useTranslation();
@@ -149,6 +150,10 @@ export default function Login({ setIsAuthenticated, setUser }) {
         />
       )}
       <div className="relative flex items-center justify-center h-screen bg-[#0f172a] overflow-hidden">
+        {/* Language Switcher - top right */}
+        <div className="absolute top-4 right-4 z-20 w-44">
+          <ThemeLanguageSwitcher />
+        </div>
         {/* Animated Background Elements */}
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-red-600/20 blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-600/20 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>

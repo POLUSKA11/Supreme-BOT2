@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Toast from '../components/Toast';
+import ThemeLanguageSwitcher from '../components/ThemeLanguageSwitcher';
 
 export default function ServerSelection({ setSelectedGuild, user }) {
   const [guilds, setGuilds] = useState([]);
@@ -147,6 +148,11 @@ export default function ServerSelection({ setSelectedGuild, user }) {
                   <img src="/logo.webp" alt="Logo" className="w-full h-full object-cover" />
                 </div>
                 <span className="text-white font-bold text-sm tracking-wide hidden sm:block">Supreme Bot</span>
+              </div>
+
+              {/* Language Switcher */}
+              <div className="w-44 hidden sm:block">
+                <ThemeLanguageSwitcher />
               </div>
 
               {/* User Info */}

@@ -50,7 +50,9 @@
     "error": "Erreur",
     "success": "Succès",
     "warning": "Avertissement",
-    "info": "Information"
+    "info": "Information",
+    "totalMessages": "Messages Totaux",
+    "uniqueUsers": "Utilisateurs Uniques"
   },
   "dashboard": {
     "title": "Aperçu du système",

@@ -50,7 +50,9 @@
     "error": "خطأ",
     "success": "نجاح",
     "warning": "تحذير",
-    "info": "معلومات"
+    "info": "معلومات",
+    "totalMessages": "إجمالي الرسائل",
+    "uniqueUsers": "المستخدمون الفريدون"
   },
   "dashboard": {
     "title": "نظرة عامة على النظام",

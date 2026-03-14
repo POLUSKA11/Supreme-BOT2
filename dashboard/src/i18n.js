@@ -24,6 +24,8 @@ const resources = {
   ko: { translation: ko },
 };
 
+const RTL_LANGS = ['ar'];
+
 i18n
   .use(initReactI18next)
   .init({
@@ -34,5 +36,12 @@ i18n
       escapeValue: false
     }
   });
+
+// Apply lang and dir attributes immediately on load
+(function applyLangOnInit() {
+  const lang = localStorage.getItem('nexus-language') || 'en';
+  document.documentElement.setAttribute('lang', lang);
+  document.documentElement.setAttribute('dir', RTL_LANGS.includes(lang) ? 'rtl' : 'ltr');
+})();
 
 export default i18n;

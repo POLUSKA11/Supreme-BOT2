@@ -129,8 +129,8 @@ export default function ThemeLanguageSwitcher() {
       {/* ── Keyframe injection ── */}
       <style>{`
         @keyframes _langIn {
-          from { opacity:0; transform:translateY(8px) scale(0.96); }
-          to   { opacity:1; transform:translateY(0)   scale(1);    }
+          from { opacity:0; transform:translateY(-8px) scale(0.96); }
+          to   { opacity:1; transform:translateY(0)    scale(1);   }
         }
         ._lang-menu { animation: _langIn 0.2s cubic-bezier(0.16,1,0.3,1) both; }
         ._lang-item:hover { background: rgba(255,255,255,0.06); }
@@ -230,7 +230,7 @@ export default function ThemeLanguageSwitcher() {
                 position: 'absolute',
                 left: 0,
                 right: 0,
-                bottom: 'calc(100% + 8px)',
+                top: 'calc(100% + 8px)',
                 zIndex: 9999,
                 borderRadius: 16,
                 overflow: 'hidden',
