@@ -7,6 +7,7 @@ export default defineConfig({
   base: '/', // Use absolute paths to ensure assets load correctly on all routes
   publicDir: 'public', // Explicitly set public directory
   server: {
+    allowedHosts: 'all',
     proxy: {
       '/api': {
         target: 'http://localhost:8000',
