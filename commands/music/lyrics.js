@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useQueue, lrclib } = require('discord-player');
+const { useQueue } = require('discord-player');
 const { buildErrorEmbed, COLORS, getGlobalPlayer, } = require('../../utils/musicPlayer');
 
 module.exports = {
@@ -46,8 +46,8 @@ module.exports = {
         }
 
         try {
-            // Use discord-player's built-in LrcLib lyrics fetcher
-            const lyrics = await lrclib.search({
+            // Use discord-player's built-in lyrics fetcher
+            const lyrics = await player.lyrics.search({
                 q: `${title} ${author}`.trim(),
             });
 

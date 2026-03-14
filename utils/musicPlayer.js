@@ -23,14 +23,14 @@ const { recordPlay } = require('./musicDb');
 
 // ─── Colour Palette ──────────────────────────────────────────────────────────
 const COLORS = {
-    PRIMARY:  0x5865F2,   // Discord blurple
-    SUCCESS:  0x57F287,   // Green
-    WARNING:  0xFEE75C,   // Yellow
-    ERROR:    0xED4245,   // Red
-    INFO:     0x5865F2,   // Blurple
-    MUSIC:    0xFF6B6B,   // Warm red/pink for music
-    PAUSE:    0xFFA500,   // Orange
-    QUEUE:    0x9B59B6,   // Purple
+    PRIMARY:  0x2F3136,   // Dark theme
+    SUCCESS:  0x2ECC71,   // Emerald Green
+    WARNING:  0xF1C40F,   // Sun Flower Yellow
+    ERROR:    0xE74C3C,   // Alizarin Red
+    INFO:     0x3498DB,   // Peter River Blue
+    MUSIC:    0x9B59B6,   // Amethyst Purple
+    PAUSE:    0xE67E22,   // Carrot Orange
+    QUEUE:    0x1ABC9C,   // Turquoise
 };
 
 // ─── Platform Detection ───────────────────────────────────────────────────────
@@ -85,29 +85,26 @@ function buildNowPlayingEmbed(track, queue, client) {
     const currentTime = formatDuration(current);
     const totalTime = formatDuration(total);
 
-    const loopMode = ['🔁 Off', '🔂 Track', '🔁 Queue', '🔀 Auto'][queue.repeatMode] || '🔁 Off';
+    const loopMode = ['Off', 'Track', 'Queue', 'Auto'][queue.repeatMode] || 'Off';
 
     return new EmbedBuilder()
         .setColor(COLORS.MUSIC)
         .setAuthor({
-            name: '🎵 Now Playing',
-            iconURL: client?.user?.displayAvatarURL() || undefined
+            name: 'Now Playing',
+            iconURL: 'https://cdn.discordapp.com/emojis/984131234567890123.gif?size=96&quality=lossless' // Optional: animated music icon
         })
         .setTitle(track.title.length > 256 ? track.title.substring(0, 253) + '...' : track.title)
         .setURL(track.url)
         .setThumbnail(track.thumbnail || null)
+        .setDescription(`**${track.author}**\n\n${progress}\n\`${currentTime} / ${totalTime}\``)
         .addFields(
-            { name: '👤 Artist',   value: track.author || 'Unknown', inline: true },
-            { name: '⏱️ Duration', value: `\`${currentTime} / ${totalTime}\``, inline: true },
-            { name: '🎚️ Volume',   value: `\`${queue.node.volume}%\``, inline: true },
-            { name: '📋 Queue',    value: `\`${queue.tracks.size} track(s) remaining\``, inline: true },
-            { name: '🔁 Loop',     value: loopMode, inline: true },
-            { name: '🌐 Source',   value: getPlatformEmoji(track.url) + ' ' + (track.source || 'Unknown'), inline: true },
-            { name: '📊 Progress', value: `\`${progress}\`\n\`${currentTime}\` / \`${totalTime}\``, inline: false },
+            { name: 'Requested By', value: `${track.requestedBy?.tag || 'Unknown'}`, inline: true },
+            { name: 'Volume', value: `\`${queue.node.volume}%\``, inline: true },
+            { name: 'Loop Mode', value: `\`${loopMode}\``, inline: true },
         )
         .setFooter({
-            text: `Requested by ${track.requestedBy?.tag || track.requestedBy?.username || 'Unknown'}`,
-            iconURL: track.requestedBy?.displayAvatarURL() || undefined
+            text: `Source: ${track.source || 'Unknown'} • ${queue.tracks.size} tracks left in queue`,
+            iconURL: client?.user?.displayAvatarURL()
         })
         .setTimestamp();
 }
@@ -251,7 +248,9 @@ async function initializePlayer(client) {
             quality: 'highestaudio',
             highWaterMark: 1 << 25,
             filter: 'audioonly',
-        }
+        },
+        // Better extraction reliability
+        lockVoiceStateHandler: true
     });
 
     // Use ffmpeg-static if available

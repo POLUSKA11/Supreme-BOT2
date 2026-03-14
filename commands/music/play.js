@@ -156,19 +156,31 @@ module.exports = {
         leaveOnEnd: false,
         leaveOnEndCooldown: 30000,
         skipOnNoStream: true,
-        connectionTimeout: 30000,
-        bufferingTimeout: 3000,
+        connectionTimeout: 60000, // Increased timeout
+        bufferingTimeout: 5000,   // Increased buffering
       });
       console.log("[PLAY CMD] Queue created or retrieved");
 
       if (!queue.connection) {
         console.log("[PLAY CMD] Connecting to voice channel...");
-        await queue.connect(voiceChannel);
-        console.log("[PLAY CMD] Connected to voice channel");
+        try {
+          await queue.connect(voiceChannel);
+          console.log("[PLAY CMD] Connected to voice channel");
+        } catch (connErr) {
+          console.error("[PLAY CMD] Connection error:", connErr);
+          if (queue) queue.delete();
+          return interaction.editReply({
+            embeds: [buildErrorEmbed(`Failed to join voice channel: ${connErr.message}`, interaction.client)],
+          });
+        }
       } else if (queue.connection.channel.id !== voiceChannel.id) {
         console.log("[PLAY CMD] Switching voice channel...");
-        await queue.connect(voiceChannel);
-        console.log("[PLAY CMD] Switched voice channel");
+        try {
+          await queue.connect(voiceChannel);
+          console.log("[PLAY CMD] Switched voice channel");
+        } catch (connErr) {
+          console.error("[PLAY CMD] Switch error:", connErr);
+        }
       }
 
       if (result.hasPlaylist()) {
