@@ -162,7 +162,36 @@
     "reason": "Sebep",
     "timestamp": "Zaman Damgası",
     "filterByAction": "Eyleme göre filtrele",
-    "filterByModerator": "Moderatöre göre filtrele"
+    "filterByModerator": "Moderatöre göre filtrele",
+    "failedToFetch": "Denetim kayıtları alınamadı:",
+    "justNow": "Az önce",
+    "minutesAgo": "{minutes} dakika önce",
+    "hoursAgo": "{hours} saat önce",
+    "daysAgo": "{days} gün önce",
+    "headerTitle": "Denetim <span className=\"gradient-text\">Kayıtları</span>",
+    "headerSubtitle": "Sunucudaki tüm yönetimsel işlemleri takip edin.",
+    "allActions": "Tüm İşlemler",
+    "refresh": "Yenile",
+    "noLogsFound": "Denetim kaydı bulunamadı",
+    "tryDifferentFilter": "Farklı bir filtre deneyin",
+    "noRecentActions": "Görüntülenecek yeni işlem yok",
+    "performed": "gerçekleştirildi",
+    "showingEntries": "{filteredCount} / {totalCount} kayıt gösteriliyor",
+    "actionColors": {
+      "Member Banned": "Üye Yasaklandı",
+      "Member Kicked": "Üye Atıldı",
+      "Member Unbanned": "Üye Yasağı Kaldırıldı",
+      "Channel Created": "Kanal Oluşturuldu",
+      "Channel Deleted": "Kanal Silindi",
+      "Channel Updated": "Kanal Güncellendi",
+      "Role Created": "Rol Oluşturuldu",
+      "Role Deleted": "Rol Silindi",
+      "Role Updated": "Rol Güncellendi",
+      "Message Deleted": "Mesaj Silindi",
+      "Messages Bulk Deleted": "Mesajlar Toplu Silindi",
+      "Member Updated": "Üye Güncellendi",
+      "Server Updated": "Sunucu Güncellendi"
+    }
   },
   "transcripts": {
     "title": "Talep Transkriptleri",
@@ -209,6 +238,169 @@
     "variables": "Mevcut Değişkenler",
     "userName": "Kullanıcı Adı",
     "serverName": "Sunucu Adı",
-    "memberCount": "Üye Sayısı"
+    "memberCount": "Üye Sayısı",
+    "selectChannelError": "{tabName} mesajları için bir kanal seçin lütfen",
+    "saveSuccess": "{tabName} yapılandırması başarıyla kaydedildi!",
+    "saveError": "Kaydetme başarısız: {error}",
+    "saveErrorGeneric": "Yapılandırma kaydedilemedi",
+    "loadingServers": "Sunucularınız yükleniyor...",
+    "welcomeTab": "Hoşgeldiniz",
+    "goodbyeTab": "Hoşçakal",
+    "messageSettings": "Mesaj Ayarları",
+    "availableVariables": "Mevcut Değişkenler:",
+    "usernameVar": "- Kullanıcının adı",
+    "userMentionVar": "- Kullanıcı mention",
+    "serverNameVar": "- Sunucu adı",
+    "enableMessages": "{tabName} mesajlarını etkinleştir",
+    "enableMessagesDesc": "Bu özelliği açmak veya kapatmak için değiştirin",
+    "targetChannel": "Hedef Kanal",
+    "selectChannelPlaceholder": "Bir kanal seçin",
+    "embedTitle": "Embed Başlığı",
+    "welcomePlaceholder": "Hoşgeldin {username}!",
+    "goodbyePlaceholder": "Hoşçakal {username}",
+    "embedDescription": "Embed Açıklaması",
+    "embedDescriptionPlaceholder": "{user} sunucuya katıldı!",
+    "embedBanner": "Embed Banner Resim URL'si",
+    "embedBannerPlaceholder": "https://example.com/banner.png",
+    "previewTitle": "{serverName} sunucusuna hoşgeldiniz",
+    "previewDescription": "Bu, hoşgeldin mesajınızın önizlemesidir. {user} sunucuya katıldı!",
+    "previewFooter": "Üye #{memberCount}",
+    "showVariables": "Değişkenleri Göster",
+    "hideVariables": "Değişkenleri Gizle"
+  },
+  "antiRaid": {
+    "title": "Anti-Raid Sistemi",
+    "subtitle": "Sunucunuzu saldırılardan, spamden ve zararlı içeriklerden koruyun.",
+    "saveSuccess": "Anti-Raid yapılandırması başarıyla kaydedildi!",
+    "saveError": "Yapılandırma kaydedilemedi",
+    "securityModules": "Güvenlik Modülleri",
+    "antiLink": {
+      "label": "Anti-Link",
+      "desc": "Tüm dış bağlantıları engelle"
+    },
+    "antiPromotion": {
+      "label": "Anti-Promosyon",
+      "desc": "Discord davet bağlantılarını engelle"
+    },
+    "antiSpam": {
+      "label": "Anti-Spam",
+      "desc": "Mesaj spamini önle"
+    },
+    "antiBadwords": {
+      "label": "Anti-Küfür",
+      "desc": "Yasaklı kelimeleri filtrele"
+    },
+    "lockdownMode": {
+      "label": "Kilitlenme Modu",
+      "desc": "Tüm mesajları engelle (acil durum)"
+    },
+    "advancedSettings": "Gelişmiş Ayarlar",
+    "logChannel": {
+      "label": "Kayıt Kanalı",
+      "placeholder": "Kayıt için bir kanal seçin...",
+      "desc": "İhlaller buraya kaydedilecek"
+    },
+    "spamThreshold": {
+      "label": "Spam Eşiği",
+      "desc": "Spam filtresini tetiklemeden önce 5 saniyede gönderilen mesaj sayısı"
+    },
+    "bannedWords": {
+      "label": "Yasaklı Kelimeler (virgülle ayrılmış)",
+      "placeholder": "kufur1, kufur2, kufur3...",
+      "desc": "Kelimeler büyük/küçük harf duyarsız eşleşir"
+    },
+    "saveButton": "Anti-Raid Yapılandırmasını Kaydet",
+    "saving": "Kaydediliyor...",
+    "statusOverview": "Durum Özeti",
+    "activeModules": "Aktif Modüller:",
+    "bannedWordsCount": "Yasaklı Kelimeler:",
+    "logChannelStatus": "Kayıt Kanalı:",
+    "securityTip": {
+      "title": "Güvenlik İpucu",
+      "desc": "Filtreleri tetikleyenleri takip etmek için her zaman bir **Kayıt Kanalı** belirleyin. Bu, ısrarcı saldırganları tespit edip yasaklamanıza yardımcı olur."
+    }
+  },
+  "adminPanel": {
+    "justNow": "şimdi",
+    "minutesAgo": "{minutes}m önce",
+    "hoursAgo": "{hours}s önce",
+    "daysAgo": "{days}g önce",
+    "freePlan": "Ücretsiz",
+    "ultimatePlan": "Ultimate",
+    "proPlan": "Pro",
+    "modalClose": "Kapat",
+    "overviewTab": "Genel Bakış",
+    "premiumTab": "Premium",
+    "webLoginsTab": "Web Girişleri",
+    "registeredUsersTab": "Kayıtlı Kullanıcılar",
+    "allServersTab": "Tüm Sunucular",
+    "guildIdRequired": "Guild ID gereklidir",
+    "premiumGranted": "✅ {guildName} için premium verildi ({plan}, {duration}g)",
+    "failedToGrantPremium": "Premium verilemedi",
+    "requestFailed": "İstek başarısız oldu",
+    "premiumExtended": "✅ {guildName} için premium {days} gün uzatıldı",
+    "failedToExtendPremium": "Premium uzatılamadı",
+    "premiumRevoked": "✅ {guildName} için premium iptal edildi",
+    "failedToRevokePremium": "Premium iptal edilemedi",
+    "freePremiumGranted": "✅ {guildName} için ücretsiz premium verildi ({plan}, {duration}g)",
+    "failedToGrantFreePremium": "Ücretsiz premium verilemedi",
+    "loading": "Yükleniyor...",
+    "accessDenied": "Erişim Reddedildi",
+    "accessDeniedMessage": "Bu sayfayı görüntüleme izniniz yok.",
+    "totalUsers": "Toplam Kullanıcı",
+    "totalGuilds": "Toplam Guild",
+    "activePremium": "Aktif Premium",
+    "totalLogins": "Toplam Giriş",
+    "botUptime": "Bot Çalışma Süresi",
+    "lastRestart": "Son Yeniden Başlatma",
+    "webLoginHistory": "Web Giriş Geçmişi",
+    "user": "Kullanıcı",
+    "lastLogin": "Son Giriş",
+    "ipAddress": "IP Adresi",
+    "userAgent": "Kullanıcı Aracısı",
+    "registeredUsers": "Kayıtlı Kullanıcılar",
+    "joined": "Katıldı",
+    "premiumSubscriptions": "Premium Abonelikler",
+    "guild": "Guild",
+    "plan": "Plan",
+    "expires": "Sona Erme",
+    "actions": "İşlemler",
+    "grantPremium": "Premium Ver",
+    "extendPremium": "Premium Uzat",
+    "revokePremium": "Premium İptal Et",
+    "allServers": "Tüm Sunucular",
+    "serverName": "Sunucu Adı",
+    "owner": "Sahip",
+    "members": "Üyeler",
+    "premium": "Premium",
+    "grantPremiumModal": {
+      "title": "Premium Ver",
+      "guildId": "Guild ID",
+      "guildIdPlaceholder": "Guild ID girin",
+      "plan": "Plan",
+      "duration": "Süre (gün)",
+      "durationPlaceholder": "ör. 30, 60, 90",
+      "grantButton": "Premium Ver"
+    },
+    "extendPremiumModal": {
+      "title": "{guildName} için Premium Uzat",
+      "days": "Uzatılacak Gün Sayısı",
+      "daysPlaceholder": "ör. 30, 60, 90",
+      "extendButton": "Premium Uzat"
+    },
+    "revokePremiumModal": {
+      "title": "{guildName} için Premium İptal Et",
+      "confirm": "{guildName} için premium iptal etmek istediğinize emin misiniz?",
+      "revokeButton": "Premium İptal Et"
+    },
+    "grantFreePremiumModal": {
+      "title": "Ücretsiz Premium Ver",
+      "guildId": "Guild ID",
+      "guildIdPlaceholder": "Guild ID girin",
+      "plan": "Plan",
+      "duration": "Süre (gün)",
+      "durationPlaceholder": "ör. 30, 60, 90",
+      "grantButton": "Ücretsiz Premium Ver"
+    }
   }
 }

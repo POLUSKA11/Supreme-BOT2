@@ -162,7 +162,36 @@
     "reason": "原因",
     "timestamp": "時間戳記",
     "filterByAction": "依操作篩選",
-    "filterByModerator": "依管理員篩選"
+    "filterByModerator": "依管理員篩選",
+    "failedToFetch": "無法取得稽核日誌：",
+    "justNow": "剛剛",
+    "minutesAgo": "{minutes} 分鐘前",
+    "hoursAgo": "{hours} 小時前",
+    "daysAgo": "{days} 天前",
+    "headerTitle": "稽核 <span className=\"gradient-text\">日誌</span>",
+    "headerSubtitle": "追蹤伺服器上的所有管理操作。",
+    "allActions": "所有操作",
+    "refresh": "重新整理",
+    "noLogsFound": "找不到稽核日誌",
+    "tryDifferentFilter": "嘗試不同的篩選條件",
+    "noRecentActions": "沒有近期操作可顯示",
+    "performed": "執行了",
+    "showingEntries": "顯示 {filteredCount} 筆，共 {totalCount} 筆",
+    "actionColors": {
+      "Member Banned": "成員被封鎖",
+      "Member Kicked": "成員被踢出",
+      "Member Unbanned": "成員解除封鎖",
+      "Channel Created": "頻道已建立",
+      "Channel Deleted": "頻道已刪除",
+      "Channel Updated": "頻道已更新",
+      "Role Created": "身分組已建立",
+      "Role Deleted": "身分組已刪除",
+      "Role Updated": "身分組已更新",
+      "Message Deleted": "訊息已刪除",
+      "Messages Bulk Deleted": "訊息已批次刪除",
+      "Member Updated": "成員已更新",
+      "Server Updated": "伺服器已更新"
+    }
   },
   "transcripts": {
     "title": "工單記錄",
@@ -209,6 +238,169 @@
     "variables": "可用變數",
     "userName": "用戶名稱",
     "serverName": "伺服器名稱",
-    "memberCount": "成員數量"
+    "memberCount": "成員數量",
+    "selectChannelError": "請為 {tabName} 訊息選擇一個頻道",
+    "saveSuccess": "{tabName} 設定已成功儲存！",
+    "saveError": "儲存失敗：{error}",
+    "saveErrorGeneric": "儲存設定失敗",
+    "loadingServers": "正在載入您的伺服器...",
+    "welcomeTab": "歡迎",
+    "goodbyeTab": "再見",
+    "messageSettings": "訊息設定",
+    "availableVariables": "可用變數：",
+    "usernameVar": "- 使用者名稱",
+    "userMentionVar": "- 使用者標註",
+    "serverNameVar": "- 伺服器名稱",
+    "enableMessages": "啟用 {tabName} 訊息",
+    "enableMessagesDesc": "切換此項以開啟或關閉此功能",
+    "targetChannel": "目標頻道",
+    "selectChannelPlaceholder": "選擇一個頻道",
+    "embedTitle": "嵌入標題",
+    "welcomePlaceholder": "歡迎 {username}！",
+    "goodbyePlaceholder": "再見 {username}",
+    "embedDescription": "嵌入描述",
+    "embedDescriptionPlaceholder": "{user} 已加入伺服器！",
+    "embedBanner": "嵌入橫幅圖片網址",
+    "embedBannerPlaceholder": "https://example.com/banner.png",
+    "previewTitle": "歡迎來到 {serverName}",
+    "previewDescription": "這是您的歡迎訊息預覽。{user} 已加入伺服器！",
+    "previewFooter": "成員編號 #{memberCount}",
+    "showVariables": "顯示變數",
+    "hideVariables": "隱藏變數"
+  },
+  "antiRaid": {
+    "title": "防突襲系統",
+    "subtitle": "保護您的伺服器免受突襲、垃圾訊息及惡意內容的侵害。",
+    "saveSuccess": "防突襲設定已成功儲存！",
+    "saveError": "儲存設定失敗",
+    "securityModules": "安全模組",
+    "antiLink": {
+      "label": "防連結",
+      "desc": "封鎖所有外部連結"
+    },
+    "antiPromotion": {
+      "label": "防推廣",
+      "desc": "封鎖 Discord 邀請連結"
+    },
+    "antiSpam": {
+      "label": "防垃圾訊息",
+      "desc": "防止訊息灌水"
+    },
+    "antiBadwords": {
+      "label": "防髒話",
+      "desc": "過濾禁止詞彙"
+    },
+    "lockdownMode": {
+      "label": "封鎖模式",
+      "desc": "封鎖所有訊息（緊急狀態）"
+    },
+    "advancedSettings": "進階設定",
+    "logChannel": {
+      "label": "紀錄頻道",
+      "placeholder": "選擇一個用於紀錄的頻道...",
+      "desc": "違規行為將會記錄在此"
+    },
+    "spamThreshold": {
+      "label": "垃圾訊息門檻",
+      "desc": "在 5 秒內訊息數達到此數量即觸發垃圾訊息過濾器"
+    },
+    "bannedWords": {
+      "label": "禁止詞彙（以逗號分隔）",
+      "placeholder": "髒話1, 髒話2, 髒話3...",
+      "desc": "詞彙比對不區分大小寫"
+    },
+    "saveButton": "儲存防突襲設定",
+    "saving": "儲存中...",
+    "statusOverview": "狀態總覽",
+    "activeModules": "啟用模組：",
+    "bannedWordsCount": "禁止詞彙數量：",
+    "logChannelStatus": "紀錄頻道：",
+    "securityTip": {
+      "title": "安全提示",
+      "desc": "請務必設定**紀錄頻道**以追蹤觸發過濾器的使用者，這有助於您識別並封鎖持續突襲者。"
+    }
+  },
+  "adminPanel": {
+    "justNow": "剛剛",
+    "minutesAgo": "{minutes} 分鐘前",
+    "hoursAgo": "{hours} 小時前",
+    "daysAgo": "{days} 天前",
+    "freePlan": "免費",
+    "ultimatePlan": "終極版",
+    "proPlan": "專業版",
+    "modalClose": "關閉",
+    "overviewTab": "總覽",
+    "premiumTab": "高級版",
+    "webLoginsTab": "網頁登入",
+    "registeredUsersTab": "註冊用戶",
+    "allServersTab": "所有伺服器",
+    "guildIdRequired": "需要公會 ID",
+    "premiumGranted": "✅ 已授予 {guildName} 高級版 ({plan}, {duration} 天)",
+    "failedToGrantPremium": "授予高級版失敗",
+    "requestFailed": "請求失敗",
+    "premiumExtended": "✅ {guildName} 的高級版已延長 {days} 天",
+    "failedToExtendPremium": "延長高級版失敗",
+    "premiumRevoked": "✅ 已撤銷 {guildName} 的高級版",
+    "failedToRevokePremium": "撤銷高級版失敗",
+    "freePremiumGranted": "✅ 已授予 {guildName} 免費高級版 ({plan}, {duration} 天)",
+    "failedToGrantFreePremium": "授予免費高級版失敗",
+    "loading": "載入中...",
+    "accessDenied": "拒絕存取",
+    "accessDeniedMessage": "您沒有權限查看此頁面。",
+    "totalUsers": "用戶總數",
+    "totalGuilds": "公會總數",
+    "activePremium": "有效高級版",
+    "totalLogins": "登入總數",
+    "botUptime": "機器人運行時間",
+    "lastRestart": "上次重啟",
+    "webLoginHistory": "網頁登入歷史",
+    "user": "用戶",
+    "lastLogin": "上次登入",
+    "ipAddress": "IP 位址",
+    "userAgent": "使用者代理",
+    "registeredUsers": "註冊用戶",
+    "joined": "加入時間",
+    "premiumSubscriptions": "高級訂閱",
+    "guild": "公會",
+    "plan": "方案",
+    "expires": "到期時間",
+    "actions": "操作",
+    "grantPremium": "授予高級版",
+    "extendPremium": "延長高級版",
+    "revokePremium": "撤銷高級版",
+    "allServers": "所有伺服器",
+    "serverName": "伺服器名稱",
+    "owner": "擁有者",
+    "members": "成員",
+    "premium": "高級版",
+    "grantPremiumModal": {
+      "title": "授予高級版",
+      "guildId": "公會 ID",
+      "guildIdPlaceholder": "輸入公會 ID",
+      "plan": "方案",
+      "duration": "期限（天）",
+      "durationPlaceholder": "例如：30、60、90",
+      "grantButton": "授予高級版"
+    },
+    "extendPremiumModal": {
+      "title": "延長 {guildName} 的高級版",
+      "days": "延長天數",
+      "daysPlaceholder": "例如：30、60、90",
+      "extendButton": "延長高級版"
+    },
+    "revokePremiumModal": {
+      "title": "撤銷 {guildName} 的高級版",
+      "confirm": "您確定要撤銷 {guildName} 的高級版嗎？",
+      "revokeButton": "撤銷高級版"
+    },
+    "grantFreePremiumModal": {
+      "title": "授予免費高級版",
+      "guildId": "公會 ID",
+      "guildIdPlaceholder": "輸入公會 ID",
+      "plan": "方案",
+      "duration": "期限（天）",
+      "durationPlaceholder": "例如：30、60、90",
+      "grantButton": "授予免費高級版"
+    }
   }
 }

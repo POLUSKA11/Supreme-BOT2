@@ -150,7 +150,36 @@
     "reason": "السبب",
     "timestamp": "الطابع الزمني",
     "filterByAction": "تصفية حسب الإجراء",
-    "filterByModerator": "تصفية حسب المشرف"
+    "filterByModerator": "تصفية حسب المشرف",
+    "failedToFetch": "فشل في جلب سجلات التدقيق:",
+    "justNow": "الآن",
+    "minutesAgo": "منذ {minutes} دقيقة",
+    "hoursAgo": "منذ {hours} ساعة",
+    "daysAgo": "منذ {days} يوم",
+    "headerTitle": "سجلات <span className=\"gradient-text\">التدقيق</span>",
+    "headerSubtitle": "تتبع جميع الإجراءات الإدارية على الخادم.",
+    "allActions": "جميع الإجراءات",
+    "refresh": "تحديث",
+    "noLogsFound": "لم يتم العثور على سجلات تدقيق",
+    "tryDifferentFilter": "حاول فلترًا مختلفًا",
+    "noRecentActions": "لا توجد إجراءات حديثة للعرض",
+    "performed": "تم",
+    "showingEntries": "عرض {filteredCount} من أصل {totalCount} مدخل",
+    "actionColors": {
+      "Member Banned": "تم حظر العضو",
+      "Member Kicked": "تم طرد العضو",
+      "Member Unbanned": "تم رفع الحظر عن العضو",
+      "Channel Created": "تم إنشاء القناة",
+      "Channel Deleted": "تم حذف القناة",
+      "Channel Updated": "تم تحديث القناة",
+      "Role Created": "تم إنشاء الدور",
+      "Role Deleted": "تم حذف الدور",
+      "Role Updated": "تم تحديث الدور",
+      "Message Deleted": "تم حذف الرسالة",
+      "Messages Bulk Deleted": "تم حذف الرسائل بشكل جماعي",
+      "Member Updated": "تم تحديث العضو",
+      "Server Updated": "تم تحديث الخادم"
+    }
   },
   "transcripts": {
     "title": "نصوص التذاكر",
@@ -197,7 +226,35 @@
     "variables": "المتغيرات المتاحة",
     "userName": "اسم المستخدم",
     "serverName": "اسم الخادم",
-    "memberCount": "عدد الأعضاء"
+    "memberCount": "عدد الأعضاء",
+    "selectChannelError": "يرجى اختيار قناة لرسائل {tabName}",
+    "saveSuccess": "تم حفظ إعدادات {tabName} بنجاح!",
+    "saveError": "فشل الحفظ: {error}",
+    "saveErrorGeneric": "فشل حفظ الإعدادات",
+    "loadingServers": "جارٍ تحميل خوادمك...",
+    "welcomeTab": "مرحبًا",
+    "goodbyeTab": "وداعًا",
+    "messageSettings": "إعدادات الرسائل",
+    "availableVariables": "المتغيرات المتاحة:",
+    "usernameVar": "- اسم المستخدم",
+    "userMentionVar": "- ذكر المستخدم",
+    "serverNameVar": "- اسم الخادم",
+    "enableMessages": "تفعيل رسائل {tabName}",
+    "enableMessagesDesc": "قم بتبديل هذا لتشغيل الميزة أو إيقافها",
+    "targetChannel": "القناة المستهدفة",
+    "selectChannelPlaceholder": "اختر قناة",
+    "embedTitle": "عنوان التضمين",
+    "welcomePlaceholder": "مرحبًا {username}!",
+    "goodbyePlaceholder": "وداعًا {username}",
+    "embedDescription": "وصف التضمين",
+    "embedDescriptionPlaceholder": "انضم {user} إلى الخادم!",
+    "embedBanner": "رابط صورة بانر التضمين",
+    "embedBannerPlaceholder": "https://example.com/banner.png",
+    "previewTitle": "مرحبًا بك في {serverName}",
+    "previewDescription": "هذا معاينة لرسالة الترحيب الخاصة بك. انضم {user} إلى الخادم!",
+    "previewFooter": "عضو رقم #{memberCount}",
+    "showVariables": "عرض المتغيرات",
+    "hideVariables": "إخفاء المتغيرات"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -208,5 +265,140 @@
     "loggingIn": "جاري تسجيل الدخول...",
     "loginFailed": "فشل تسجيل الدخول",
     "unauthorized": "غير مصرح"
+  },
+  "antiRaid": {
+    "title": "نظام مكافحة الهجمات",
+    "subtitle": "احمِ خادمك من الهجمات، الرسائل المزعجة، والمحتوى الضار.",
+    "saveSuccess": "تم حفظ إعدادات مكافحة الهجمات بنجاح!",
+    "saveError": "فشل في حفظ الإعدادات",
+    "securityModules": "وحدات الأمان",
+    "antiLink": {
+      "label": "مكافحة الروابط",
+      "desc": "حظر جميع الروابط الخارجية"
+    },
+    "antiPromotion": {
+      "label": "مكافحة الترويج",
+      "desc": "حظر روابط دعوة ديسكورد"
+    },
+    "antiSpam": {
+      "label": "مكافحة الرسائل المزعجة",
+      "desc": "منع الرسائل المكررة"
+    },
+    "antiBadwords": {
+      "label": "مكافحة الكلمات المحظورة",
+      "desc": "تصفية الكلمات المحظورة"
+    },
+    "lockdownMode": {
+      "label": "وضع الإغلاق",
+      "desc": "حظر جميع الرسائل (طوارئ)"
+    },
+    "advancedSettings": "الإعدادات المتقدمة",
+    "logChannel": {
+      "label": "قناة السجل",
+      "placeholder": "اختر قناة للسجل...",
+      "desc": "سيتم تسجيل الانتهاكات هنا"
+    },
+    "spamThreshold": {
+      "label": "حد الرسائل المزعجة",
+      "desc": "عدد الرسائل خلال 5 ثوانٍ قبل تفعيل فلتر الرسائل المزعجة"
+    },
+    "bannedWords": {
+      "label": "الكلمات المحظورة (مفصولة بفواصل)",
+      "placeholder": "كلمةسيئة1، كلمةسيئة2، كلمةسيئة3...",
+      "desc": "سيتم مطابقة الكلمات بغض النظر عن حالة الأحرف"
+    },
+    "saveButton": "حفظ إعدادات مكافحة الهجمات",
+    "saving": "جارٍ الحفظ...",
+    "statusOverview": "نظرة عامة على الحالة",
+    "activeModules": "الوحدات النشطة:",
+    "bannedWordsCount": "الكلمات المحظورة:",
+    "logChannelStatus": "قناة السجل:",
+    "securityTip": {
+      "title": "نصيحة أمنية",
+      "desc": "قم دائمًا بتعيين **قناة السجل** لتتبع من يقوم بتفعيل الفلاتر. هذا يساعدك على تحديد وحظر المهاجمين المستمرين."
+    }
+  },
+  "adminPanel": {
+    "justNow": "الآن",
+    "minutesAgo": "منذ {minutes} دقيقة",
+    "hoursAgo": "منذ {hours} ساعة",
+    "daysAgo": "منذ {days} يوم",
+    "freePlan": "مجاني",
+    "ultimatePlan": "نهائي",
+    "proPlan": "محترف",
+    "modalClose": "إغلاق",
+    "overviewTab": "نظرة عامة",
+    "premiumTab": "مميز",
+    "webLoginsTab": "تسجيلات الدخول عبر الويب",
+    "registeredUsersTab": "المستخدمون المسجلون",
+    "allServersTab": "جميع الخوادم",
+    "guildIdRequired": "معرف النقابة مطلوب",
+    "premiumGranted": "✅ تم منح المميز لـ {guildName} ({plan}، {duration} يوم)",
+    "failedToGrantPremium": "فشل في منح المميز",
+    "requestFailed": "فشل الطلب",
+    "premiumExtended": "✅ تم تمديد المميز لـ {guildName} لمدة {days} يوم",
+    "failedToExtendPremium": "فشل في تمديد المميز",
+    "premiumRevoked": "✅ تم سحب المميز من {guildName}",
+    "failedToRevokePremium": "فشل في سحب المميز",
+    "freePremiumGranted": "✅ تم منح المميز المجاني لـ {guildName} ({plan}، {duration} يوم)",
+    "failedToGrantFreePremium": "فشل في منح المميز المجاني",
+    "loading": "جارٍ التحميل...",
+    "accessDenied": "تم رفض الوصول",
+    "accessDeniedMessage": "ليس لديك إذن لعرض هذه الصفحة.",
+    "totalUsers": "إجمالي المستخدمين",
+    "totalGuilds": "إجمالي النقابات",
+    "activePremium": "المميز النشط",
+    "totalLogins": "إجمالي تسجيلات الدخول",
+    "botUptime": "مدة تشغيل الروبوت",
+    "lastRestart": "آخر إعادة تشغيل",
+    "webLoginHistory": "تاريخ تسجيل الدخول عبر الويب",
+    "user": "المستخدم",
+    "lastLogin": "آخر تسجيل دخول",
+    "ipAddress": "عنوان IP",
+    "userAgent": "وكيل المستخدم",
+    "registeredUsers": "المستخدمون المسجلون",
+    "joined": "انضم",
+    "premiumSubscriptions": "اشتراكات المميز",
+    "guild": "النقابة",
+    "plan": "الخطة",
+    "expires": "ينتهي",
+    "actions": "الإجراءات",
+    "grantPremium": "منح المميز",
+    "extendPremium": "تمديد المميز",
+    "revokePremium": "سحب المميز",
+    "allServers": "جميع الخوادم",
+    "serverName": "اسم الخادم",
+    "owner": "المالك",
+    "members": "الأعضاء",
+    "premium": "مميز",
+    "grantPremiumModal": {
+      "title": "منح المميز",
+      "guildId": "معرف النقابة",
+      "guildIdPlaceholder": "أدخل معرف النقابة",
+      "plan": "الخطة",
+      "duration": "المدة (أيام)",
+      "durationPlaceholder": "مثلاً، 30، 60، 90",
+      "grantButton": "منح المميز"
+    },
+    "extendPremiumModal": {
+      "title": "تمديد المميز لـ {guildName}",
+      "days": "أيام التمديد",
+      "daysPlaceholder": "مثلاً، 30، 60، 90",
+      "extendButton": "تمديد المميز"
+    },
+    "revokePremiumModal": {
+      "title": "سحب المميز من {guildName}",
+      "confirm": "هل أنت متأكد أنك تريد سحب المميز من {guildName}؟",
+      "revokeButton": "سحب المميز"
+    },
+    "grantFreePremiumModal": {
+      "title": "منح المميز المجاني",
+      "guildId": "معرف النقابة",
+      "guildIdPlaceholder": "أدخل معرف النقابة",
+      "plan": "الخطة",
+      "duration": "المدة (أيام)",
+      "durationPlaceholder": "مثلاً، 30، 60، 90",
+      "grantButton": "منح المميز المجاني"
+    }
   }
 }

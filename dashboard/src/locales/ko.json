@@ -162,7 +162,36 @@
     "reason": "사유",
     "timestamp": "타임스탬프",
     "filterByAction": "작업별 필터",
-    "filterByModerator": "중재자별 필터"
+    "filterByModerator": "중재자별 필터",
+    "failedToFetch": "감사 로그를 가져오지 못했습니다:",
+    "justNow": "방금",
+    "minutesAgo": "{minutes}분 전",
+    "hoursAgo": "{hours}시간 전",
+    "daysAgo": "{days}일 전",
+    "headerTitle": "감사 <span className=\"gradient-text\">로그</span>",
+    "headerSubtitle": "서버의 모든 관리 작업을 추적합니다.",
+    "allActions": "모든 작업",
+    "refresh": "새로 고침",
+    "noLogsFound": "감사 로그를 찾을 수 없습니다",
+    "tryDifferentFilter": "다른 필터를 시도해 보세요",
+    "noRecentActions": "표시할 최근 작업이 없습니다",
+    "performed": "수행됨",
+    "showingEntries": "{totalCount}개 중 {filteredCount}개 항목 표시",
+    "actionColors": {
+      "Member Banned": "회원 차단됨",
+      "Member Kicked": "회원 추방됨",
+      "Member Unbanned": "회원 차단 해제됨",
+      "Channel Created": "채널 생성됨",
+      "Channel Deleted": "채널 삭제됨",
+      "Channel Updated": "채널 업데이트됨",
+      "Role Created": "역할 생성됨",
+      "Role Deleted": "역할 삭제됨",
+      "Role Updated": "역할 업데이트됨",
+      "Message Deleted": "메시지 삭제됨",
+      "Messages Bulk Deleted": "메시지 대량 삭제됨",
+      "Member Updated": "회원 정보 업데이트됨",
+      "Server Updated": "서버 업데이트됨"
+    }
   },
   "transcripts": {
     "title": "티켓 대화 기록",
@@ -209,6 +238,169 @@
     "variables": "사용 가능한 변수",
     "userName": "사용자 이름",
     "serverName": "서버 이름",
-    "memberCount": "멤버 수"
+    "memberCount": "멤버 수",
+    "selectChannelError": "{tabName} 메시지를 위한 채널을 선택해 주세요",
+    "saveSuccess": "{tabName} 설정이 성공적으로 저장되었습니다!",
+    "saveError": "저장 실패: {error}",
+    "saveErrorGeneric": "설정 저장에 실패했습니다",
+    "loadingServers": "서버를 불러오는 중...",
+    "welcomeTab": "환영",
+    "goodbyeTab": "작별",
+    "messageSettings": "메시지 설정",
+    "availableVariables": "사용 가능한 변수:",
+    "usernameVar": "- 사용자 이름",
+    "userMentionVar": "- 사용자 멘션",
+    "serverNameVar": "- 서버 이름",
+    "enableMessages": "{tabName} 메시지 활성화",
+    "enableMessagesDesc": "이 기능을 켜거나 끄려면 토글하세요",
+    "targetChannel": "대상 채널",
+    "selectChannelPlaceholder": "채널 선택",
+    "embedTitle": "임베드 제목",
+    "welcomePlaceholder": "환영합니다 {username}!",
+    "goodbyePlaceholder": "안녕히 가세요 {username}",
+    "embedDescription": "임베드 설명",
+    "embedDescriptionPlaceholder": "{user}님이 서버에 참여했습니다!",
+    "embedBanner": "임베드 배너 이미지 URL",
+    "embedBannerPlaceholder": "https://example.com/banner.png",
+    "previewTitle": "{serverName}에 오신 것을 환영합니다",
+    "previewDescription": "환영 메시지 미리보기입니다. {user}님이 서버에 참여했습니다!",
+    "previewFooter": "회원 #{memberCount}",
+    "showVariables": "변수 표시",
+    "hideVariables": "변수 숨기기"
+  },
+  "antiRaid": {
+    "title": "안티 레이드 시스템",
+    "subtitle": "레이드, 스팸 및 악성 콘텐츠로부터 서버를 보호하세요.",
+    "saveSuccess": "안티 레이드 설정이 성공적으로 저장되었습니다!",
+    "saveError": "설정 저장에 실패했습니다",
+    "securityModules": "보안 모듈",
+    "antiLink": {
+      "label": "안티 링크",
+      "desc": "모든 외부 링크 차단"
+    },
+    "antiPromotion": {
+      "label": "안티 홍보",
+      "desc": "디스코드 초대 링크 차단"
+    },
+    "antiSpam": {
+      "label": "안티 스팸",
+      "desc": "메시지 스팸 방지"
+    },
+    "antiBadwords": {
+      "label": "안티 욕설",
+      "desc": "금지어 필터링"
+    },
+    "lockdownMode": {
+      "label": "락다운 모드",
+      "desc": "모든 메시지 차단 (긴급 상황)"
+    },
+    "advancedSettings": "고급 설정",
+    "logChannel": {
+      "label": "로그 채널",
+      "placeholder": "로그를 위한 채널 선택...",
+      "desc": "위반 사항이 여기에 기록됩니다"
+    },
+    "spamThreshold": {
+      "label": "스팸 임계값",
+      "desc": "스팸 필터가 작동하기 전 5초당 메시지 수"
+    },
+    "bannedWords": {
+      "label": "금지어 (쉼표로 구분)",
+      "placeholder": "욕설1, 욕설2, 욕설3...",
+      "desc": "단어는 대소문자 구분 없이 일치합니다"
+    },
+    "saveButton": "안티 레이드 설정 저장",
+    "saving": "저장 중...",
+    "statusOverview": "상태 개요",
+    "activeModules": "활성 모듈:",
+    "bannedWordsCount": "금지어 수:",
+    "logChannelStatus": "로그 채널:",
+    "securityTip": {
+      "title": "보안 팁",
+      "desc": "항상 **로그 채널**을 설정하여 누가 필터를 작동시키는지 추적하세요. 이는 지속적인 레이더를 식별하고 차단하는 데 도움이 됩니다."
+    }
+  },
+  "adminPanel": {
+    "justNow": "방금",
+    "minutesAgo": "{minutes}분 전",
+    "hoursAgo": "{hours}시간 전",
+    "daysAgo": "{days}일 전",
+    "freePlan": "무료",
+    "ultimatePlan": "얼티밋",
+    "proPlan": "프로",
+    "modalClose": "닫기",
+    "overviewTab": "개요",
+    "premiumTab": "프리미엄",
+    "webLoginsTab": "웹 로그인",
+    "registeredUsersTab": "등록된 사용자",
+    "allServersTab": "모든 서버",
+    "guildIdRequired": "길드 ID가 필요합니다",
+    "premiumGranted": "✅ {guildName}에 프리미엄이 부여되었습니다 ({plan}, {duration}일)",
+    "failedToGrantPremium": "프리미엄 부여 실패",
+    "requestFailed": "요청 실패",
+    "premiumExtended": "✅ {guildName}의 프리미엄이 {days}일 연장되었습니다",
+    "failedToExtendPremium": "프리미엄 연장 실패",
+    "premiumRevoked": "✅ {guildName}의 프리미엄이 취소되었습니다",
+    "failedToRevokePremium": "프리미엄 취소 실패",
+    "freePremiumGranted": "✅ {guildName}에 무료 프리미엄이 부여되었습니다 ({plan}, {duration}일)",
+    "failedToGrantFreePremium": "무료 프리미엄 부여 실패",
+    "loading": "로딩 중...",
+    "accessDenied": "접근 거부",
+    "accessDeniedMessage": "이 페이지를 볼 권한이 없습니다.",
+    "totalUsers": "총 사용자",
+    "totalGuilds": "총 길드",
+    "activePremium": "활성 프리미엄",
+    "totalLogins": "총 로그인",
+    "botUptime": "봇 가동 시간",
+    "lastRestart": "마지막 재시작",
+    "webLoginHistory": "웹 로그인 기록",
+    "user": "사용자",
+    "lastLogin": "마지막 로그인",
+    "ipAddress": "IP 주소",
+    "userAgent": "사용자 에이전트",
+    "registeredUsers": "등록된 사용자",
+    "joined": "가입일",
+    "premiumSubscriptions": "프리미엄 구독",
+    "guild": "길드",
+    "plan": "플랜",
+    "expires": "만료일",
+    "actions": "작업",
+    "grantPremium": "프리미엄 부여",
+    "extendPremium": "프리미엄 연장",
+    "revokePremium": "프리미엄 취소",
+    "allServers": "모든 서버",
+    "serverName": "서버 이름",
+    "owner": "소유자",
+    "members": "멤버",
+    "premium": "프리미엄",
+    "grantPremiumModal": {
+      "title": "프리미엄 부여",
+      "guildId": "길드 ID",
+      "guildIdPlaceholder": "길드 ID 입력",
+      "plan": "플랜",
+      "duration": "기간 (일)",
+      "durationPlaceholder": "예: 30, 60, 90",
+      "grantButton": "프리미엄 부여"
+    },
+    "extendPremiumModal": {
+      "title": "{guildName} 프리미엄 연장",
+      "days": "연장 일수",
+      "daysPlaceholder": "예: 30, 60, 90",
+      "extendButton": "프리미엄 연장"
+    },
+    "revokePremiumModal": {
+      "title": "{guildName} 프리미엄 취소",
+      "confirm": "{guildName}의 프리미엄을 취소하시겠습니까?",
+      "revokeButton": "프리미엄 취소"
+    },
+    "grantFreePremiumModal": {
+      "title": "무료 프리미엄 부여",
+      "guildId": "길드 ID",
+      "guildIdPlaceholder": "길드 ID 입력",
+      "plan": "플랜",
+      "duration": "기간 (일)",
+      "durationPlaceholder": "예: 30, 60, 90",
+      "grantButton": "무료 프리미엄 부여"
+    }
   }
 }

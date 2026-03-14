@@ -162,7 +162,36 @@
     "reason": "Grund",
     "timestamp": "Zeitstempel",
     "filterByAction": "Nach Aktion filtern",
-    "filterByModerator": "Nach Moderator filtern"
+    "filterByModerator": "Nach Moderator filtern",
+    "failedToFetch": "Fehler beim Abrufen der Prüfprotokolle:",
+    "justNow": "Gerade eben",
+    "minutesAgo": "vor {minutes} Min.",
+    "hoursAgo": "vor {hours} Std.",
+    "daysAgo": "vor {days} Tg.",
+    "headerTitle": "Audit <span className=\"gradient-text\">Logs</span>",
+    "headerSubtitle": "Verfolgen Sie alle administrativen Aktionen auf dem Server.",
+    "allActions": "Alle Aktionen",
+    "refresh": "Aktualisieren",
+    "noLogsFound": "Keine Prüfprotokolle gefunden",
+    "tryDifferentFilter": "Versuchen Sie einen anderen Filter",
+    "noRecentActions": "Keine aktuellen Aktionen zum Anzeigen",
+    "performed": "ausgeführt",
+    "showingEntries": "Zeige {filteredCount} von {totalCount} Einträgen",
+    "actionColors": {
+      "Member Banned": "Mitglied gesperrt",
+      "Member Kicked": "Mitglied entfernt",
+      "Member Unbanned": "Mitglied entsperrt",
+      "Channel Created": "Kanal erstellt",
+      "Channel Deleted": "Kanal gelöscht",
+      "Channel Updated": "Kanal aktualisiert",
+      "Role Created": "Rolle erstellt",
+      "Role Deleted": "Rolle gelöscht",
+      "Role Updated": "Rolle aktualisiert",
+      "Message Deleted": "Nachricht gelöscht",
+      "Messages Bulk Deleted": "Nachrichten massenweise gelöscht",
+      "Member Updated": "Mitglied aktualisiert",
+      "Server Updated": "Server aktualisiert"
+    }
   },
   "transcripts": {
     "title": "Ticket-Protokolle",
@@ -209,6 +238,169 @@
     "variables": "Verfügbare Variablen",
     "userName": "Benutzername",
     "serverName": "Servername",
-    "memberCount": "Mitgliederanzahl"
+    "memberCount": "Mitgliederanzahl",
+    "selectChannelError": "Bitte wählen Sie einen Kanal für {tabName}-Nachrichten aus",
+    "saveSuccess": "{tabName}-Konfiguration erfolgreich gespeichert!",
+    "saveError": "Speichern fehlgeschlagen: {error}",
+    "saveErrorGeneric": "Konfiguration konnte nicht gespeichert werden",
+    "loadingServers": "Lade Ihre Server...",
+    "welcomeTab": "Willkommen",
+    "goodbyeTab": "Auf Wiedersehen",
+    "messageSettings": "Nachrichteneinstellungen",
+    "availableVariables": "Verfügbare Variablen:",
+    "usernameVar": "- Name des Benutzers",
+    "userMentionVar": "- Benutzererwähnung",
+    "serverNameVar": "- Servername",
+    "enableMessages": "{tabName}-Nachrichten aktivieren",
+    "enableMessagesDesc": "Schalten Sie dies ein oder aus, um die Funktion zu aktivieren oder zu deaktivieren",
+    "targetChannel": "Zielkanal",
+    "selectChannelPlaceholder": "Wählen Sie einen Kanal",
+    "embedTitle": "Embed-Titel",
+    "welcomePlaceholder": "Willkommen {username}!",
+    "goodbyePlaceholder": "Auf Wiedersehen {username}",
+    "embedDescription": "Embed-Beschreibung",
+    "embedDescriptionPlaceholder": "{user} ist dem Server beigetreten!",
+    "embedBanner": "URL des Embed-Bannerbildes",
+    "embedBannerPlaceholder": "https://example.com/banner.png",
+    "previewTitle": "Willkommen bei {serverName}",
+    "previewDescription": "Dies ist eine Vorschau Ihrer Willkommensnachricht. {user} ist dem Server beigetreten!",
+    "previewFooter": "Mitglied #{memberCount}",
+    "showVariables": "Variablen anzeigen",
+    "hideVariables": "Variablen ausblenden"
+  },
+  "antiRaid": {
+    "title": "Anti-Raid-System",
+    "subtitle": "Schützen Sie Ihren Server vor Raids, Spam und schädlichen Inhalten.",
+    "saveSuccess": "Anti-Raid-Konfiguration erfolgreich gespeichert!",
+    "saveError": "Konfiguration konnte nicht gespeichert werden",
+    "securityModules": "Sicherheitsmodule",
+    "antiLink": {
+      "label": "Anti-Link",
+      "desc": "Alle externen Links blockieren"
+    },
+    "antiPromotion": {
+      "label": "Anti-Promotion",
+      "desc": "Discord-Einladungslinks blockieren"
+    },
+    "antiSpam": {
+      "label": "Anti-Spam",
+      "desc": "Verhindert Nachrichten-Spamming"
+    },
+    "antiBadwords": {
+      "label": "Anti-Schimpfwörter",
+      "desc": "Verbotene Wörter filtern"
+    },
+    "lockdownMode": {
+      "label": "Lockdown-Modus",
+      "desc": "Alle Nachrichten blockieren (Notfall)"
+    },
+    "advancedSettings": "Erweiterte Einstellungen",
+    "logChannel": {
+      "label": "Protokoll-Kanal",
+      "placeholder": "Wählen Sie einen Kanal für die Protokollierung...",
+      "desc": "Verstöße werden hier protokolliert"
+    },
+    "spamThreshold": {
+      "label": "Spam-Schwelle",
+      "desc": "Nachrichten pro 5 Sekunden bevor der Spamfilter ausgelöst wird"
+    },
+    "bannedWords": {
+      "label": "Verbotene Wörter (kommagetrennt)",
+      "placeholder": "schimpfwort1, schimpfwort2, schimpfwort3...",
+      "desc": "Wörter werden ohne Berücksichtigung der Groß-/Kleinschreibung erkannt"
+    },
+    "saveButton": "Anti-Raid-Konfiguration speichern",
+    "saving": "Speichert...",
+    "statusOverview": "Statusübersicht",
+    "activeModules": "Aktive Module:",
+    "bannedWordsCount": "Verbotene Wörter:",
+    "logChannelStatus": "Protokoll-Kanal:",
+    "securityTip": {
+      "title": "Sicherheitstipp",
+      "desc": "Setzen Sie immer einen **Protokoll-Kanal**, um nachzuverfolgen, wer die Filter auslöst. Dies hilft Ihnen, hartnäckige Raider zu identifizieren und zu sperren."
+    }
+  },
+  "adminPanel": {
+    "justNow": "gerade eben",
+    "minutesAgo": "vor {minutes} Min.",
+    "hoursAgo": "vor {hours} Std.",
+    "daysAgo": "vor {days} Tg.",
+    "freePlan": "Kostenlos",
+    "ultimatePlan": "Ultimativ",
+    "proPlan": "Pro",
+    "modalClose": "Schließen",
+    "overviewTab": "Übersicht",
+    "premiumTab": "Premium",
+    "webLoginsTab": "Web-Anmeldungen",
+    "registeredUsersTab": "Registrierte Benutzer",
+    "allServersTab": "Alle Server",
+    "guildIdRequired": "Gilden-ID ist erforderlich",
+    "premiumGranted": "✅ Premium für {guildName} gewährt ({plan}, {duration} Tage)",
+    "failedToGrantPremium": "Premium konnte nicht gewährt werden",
+    "requestFailed": "Anfrage fehlgeschlagen",
+    "premiumExtended": "✅ Premium für {guildName} um {days} Tage verlängert",
+    "failedToExtendPremium": "Premium konnte nicht verlängert werden",
+    "premiumRevoked": "✅ Premium für {guildName} entzogen",
+    "failedToRevokePremium": "Premium konnte nicht entzogen werden",
+    "freePremiumGranted": "✅ Kostenloses Premium für {guildName} gewährt ({plan}, {duration} Tage)",
+    "failedToGrantFreePremium": "Kostenloses Premium konnte nicht gewährt werden",
+    "loading": "Lädt...",
+    "accessDenied": "Zugriff verweigert",
+    "accessDeniedMessage": "Sie haben keine Berechtigung, diese Seite anzusehen.",
+    "totalUsers": "Gesamtanzahl Benutzer",
+    "totalGuilds": "Gesamtanzahl Gilden",
+    "activePremium": "Aktives Premium",
+    "totalLogins": "Gesamtanzahl Anmeldungen",
+    "botUptime": "Bot-Betriebszeit",
+    "lastRestart": "Letzter Neustart",
+    "webLoginHistory": "Web-Anmeldeverlauf",
+    "user": "Benutzer",
+    "lastLogin": "Letzte Anmeldung",
+    "ipAddress": "IP-Adresse",
+    "userAgent": "User Agent",
+    "registeredUsers": "Registrierte Benutzer",
+    "joined": "Beigetreten",
+    "premiumSubscriptions": "Premium-Abonnements",
+    "guild": "Gilde",
+    "plan": "Plan",
+    "expires": "Läuft ab",
+    "actions": "Aktionen",
+    "grantPremium": "Premium gewähren",
+    "extendPremium": "Premium verlängern",
+    "revokePremium": "Premium entziehen",
+    "allServers": "Alle Server",
+    "serverName": "Servername",
+    "owner": "Besitzer",
+    "members": "Mitglieder",
+    "premium": "Premium",
+    "grantPremiumModal": {
+      "title": "Premium gewähren",
+      "guildId": "Gilden-ID",
+      "guildIdPlaceholder": "Gilden-ID eingeben",
+      "plan": "Plan",
+      "duration": "Dauer (Tage)",
+      "durationPlaceholder": "z.B. 30, 60, 90",
+      "grantButton": "Premium gewähren"
+    },
+    "extendPremiumModal": {
+      "title": "Premium für {guildName} verlängern",
+      "days": "Tage zur Verlängerung",
+      "daysPlaceholder": "z.B. 30, 60, 90",
+      "extendButton": "Premium verlängern"
+    },
+    "revokePremiumModal": {
+      "title": "Premium für {guildName} entziehen",
+      "confirm": "Sind Sie sicher, dass Sie das Premium für {guildName} entziehen möchten?",
+      "revokeButton": "Premium entziehen"
+    },
+    "grantFreePremiumModal": {
+      "title": "Kostenloses Premium gewähren",
+      "guildId": "Gilden-ID",
+      "guildIdPlaceholder": "Gilden-ID eingeben",
+      "plan": "Plan",
+      "duration": "Dauer (Tage)",
+      "durationPlaceholder": "z.B. 30, 60, 90",
+      "grantButton": "Kostenloses Premium gewähren"
+    }
   }
 }

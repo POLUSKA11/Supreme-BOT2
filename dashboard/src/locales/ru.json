@@ -162,7 +162,36 @@
     "reason": "Причина",
     "timestamp": "Временная метка",
     "filterByAction": "Фильтр по действию",
-    "filterByModerator": "Фильтр по модератору"
+    "filterByModerator": "Фильтр по модератору",
+    "failedToFetch": "Не удалось получить журналы аудита:",
+    "justNow": "Только что",
+    "minutesAgo": "{minutes}м назад",
+    "hoursAgo": "{hours}ч назад",
+    "daysAgo": "{days}д назад",
+    "headerTitle": "Аудит <span className=\"gradient-text\">Журналы</span>",
+    "headerSubtitle": "Отслеживайте все административные действия на сервере.",
+    "allActions": "Все действия",
+    "refresh": "Обновить",
+    "noLogsFound": "Журналы аудита не найдены",
+    "tryDifferentFilter": "Попробуйте другой фильтр",
+    "noRecentActions": "Нет недавних действий для отображения",
+    "performed": "выполнено",
+    "showingEntries": "Показано {filteredCount} из {totalCount} записей",
+    "actionColors": {
+      "Member Banned": "Участник заблокирован",
+      "Member Kicked": "Участник исключён",
+      "Member Unbanned": "Участник разблокирован",
+      "Channel Created": "Канал создан",
+      "Channel Deleted": "Канал удалён",
+      "Channel Updated": "Канал обновлён",
+      "Role Created": "Роль создана",
+      "Role Deleted": "Роль удалена",
+      "Role Updated": "Роль обновлена",
+      "Message Deleted": "Сообщение удалено",
+      "Messages Bulk Deleted": "Сообщения удалены массово",
+      "Member Updated": "Участник обновлён",
+      "Server Updated": "Сервер обновлён"
+    }
   },
   "transcripts": {
     "title": "Транскрипты тикетов",
@@ -209,6 +238,169 @@
     "variables": "Доступные переменные",
     "userName": "Имя пользователя",
     "serverName": "Название сервера",
-    "memberCount": "Количество участников"
+    "memberCount": "Количество участников",
+    "selectChannelError": "Пожалуйста, выберите канал для сообщений {tabName}",
+    "saveSuccess": "Конфигурация {tabName} успешно сохранена!",
+    "saveError": "Не удалось сохранить: {error}",
+    "saveErrorGeneric": "Не удалось сохранить конфигурацию",
+    "loadingServers": "Загрузка ваших серверов...",
+    "welcomeTab": "Добро пожаловать",
+    "goodbyeTab": "Прощание",
+    "messageSettings": "Настройки сообщений",
+    "availableVariables": "Доступные переменные:",
+    "usernameVar": "- Имя пользователя",
+    "userMentionVar": "- Упоминание пользователя",
+    "serverNameVar": "- Название сервера",
+    "enableMessages": "Включить сообщения {tabName}",
+    "enableMessagesDesc": "Переключите, чтобы включить или отключить функцию",
+    "targetChannel": "Целевой канал",
+    "selectChannelPlaceholder": "Выберите канал",
+    "embedTitle": "Заголовок вложения",
+    "welcomePlaceholder": "Добро пожаловать, {username}!",
+    "goodbyePlaceholder": "Прощай, {username}",
+    "embedDescription": "Описание вложения",
+    "embedDescriptionPlaceholder": "{user} присоединился к серверу!",
+    "embedBanner": "URL баннера вложения",
+    "embedBannerPlaceholder": "https://example.com/banner.png",
+    "previewTitle": "Добро пожаловать на {serverName}",
+    "previewDescription": "Это предварительный просмотр вашего приветственного сообщения. {user} присоединился к серверу!",
+    "previewFooter": "Участник №{memberCount}",
+    "showVariables": "Показать переменные",
+    "hideVariables": "Скрыть переменные"
+  },
+  "antiRaid": {
+    "title": "Система Анти-Рейд",
+    "subtitle": "Защитите свой сервер от рейдов, спама и вредоносного контента.",
+    "saveSuccess": "Конфигурация Анти-Рейда успешно сохранена!",
+    "saveError": "Не удалось сохранить конфигурацию",
+    "securityModules": "Модули Безопасности",
+    "antiLink": {
+      "label": "Анти-Ссылка",
+      "desc": "Блокировать все внешние ссылки"
+    },
+    "antiPromotion": {
+      "label": "Анти-Промо",
+      "desc": "Блокировать приглашения Discord"
+    },
+    "antiSpam": {
+      "label": "Анти-Спам",
+      "desc": "Предотвращать спам сообщений"
+    },
+    "antiBadwords": {
+      "label": "Анти-Мат",
+      "desc": "Фильтровать запрещённые слова"
+    },
+    "lockdownMode": {
+      "label": "Режим Блокировки",
+      "desc": "Блокировать все сообщения (аварийный режим)"
+    },
+    "advancedSettings": "Расширенные Настройки",
+    "logChannel": {
+      "label": "Канал Логов",
+      "placeholder": "Выберите канал для логирования...",
+      "desc": "Нарушения будут записываться здесь"
+    },
+    "spamThreshold": {
+      "label": "Порог Спама",
+      "desc": "Сообщений за 5 секунд до срабатывания фильтра спама"
+    },
+    "bannedWords": {
+      "label": "Запрещённые Слова (через запятую)",
+      "placeholder": "плохослово1, плохослово2, плохослово3...",
+      "desc": "Слова будут сопоставляться без учёта регистра"
+    },
+    "saveButton": "Сохранить Конфигурацию Анти-Рейда",
+    "saving": "Сохранение...",
+    "statusOverview": "Обзор Статуса",
+    "activeModules": "Активные Модули:",
+    "bannedWordsCount": "Запрещённые Слова:",
+    "logChannelStatus": "Канал Логов:",
+    "securityTip": {
+      "title": "Совет по Безопасности",
+      "desc": "Всегда устанавливайте **Канал Логов**, чтобы отслеживать, кто срабатывает на фильтры. Это поможет вам выявлять и банить постоянных рейдеров."
+    }
+  },
+  "adminPanel": {
+    "justNow": "только что",
+    "minutesAgo": "{minutes}м назад",
+    "hoursAgo": "{hours}ч назад",
+    "daysAgo": "{days}д назад",
+    "freePlan": "Бесплатно",
+    "ultimatePlan": "Ультимейт",
+    "proPlan": "Про",
+    "modalClose": "Закрыть",
+    "overviewTab": "Обзор",
+    "premiumTab": "Премиум",
+    "webLoginsTab": "Входы на сайт",
+    "registeredUsersTab": "Зарегистрированные пользователи",
+    "allServersTab": "Все серверы",
+    "guildIdRequired": "Требуется ID гильдии",
+    "premiumGranted": "✅ Премиум предоставлен {guildName} ({plan}, {duration}д)",
+    "failedToGrantPremium": "Не удалось предоставить премиум",
+    "requestFailed": "Запрос не выполнен",
+    "premiumExtended": "✅ Премиум для {guildName} продлен на {days} дней",
+    "failedToExtendPremium": "Не удалось продлить премиум",
+    "premiumRevoked": "✅ Премиум отозван у {guildName}",
+    "failedToRevokePremium": "Не удалось отозвать премиум",
+    "freePremiumGranted": "✅ Бесплатный премиум предоставлен {guildName} ({plan}, {duration}д)",
+    "failedToGrantFreePremium": "Не удалось предоставить бесплатный премиум",
+    "loading": "Загрузка...",
+    "accessDenied": "Доступ запрещен",
+    "accessDeniedMessage": "У вас нет разрешения на просмотр этой страницы.",
+    "totalUsers": "Всего пользователей",
+    "totalGuilds": "Всего гильдий",
+    "activePremium": "Активный премиум",
+    "totalLogins": "Всего входов",
+    "botUptime": "Время работы бота",
+    "lastRestart": "Последняя перезагрузка",
+    "webLoginHistory": "История входов на сайт",
+    "user": "Пользователь",
+    "lastLogin": "Последний вход",
+    "ipAddress": "IP-адрес",
+    "userAgent": "User Agent",
+    "registeredUsers": "Зарегистрированные пользователи",
+    "joined": "Присоединился",
+    "premiumSubscriptions": "Премиум подписки",
+    "guild": "Гильдия",
+    "plan": "План",
+    "expires": "Истекает",
+    "actions": "Действия",
+    "grantPremium": "Предоставить премиум",
+    "extendPremium": "Продлить премиум",
+    "revokePremium": "Отозвать премиум",
+    "allServers": "Все серверы",
+    "serverName": "Название сервера",
+    "owner": "Владелец",
+    "members": "Участники",
+    "premium": "Премиум",
+    "grantPremiumModal": {
+      "title": "Предоставить премиум",
+      "guildId": "ID гильдии",
+      "guildIdPlaceholder": "Введите ID гильдии",
+      "plan": "План",
+      "duration": "Длительность (дни)",
+      "durationPlaceholder": "например, 30, 60, 90",
+      "grantButton": "Предоставить премиум"
+    },
+    "extendPremiumModal": {
+      "title": "Продлить премиум для {guildName}",
+      "days": "Дней для продления",
+      "daysPlaceholder": "например, 30, 60, 90",
+      "extendButton": "Продлить премиум"
+    },
+    "revokePremiumModal": {
+      "title": "Отозвать премиум для {guildName}",
+      "confirm": "Вы уверены, что хотите отозвать премиум у {guildName}?",
+      "revokeButton": "Отозвать премиум"
+    },
+    "grantFreePremiumModal": {
+      "title": "Предоставить бесплатный премиум",
+      "guildId": "ID гильдии",
+      "guildIdPlaceholder": "Введите ID гильдии",
+      "plan": "План",
+      "duration": "Длительность (дни)",
+      "durationPlaceholder": "например, 30, 60, 90",
+      "grantButton": "Предоставить бесплатный премиум"
+    }
   }
 }

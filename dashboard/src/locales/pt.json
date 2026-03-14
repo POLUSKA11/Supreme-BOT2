@@ -162,7 +162,36 @@
     "reason": "Motivo",
     "timestamp": "Data e Hora",
     "filterByAction": "Filtrar por ação",
-    "filterByModerator": "Filtrar por moderador"
+    "filterByModerator": "Filtrar por moderador",
+    "failedToFetch": "Falha ao buscar registros de auditoria:",
+    "justNow": "Agora mesmo",
+    "minutesAgo": "há {minutes}m",
+    "hoursAgo": "há {hours}h",
+    "daysAgo": "há {days}d",
+    "headerTitle": "Registros de <span className=\"gradient-text\">Auditoria</span>",
+    "headerSubtitle": "Acompanhe todas as ações administrativas no servidor.",
+    "allActions": "Todas as Ações",
+    "refresh": "Atualizar",
+    "noLogsFound": "Nenhum registro de auditoria encontrado",
+    "tryDifferentFilter": "Tente um filtro diferente",
+    "noRecentActions": "Nenhuma ação recente para exibir",
+    "performed": "realizado",
+    "showingEntries": "Exibindo {filteredCount} de {totalCount} entradas",
+    "actionColors": {
+      "Member Banned": "Membro Banido",
+      "Member Kicked": "Membro Expulso",
+      "Member Unbanned": "Membro Desbanido",
+      "Channel Created": "Canal Criado",
+      "Channel Deleted": "Canal Excluído",
+      "Channel Updated": "Canal Atualizado",
+      "Role Created": "Cargo Criado",
+      "Role Deleted": "Cargo Excluído",
+      "Role Updated": "Cargo Atualizado",
+      "Message Deleted": "Mensagem Excluída",
+      "Messages Bulk Deleted": "Mensagens Excluídas em Massa",
+      "Member Updated": "Membro Atualizado",
+      "Server Updated": "Servidor Atualizado"
+    }
   },
   "transcripts": {
     "title": "Transcrições de Tickets",
@@ -209,6 +238,169 @@
     "variables": "Variáveis Disponíveis",
     "userName": "Nome do Usuário",
     "serverName": "Nome do Servidor",
-    "memberCount": "Contagem de Membros"
+    "memberCount": "Contagem de Membros",
+    "selectChannelError": "Por favor, selecione um canal para as mensagens de {tabName}",
+    "saveSuccess": "Configuração de {tabName} salva com sucesso!",
+    "saveError": "Falha ao salvar: {error}",
+    "saveErrorGeneric": "Falha ao salvar a configuração",
+    "loadingServers": "Carregando seus servidores...",
+    "welcomeTab": "Bem-vindo",
+    "goodbyeTab": "Adeus",
+    "messageSettings": "Configurações de Mensagem",
+    "availableVariables": "Variáveis Disponíveis:",
+    "usernameVar": "- Nome do usuário",
+    "userMentionVar": "- Menção ao usuário",
+    "serverNameVar": "- Nome do servidor",
+    "enableMessages": "Ativar mensagens de {tabName}",
+    "enableMessagesDesc": "Ative ou desative este recurso",
+    "targetChannel": "Canal de Destino",
+    "selectChannelPlaceholder": "Selecione um canal",
+    "embedTitle": "Título do Embed",
+    "welcomePlaceholder": "Bem-vindo {username}!",
+    "goodbyePlaceholder": "Adeus {username}",
+    "embedDescription": "Descrição do Embed",
+    "embedDescriptionPlaceholder": "{user} entrou no servidor!",
+    "embedBanner": "URL da Imagem do Banner do Embed",
+    "embedBannerPlaceholder": "https://example.com/banner.png",
+    "previewTitle": "Bem-vindo ao {serverName}",
+    "previewDescription": "Esta é uma prévia da sua mensagem de boas-vindas. {user} entrou no servidor!",
+    "previewFooter": "Membro #{memberCount}",
+    "showVariables": "Mostrar Variáveis",
+    "hideVariables": "Ocultar Variáveis"
+  },
+  "antiRaid": {
+    "title": "Sistema Anti-Raide",
+    "subtitle": "Proteja seu servidor contra raides, spam e conteúdo malicioso.",
+    "saveSuccess": "Configuração Anti-Raide salva com sucesso!",
+    "saveError": "Falha ao salvar a configuração",
+    "securityModules": "Módulos de Segurança",
+    "antiLink": {
+      "label": "Anti-Link",
+      "desc": "Bloquear todos os links externos"
+    },
+    "antiPromotion": {
+      "label": "Anti-Promoção",
+      "desc": "Bloquear links de convite do Discord"
+    },
+    "antiSpam": {
+      "label": "Anti-Spam",
+      "desc": "Prevenir spam de mensagens"
+    },
+    "antiBadwords": {
+      "label": "Anti-Palavras Proibidas",
+      "desc": "Filtrar palavras proibidas"
+    },
+    "lockdownMode": {
+      "label": "Modo de Bloqueio",
+      "desc": "Bloquear todas as mensagens (emergência)"
+    },
+    "advancedSettings": "Configurações Avançadas",
+    "logChannel": {
+      "label": "Canal de Registro",
+      "placeholder": "Selecione um canal para registro...",
+      "desc": "As violações serão registradas aqui"
+    },
+    "spamThreshold": {
+      "label": "Limite de Spam",
+      "desc": "Mensagens por 5 segundos antes de ativar o filtro de spam"
+    },
+    "bannedWords": {
+      "label": "Palavras Proibidas (separadas por vírgula)",
+      "placeholder": "palavraproibida1, palavraproibida2, palavraproibida3...",
+      "desc": "As palavras serão correspondidas sem diferenciar maiúsculas de minúsculas"
+    },
+    "saveButton": "Salvar Configuração Anti-Raide",
+    "saving": "Salvando...",
+    "statusOverview": "Visão Geral do Status",
+    "activeModules": "Módulos Ativos:",
+    "bannedWordsCount": "Palavras Proibidas:",
+    "logChannelStatus": "Canal de Registro:",
+    "securityTip": {
+      "title": "Dica de Segurança",
+      "desc": "Sempre defina um **Canal de Registro** para acompanhar quem está acionando os filtros. Isso ajuda a identificar e banir raiders persistentes."
+    }
+  },
+  "adminPanel": {
+    "justNow": "agora mesmo",
+    "minutesAgo": "há {minutes}m",
+    "hoursAgo": "há {hours}h",
+    "daysAgo": "há {days}d",
+    "freePlan": "Grátis",
+    "ultimatePlan": "Ultimate",
+    "proPlan": "Pro",
+    "modalClose": "Fechar",
+    "overviewTab": "Visão Geral",
+    "premiumTab": "Premium",
+    "webLoginsTab": "Logins Web",
+    "registeredUsersTab": "Usuários Registrados",
+    "allServersTab": "Todos os Servidores",
+    "guildIdRequired": "ID da Guilda é obrigatório",
+    "premiumGranted": "✅ Premium concedido para {guildName} ({plan}, {duration}d)",
+    "failedToGrantPremium": "Falha ao conceder premium",
+    "requestFailed": "Falha na solicitação",
+    "premiumExtended": "✅ Premium para {guildName} estendido por {days} dias",
+    "failedToExtendPremium": "Falha ao estender premium",
+    "premiumRevoked": "✅ Premium revogado para {guildName}",
+    "failedToRevokePremium": "Falha ao revogar premium",
+    "freePremiumGranted": "✅ Premium gratuito concedido para {guildName} ({plan}, {duration}d)",
+    "failedToGrantFreePremium": "Falha ao conceder premium gratuito",
+    "loading": "Carregando...",
+    "accessDenied": "Acesso Negado",
+    "accessDeniedMessage": "Você não tem permissão para visualizar esta página.",
+    "totalUsers": "Total de Usuários",
+    "totalGuilds": "Total de Guildas",
+    "activePremium": "Premium Ativo",
+    "totalLogins": "Total de Logins",
+    "botUptime": "Tempo de Atividade do Bot",
+    "lastRestart": "Última Reinicialização",
+    "webLoginHistory": "Histórico de Logins Web",
+    "user": "Usuário",
+    "lastLogin": "Último Login",
+    "ipAddress": "Endereço IP",
+    "userAgent": "Agente do Usuário",
+    "registeredUsers": "Usuários Registrados",
+    "joined": "Entrou",
+    "premiumSubscriptions": "Assinaturas Premium",
+    "guild": "Guilda",
+    "plan": "Plano",
+    "expires": "Expira",
+    "actions": "Ações",
+    "grantPremium": "Conceder Premium",
+    "extendPremium": "Estender Premium",
+    "revokePremium": "Revogar Premium",
+    "allServers": "Todos os Servidores",
+    "serverName": "Nome do Servidor",
+    "owner": "Proprietário",
+    "members": "Membros",
+    "premium": "Premium",
+    "grantPremiumModal": {
+      "title": "Conceder Premium",
+      "guildId": "ID da Guilda",
+      "guildIdPlaceholder": "Digite o ID da Guilda",
+      "plan": "Plano",
+      "duration": "Duração (dias)",
+      "durationPlaceholder": "ex: 30, 60, 90",
+      "grantButton": "Conceder Premium"
+    },
+    "extendPremiumModal": {
+      "title": "Estender Premium para {guildName}",
+      "days": "Dias para Estender",
+      "daysPlaceholder": "ex: 30, 60, 90",
+      "extendButton": "Estender Premium"
+    },
+    "revokePremiumModal": {
+      "title": "Revogar Premium para {guildName}",
+      "confirm": "Tem certeza que deseja revogar o premium para {guildName}?",
+      "revokeButton": "Revogar Premium"
+    },
+    "grantFreePremiumModal": {
+      "title": "Conceder Premium Gratuito",
+      "guildId": "ID da Guilda",
+      "guildIdPlaceholder": "Digite o ID da Guilda",
+      "plan": "Plano",
+      "duration": "Duração (dias)",
+      "durationPlaceholder": "ex: 30, 60, 90",
+      "grantButton": "Conceder Premium Gratuito"
+    }
   }
 }

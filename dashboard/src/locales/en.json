@@ -141,16 +141,37 @@
     "logging": "Logging"
   },
   "auditLogs": {
-    "title": "Audit Logs",
-    "subtitle": "View server activity and moderation logs",
-    "noLogs": "No logs found",
-    "action": "Action",
-    "moderator": "Moderator",
-    "target": "Target",
-    "reason": "Reason",
-    "timestamp": "Timestamp",
-    "filterByAction": "Filter by action",
-    "filterByModerator": "Filter by moderator"
+    "failedToFetch": "Failed to fetch audit logs:",
+    "justNow": "Just now",
+    "minutesAgo": "{minutes}m ago",
+    "hoursAgo": "{hours}h ago",
+    "daysAgo": "{days}d ago",
+    "headerTitle": "Audit <span className=\"gradient-text\">Logs</span>",
+    "headerSubtitle": "Track all administrative actions on the server.",
+    "allActions": "All Actions",
+    "refresh": "Refresh",
+    "noLogsFound": "No audit logs found",
+    "tryDifferentFilter": "Try a different filter",
+    "noRecentActions": "No recent actions to display",
+    "performed": "performed",
+    "target": "Target:",
+    "reason": "Reason:",
+    "showingEntries": "Showing {filteredCount} of {totalCount} entries",
+    "actionColors": {
+      "Member Banned": "Member Banned",
+      "Member Kicked": "Member Kicked",
+      "Member Unbanned": "Member Unbanned",
+      "Channel Created": "Channel Created",
+      "Channel Deleted": "Channel Deleted",
+      "Channel Updated": "Channel Updated",
+      "Role Created": "Role Created",
+      "Role Deleted": "Role Deleted",
+      "Role Updated": "Role Updated",
+      "Message Deleted": "Message Deleted",
+      "Messages Bulk Deleted": "Messages Bulk Deleted",
+      "Member Updated": "Member Updated",
+      "Server Updated": "Server Updated"
+    }
   },
   "transcripts": {
     "title": "Ticket Transcripts",
@@ -186,18 +207,37 @@
     "verifiedBy": "Verified By"
   },
   "welcomeSetup": {
-    "title": "Welcome Setup",
-    "subtitle": "Configure welcome messages and auto-roles",
-    "welcomeChannel": "Welcome Channel",
-    "welcomeMessage": "Welcome Message",
-    "embedColor": "Embed Color",
-    "autoRole": "Auto Role",
-    "enableWelcome": "Enable Welcome Messages",
+    "selectChannelError": "Please select a channel for {tabName} messages",
+    "saveSuccess": "{tabName} configuration saved successfully!",
+    "saveError": "Failed to save: {error}",
+    "saveErrorGeneric": "Failed to save configuration",
+    "loadingServers": "Loading your servers...",
+    "title": "Welcome & Goodbye",
+    "subtitle": "Configure automatic messages for members joining or leaving your server",
+    "welcomeTab": "Welcome",
+    "goodbyeTab": "Goodbye",
+    "messageSettings": "Message Settings",
+    "availableVariables": "Available Variables:",
+    "usernameVar": "- User's name",
+    "userMentionVar": "- User mention",
+    "serverNameVar": "- Server name",
+    "enableMessages": "Enable {tabName} messages",
+    "enableMessagesDesc": "Toggle this to turn the feature on or off",
+    "targetChannel": "Target Channel",
+    "selectChannelPlaceholder": "Select a channel",
+    "embedTitle": "Embed Title",
+    "welcomePlaceholder": "Welcome {username}!",
+    "goodbyePlaceholder": "Goodbye {username}",
+    "embedDescription": "Embed Description",
+    "embedDescriptionPlaceholder": "{user} has joined the server!",
+    "embedBanner": "Embed Banner Image URL",
+    "embedBannerPlaceholder": "https://example.com/banner.png",
     "preview": "Preview",
-    "variables": "Available Variables",
-    "userName": "User Name",
-    "serverName": "Server Name",
-    "memberCount": "Member Count"
+    "previewTitle": "Welcome to {serverName}",
+    "previewDescription": "This is a preview of your welcome message. {user} has joined the server!",
+    "previewFooter": "Member #{memberCount}",
+    "showVariables": "Show Variables",
+    "hideVariables": "Hide Variables"
   },
   "auth": {
     "login": "Login",
@@ -208,5 +248,140 @@
     "loggingIn": "Logging in...",
     "loginFailed": "Login failed",
     "unauthorized": "Unauthorized"
+  },
+  "antiRaid": {
+    "title": "Anti-Raid System",
+    "subtitle": "Protect your server from raids, spam, and malicious content.",
+    "saveSuccess": "Anti-Raid configuration saved successfully!",
+    "saveError": "Failed to save configuration",
+    "securityModules": "Security Modules",
+    "antiLink": {
+      "label": "Anti-Link",
+      "desc": "Block all external links"
+    },
+    "antiPromotion": {
+      "label": "Anti-Promotion",
+      "desc": "Block Discord invite links"
+    },
+    "antiSpam": {
+      "label": "Anti-Spam",
+      "desc": "Prevent message spamming"
+    },
+    "antiBadwords": {
+      "label": "Anti-BadWords",
+      "desc": "Filter banned words"
+    },
+    "lockdownMode": {
+      "label": "Lockdown Mode",
+      "desc": "Block all messages (emergency)"
+    },
+    "advancedSettings": "Advanced Settings",
+    "logChannel": {
+      "label": "Log Channel",
+      "placeholder": "Select a channel for logging...",
+      "desc": "Violations will be logged here"
+    },
+    "spamThreshold": {
+      "label": "Spam Threshold",
+      "desc": "Messages per 5 seconds before triggering spam filter"
+    },
+    "bannedWords": {
+      "label": "Banned Words (comma-separated)",
+      "placeholder": "badword1, badword2, badword3...",
+      "desc": "Words will be matched case-insensitively"
+    },
+    "saveButton": "Save Anti-Raid Configuration",
+    "saving": "Saving...",
+    "statusOverview": "Status Overview",
+    "activeModules": "Active Modules:",
+    "bannedWordsCount": "Banned Words:",
+    "logChannelStatus": "Log Channel:",
+    "securityTip": {
+      "title": "Security Tip",
+      "desc": "Always set a **Log Channel** to keep track of who is triggering the filters. This helps you identify and ban persistent raiders."
+    }
+  },
+  "adminPanel": {
+    "justNow": "just now",
+    "minutesAgo": "{minutes}m ago",
+    "hoursAgo": "{hours}h ago",
+    "daysAgo": "{days}d ago",
+    "freePlan": "Free",
+    "ultimatePlan": "Ultimate",
+    "proPlan": "Pro",
+    "modalClose": "Close",
+    "overviewTab": "Overview",
+    "premiumTab": "Premium",
+    "webLoginsTab": "Web Logins",
+    "registeredUsersTab": "Registered Users",
+    "allServersTab": "All Servers",
+    "guildIdRequired": "Guild ID is required",
+    "premiumGranted": "\u2705 Premium granted to {guildName} ({plan}, {duration}d)",
+    "failedToGrantPremium": "Failed to grant premium",
+    "requestFailed": "Request failed",
+    "premiumExtended": "\u2705 Premium for {guildName} extended by {days} days",
+    "failedToExtendPremium": "Failed to extend premium",
+    "premiumRevoked": "\u2705 Premium revoked for {guildName}",
+    "failedToRevokePremium": "Failed to revoke premium",
+    "freePremiumGranted": "\u2705 Free premium granted to {guildName} ({plan}, {duration}d)",
+    "failedToGrantFreePremium": "Failed to grant free premium",
+    "loading": "Loading...",
+    "accessDenied": "Access Denied",
+    "accessDeniedMessage": "You do not have permission to view this page.",
+    "totalUsers": "Total Users",
+    "totalGuilds": "Total Guilds",
+    "activePremium": "Active Premium",
+    "totalLogins": "Total Logins",
+    "botUptime": "Bot Uptime",
+    "lastRestart": "Last Restart",
+    "webLoginHistory": "Web Login History",
+    "user": "User",
+    "lastLogin": "Last Login",
+    "ipAddress": "IP Address",
+    "userAgent": "User Agent",
+    "registeredUsers": "Registered Users",
+    "joined": "Joined",
+    "premiumSubscriptions": "Premium Subscriptions",
+    "guild": "Guild",
+    "plan": "Plan",
+    "expires": "Expires",
+    "actions": "Actions",
+    "grantPremium": "Grant Premium",
+    "extendPremium": "Extend Premium",
+    "revokePremium": "Revoke Premium",
+    "allServers": "All Servers",
+    "serverName": "Server Name",
+    "owner": "Owner",
+    "members": "Members",
+    "premium": "Premium",
+    "grantPremiumModal": {
+      "title": "Grant Premium",
+      "guildId": "Guild ID",
+      "guildIdPlaceholder": "Enter Guild ID",
+      "plan": "Plan",
+      "duration": "Duration (days)",
+      "durationPlaceholder": "e.g., 30, 60, 90",
+      "grantButton": "Grant Premium"
+    },
+    "extendPremiumModal": {
+      "title": "Extend Premium for {guildName}",
+      "days": "Days to Extend",
+      "daysPlaceholder": "e.g., 30, 60, 90",
+      "extendButton": "Extend Premium"
+    },
+    "revokePremiumModal": {
+      "title": "Revoke Premium for {guildName}",
+      "confirm": "Are you sure you want to revoke premium for {guildName}?",
+      "revokeButton": "Revoke Premium"
+    },
+    "grantFreePremiumModal": {
+      "title": "Grant Free Premium",
+      "guildId": "Guild ID",
+      "guildIdPlaceholder": "Enter Guild ID",
+      "plan": "Plan",
+      "duration": "Duration (days)",
+      "durationPlaceholder": "e.g., 30, 60, 90",
+      "grantButton": "Grant Free Premium"
+    }
   }
 }

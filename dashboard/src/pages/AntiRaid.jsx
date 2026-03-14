@@ -73,14 +73,14 @@ export default function AntiRaid({ selectedGuild }) {
       });
 
       if (res.ok) {
-        setSuccess('Anti-Raid configuration saved successfully!');
+        setSuccess(t('antiRaid.saveSuccess'));
         setConfig(configToSave);
       } else {
         const data = await res.json();
-        setError(data.error || 'Failed to save configuration');
+        setError(data.error || t('antiRaid.saveError'));
       }
     } catch (e) {
-      setError('Failed to save configuration');
+      setError(t('antiRaid.saveError'));
     } finally {
       setSaving(false);
       setTimeout(() => { setSuccess(''); setError(''); }, 5000);
@@ -105,9 +105,9 @@ export default function AntiRaid({ selectedGuild }) {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
           <ShieldAlert className="w-8 h-8 text-red-400" />
-          <span className="text-red-400">Anti-Raid</span> System
+          <span className="text-red-400">{t('antiRaid.title')}</span>
         </h1>
-        <p className="text-slate-400">Protect your server from raids, spam, and malicious content.</p>
+        <p className="text-slate-400">{t('antiRaid.subtitle')}</p>
       </div>
 
       {success && (
@@ -132,16 +132,16 @@ export default function AntiRaid({ selectedGuild }) {
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-red-400" />
-              Security Modules
+              {t('antiRaid.securityModules')}
             </h2>
 
             <div className="space-y-3">
               {[
-                { key: 'anti_link', label: 'Anti-Link', Icon: LinkIcon, desc: 'Block all external links' },
-                { key: 'anti_promo', label: 'Anti-Promotion', Icon: Megaphone, desc: 'Block Discord invite links' },
-                { key: 'anti_spam', label: 'Anti-Spam', Icon: Zap, desc: 'Prevent message spamming' },
-                { key: 'anti_badwords', label: 'Anti-BadWords', Icon: MessageSquare, desc: 'Filter banned words' },
-                { key: 'lockdown', label: 'Lockdown Mode', Icon: Lock, desc: 'Block all messages (emergency)' }
+                { key: 'anti_link', label: t('antiRaid.antiLink.label'), Icon: LinkIcon, desc: t('antiRaid.antiLink.desc') },
+                { key: 'anti_promo', label: t('antiRaid.antiPromotion.label'), Icon: Megaphone, desc: t('antiRaid.antiPromotion.desc') },
+                { key: 'anti_spam', label: t('antiRaid.antiSpam.label'), Icon: Zap, desc: t('antiRaid.antiSpam.desc') },
+                { key: 'anti_badwords', label: t('antiRaid.antiBadwords.label'), Icon: MessageSquare, desc: t('antiRaid.antiBadwords.desc') },
+                { key: 'lockdown', label: t('antiRaid.lockdownMode.label'), Icon: Lock, desc: t('antiRaid.lockdownMode.desc') }
               ].map(module => (
                 <div key={module.key} className="flex items-center justify-between p-4 bg-slate-900/40 rounded-xl border border-white/5 hover:border-white/10 transition-all">
                   <div className="flex items-center gap-3">
@@ -168,27 +168,27 @@ export default function AntiRaid({ selectedGuild }) {
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
               <Settings className="w-5 h-5 text-red-400" />
-              Advanced Settings
+              {t('antiRaid.advancedSettings')}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Log Channel</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t('antiRaid.logChannel.label')}</label>
                 <select
                   value={config.log_channel}
                   onChange={(e) => setConfig(prev => ({ ...prev, log_channel: e.target.value }))}
                   className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
                 >
-                  <option value="">Select a channel for logging...</option>
+                  <option value="">{t('antiRaid.logChannel.placeholder')}</option>
                   {channels.map(ch => (
                     <option key={ch.id} value={ch.id}>#{ch.name}</option>
                   ))}
                 </select>
-                <p className="text-xs text-slate-500 mt-1">Violations will be logged here</p>
+                <p className="text-xs text-slate-500 mt-1">{t('antiRaid.logChannel.desc')}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Spam Threshold</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t('antiRaid.spamThreshold.label')}</label>
                 <input
                   type="number"
                   min="2"
@@ -197,19 +197,19 @@ export default function AntiRaid({ selectedGuild }) {
                   onChange={(e) => setConfig(prev => ({ ...prev, spam_threshold: parseInt(e.target.value) || 5 }))}
                   className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
                 />
-                <p className="text-xs text-slate-500 mt-1">Messages per 5 seconds before triggering spam filter</p>
+                <p className="text-xs text-slate-500 mt-1">{t('antiRaid.spamThreshold.desc')}</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Banned Words (comma-separated)</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">{t('antiRaid.bannedWords.label')}</label>
                 <textarea
                   value={bannedWordsInput}
                   onChange={(e) => setBannedWordsInput(e.target.value)}
                   rows={4}
                   className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all resize-none text-sm"
-                  placeholder="badword1, badword2, badword3..."
+                  placeholder={t('antiRaid.bannedWords.placeholder')}
                 />
-                <p className="text-xs text-slate-500 mt-1">Words will be matched case-insensitively</p>
+                <p className="text-xs text-slate-500 mt-1">{t('antiRaid.bannedWords.desc')}</p>
               </div>
             </div>
           </div>
@@ -223,12 +223,12 @@ export default function AntiRaid({ selectedGuild }) {
             {saving ? (
               <>
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Saving...
+                {t('antiRaid.saving')}
               </>
             ) : (
               <>
                 <Save className="w-5 h-5" />
-                Save Anti-Raid Configuration
+                {t('antiRaid.saveButton')}
               </>
             )}
           </button>
@@ -240,21 +240,21 @@ export default function AntiRaid({ selectedGuild }) {
           <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
               <Info className="w-4 h-4 text-amber-400" />
-              Status Overview
+              {t('antiRaid.statusOverview')}
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex items-center justify-between p-2 bg-slate-900/40 rounded">
-                <span className="text-slate-400">Active Modules:</span>
+                <span className="text-slate-400">{t('antiRaid.activeModules')}</span>
                 <span className="text-red-400 font-semibold">
                   {Object.values(config).filter((v, i) => i < 5 && v === true).length}/5
                 </span>
               </div>
               <div className="flex items-center justify-between p-2 bg-slate-900/40 rounded">
-                <span className="text-slate-400">Banned Words:</span>
+                <span className="text-slate-400">{t('antiRaid.bannedWordsCount')}</span>
                 <span className="text-red-400 font-semibold">{config.banned_words?.length || 0}</span>
               </div>
               <div className="flex items-center justify-between p-2 bg-slate-900/40 rounded">
-                <span className="text-slate-400">Log Channel:</span>
+                <span className="text-slate-400">{t('antiRaid.logChannelStatus')}</span>
                 <span className="text-red-400 font-semibold">
                   {config.log_channel ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-red-400" />}
                 </span>
@@ -266,10 +266,10 @@ export default function AntiRaid({ selectedGuild }) {
           <div className="bg-blue-600/10 border border-blue-500/20 rounded-2xl p-6">
             <h3 className="text-sm font-bold text-blue-400 mb-3 flex items-center gap-2">
               <Info className="w-4 h-4" />
-              Security Tip
+              {t('antiRaid.securityTip.title')}
             </h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Always set a <strong>Log Channel</strong> to keep track of who is triggering the filters. This helps you identify and ban persistent raiders.
+              {t('antiRaid.securityTip.desc')}
             </p>
           </div>
         </div>

@@ -272,7 +272,7 @@ export default function WelcomeSetup() {
                 <textarea
                   value={currentConfig.description}
                   onChange={(e) => setCurrentConfig({ ...currentConfig, description: e.target.value })}
-                  placeholder={activeTab === 'welcome' ? "Welcome to the server! Please read the rules." : "We're sorry to see you go."}
+                  placeholder={t('welcomeSetup.embedDescriptionPlaceholder')}
                   rows={4}
                   className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-none"
                 />
