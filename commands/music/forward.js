@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { buildErrorEmbed, formatDuration, createProgressBar, COLORS getGlobalPlayer, } = require('../../utils/musicPlayer');
+const { buildErrorEmbed, formatDuration, createProgressBar, COLORS, getGlobalPlayer, } = require('../../utils/musicPlayer');
 
 module.exports = {
     data: new SlashCommandBuilder()

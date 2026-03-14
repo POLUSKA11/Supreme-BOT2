@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { useQueue, useMainPlayer, QueryType } = require('discord-player');
-const { buildErrorEmbed, buildTrackAddedEmbed, buildMusicControlsRow, validateVoiceChannel, formatDuration, COLORS getGlobalPlayer, } = require('../../utils/musicPlayer');
+const { buildErrorEmbed, buildTrackAddedEmbed, buildMusicControlsRow, validateVoiceChannel, formatDuration, COLORS, getGlobalPlayer, } = require('../../utils/musicPlayer');
 const {
     createPlaylist, getUserPlaylists, getPlaylistByName,
     addTrackToPlaylist, getPlaylistTracks, deletePlaylist

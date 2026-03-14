@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useQueue } = require('discord-player');
-const { buildErrorEmbed, COLORS getGlobalPlayer, } = require('../../utils/musicPlayer');
+const { buildErrorEmbed, COLORS, getGlobalPlayer, } = require('../../utils/musicPlayer');
 
 // Valid filter names as defined in discord-player's AudioFilters
 // Note: 8D audio uses '8D' (uppercase) — not '8d'

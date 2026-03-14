@@ -184,19 +184,19 @@ module.exports = {
         }
 
         console.log(`[PLAY CMD] Added ${tracks.length} tracks to queue. First track duration: ${formatDuration(tracks[0]?.durationMS)}, isLive: ${tracks[0]?.isLive}`);
-        if (!queue.isPlaying()) {
+        const isNowPlaying = !queue.isPlaying();
+        if (isNowPlaying) {
           console.log("[PLAY CMD] Starting playback of playlist...");
           await queue.node.play();
           console.log("[PLAY CMD] Playback started");
         }
 
-        const embed = buildPlaylistAddedEmbed(
-          result.playlist,
-          tracks,
-          queue,
-          interaction.client
-        );
-        return interaction.editReply({ embeds: [embed] });
+        const embed = isNowPlaying
+          ? buildNowPlayingEmbed(tracks[0], queue, interaction.client)
+          : buildPlaylistAddedEmbed(result.playlist, tracks, queue, interaction.client);
+        
+        const row = buildMusicControlsRow(false);
+        return interaction.editReply({ embeds: [embed], components: isNowPlaying ? [row] : [] });
       } else {
         console.log("[PLAY CMD] Single track found");
         const track = result.tracks[0];
@@ -207,14 +207,13 @@ module.exports = {
         }
 
         console.log(`[PLAY CMD] Added single track to queue. Duration: ${formatDuration(track?.durationMS)}, isLive: ${track?.isLive}`);
-        if (!queue.isPlaying()) {
+        const isNowPlaying = !queue.isPlaying();
+        if (isNowPlaying) {
           console.log("[PLAY CMD] Starting playback of single track...");
           await queue.node.play();
           console.log("[PLAY CMD] Playback started");
         }
 
-        const isNowPlaying =
-          !queue.isPlaying() || queue.tracks.size === 0;
         const embed = isNowPlaying
           ? buildNowPlayingEmbed(track, queue, interaction.client)
           : buildTrackAddedEmbed(track, queue, interaction.client);
